@@ -12,6 +12,6 @@ jobs:
     - name: Set up Java
       uses: actions/setup-java@v1
       with:
-        java-version: '13.0.3'
+        java-version: '13.0.2'
     - name: Build with Maven
       run: mvn -B package --file pom.xml
