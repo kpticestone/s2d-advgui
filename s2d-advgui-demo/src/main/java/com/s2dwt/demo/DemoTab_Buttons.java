@@ -29,7 +29,7 @@ public class DemoTab_Buttons extends SwtTab {
         SwtGroup grp2 = new SwtGroup(this, "Icon-Only");
         {
             SwtButton btn = new SwtButton(grp2);
-            btn.setImage("ui/icon.png");
+            btn.setImage("icons/128/apple.png");
             btn.setBounds(0, 0, 0, bh);
             btn.addListener(btnx -> {
                 float was = context.getGuiScale();
@@ -45,7 +45,7 @@ public class DemoTab_Buttons extends SwtTab {
         {
             SwtButton btn = new SwtButton(grp3);
             btn.setText("TEXT");
-            btn.setImage("ui/icon.png");
+            btn.setImage("icons/128/apple.png");
             btn.setBounds(0, 0, 0, bh);
         }
 
@@ -53,7 +53,7 @@ public class DemoTab_Buttons extends SwtTab {
         {
             SwtButton btn = new SwtButton(grp4);
             btn.setText("TEXT");
-            btn.setImage("ui/icon.png");
+            btn.setImage("icons/128/apple.png");
             btn.setBounds(0, 0, 0, bh);
             btn.setDisabled();
         }

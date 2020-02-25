@@ -12,7 +12,7 @@ public final class DemoStage extends ASwtStage<DemoResourceManager, ISwtDrawerMa
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    public void onInit() {
+    public void onInit() throws Exception {
         this.applicationController.activateScreen(DemoScreenDescriptor.ID);
     }
 

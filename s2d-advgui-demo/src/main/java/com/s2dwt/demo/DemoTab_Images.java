@@ -8,7 +8,7 @@ public class DemoTab_Images extends SwtTab {
     public DemoTab_Images(SwtTabFolder pParent) {
         super(pParent, "images");
         SwtImage img = new SwtImage(this);
-        img.setImage("ui/1.jpg");
+        img.setImage("icons/128/workplace.png");
         img.setBounds(120, 55, -130, -65);
     }
 }

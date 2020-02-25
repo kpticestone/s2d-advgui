@@ -6,9 +6,11 @@ import com.s2dwt.core.application.SwtApplicationListener;
 import com.s2dwt.core.rendering.ISwtDrawerManager;
 import com.s2dwt.core.rendering.SwtDrawerManager;
 
-public class DemoAppListener extends SwtApplicationListener<DemoResourceManager, ISwtDrawerManager<DemoResourceManager>, DemoStage, DemoApp> {
+public class DemoAppListener extends SwtApplicationListener<DemoResourceManager, ISwtDrawerManager<DemoResourceManager>, DemoStage, DemoApp>
+{
     // -------------------------------------------------------------------------------------------------------------------------
-    public static void main(String[] arg) {
+    public static void main(String[] arg)
+    {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setWindowedMode(1280, 800);
         // config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
@@ -20,7 +22,8 @@ public class DemoAppListener extends SwtApplicationListener<DemoResourceManager,
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    protected DemoApp createApplication() {
+    protected DemoApp createApplication() throws Exception
+    {
         return new DemoApp(new SwtDrawerManager<>(new DemoResourceManager()));
     }
 

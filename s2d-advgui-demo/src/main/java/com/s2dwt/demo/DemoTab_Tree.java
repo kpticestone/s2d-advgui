@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
-import com.leo.commons.utils.UUID;
 import com.s2dwt.core.tabfolder.SwtTab;
 import com.s2dwt.core.tabfolder.SwtTabFolder;
 import com.s2dwt.core.tree.ProviderItem;
@@ -19,9 +19,9 @@ public class DemoTab_Tree extends SwtTab {
     // -------------------------------------------------------------------------------------------------------------------------
     public DemoTab_Tree(SwtTabFolder pParent) {
         super(pParent, "tree");
-        ProviderItem itemA = new ProviderItem("A", "A", "ui/1.jpg");
-        ProviderItem itemB = new ProviderItem("B", "B", "ui/icon.png");
-        ProviderItem itemC = new ProviderItem("C", "C", "ui/slotType_minor.png");
+        ProviderItem itemA = new ProviderItem("A", "A", "icons/128/warning.png");
+        ProviderItem itemB = new ProviderItem("B", "B", "icons/128/workplace.png");
+        ProviderItem itemC = new ProviderItem("C", "C", "icons/128/yinyang.png");
 
         Map<ProviderItem, List<ProviderItem>> children = new HashMap<>();
 
@@ -65,8 +65,8 @@ public class DemoTab_Tree extends SwtTab {
     public List<ProviderItem> makeRandomList() {
         List<ProviderItem> list = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            String jj = UUID.random().toString();
-            list.add(new ProviderItem(jj, jj, "ui/icon.png"));
+            String jj = UUID.randomUUID().toString();
+            list.add(new ProviderItem(jj, jj, "icons/128/apple.png"));
         }
         return list;
     }

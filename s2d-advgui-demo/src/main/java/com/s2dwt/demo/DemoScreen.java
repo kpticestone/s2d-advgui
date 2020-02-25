@@ -1,7 +1,6 @@
 package com.s2dwt.demo;
 
 import com.s2dwt.core.basicwidgets.SwtButton;
-import com.s2dwt.core.basicwidgets.SwtGroup;
 import com.s2dwt.core.basicwidgets.SwtLabel;
 import com.s2dwt.core.basicwidgets.SwtPanel;
 import com.s2dwt.core.rendering.ISwtDrawerManager;
@@ -55,6 +54,7 @@ public class DemoScreen extends SwtScreen<DemoResourceManager, ISwtDrawerManager
 
         SwtTabFolder folderA = new SwtTabFolder(panel2);
 
+        DemoTab_Animations tabAnims = new DemoTab_Animations(folderA);
         DemoTab_Canvas tabCanvas = new DemoTab_Canvas(folderA);
         DemoTab_ComboBoxes tabCom = new DemoTab_ComboBoxes(folderA);
         DemoTab_Tree tabTree = new DemoTab_Tree(folderA);
