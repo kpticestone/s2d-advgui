@@ -5,10 +5,10 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.leo</groupId>
-		<artifactId>commons-parent</artifactId>
-		<version>1.0-SNAPSHOT</version>
-		<relativePath>../commons-parent</relativePath>
+		<groupId>org.s2d-advgui</groupId>
+		<artifactId>parent</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>../parent</relativePath>
 	</parent>
 
 	<artifactId>singstar</artifactId>
@@ -20,9 +20,9 @@
 			<version>0.9.12</version>
 		</dependency>
 		<dependency>
-			<groupId>com.leo</groupId>
+			<groupId>org.s2d-advgui</groupId>
 			<artifactId>commons</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>
