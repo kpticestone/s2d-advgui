@@ -19,10 +19,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.leo.commons.utils.TNull;
+import com.leo.commons.utils.TOldCompatibilityCode;
 import com.s2dwt.addons.framebuffer.SwtFrameBuffer;
 import com.s2dwt.addons.framebuffer.SwtFrameBufferBuilder;
-import com.s2dwt.impcomp.TNull;
-import com.s2dwt.impcomp.TOldCompatibilityCode;
 
 public abstract class AResourceManager {
 	// -------------------------------------------------------------------------------------------------------------------------

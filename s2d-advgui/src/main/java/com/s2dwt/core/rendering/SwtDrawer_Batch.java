@@ -12,8 +12,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Align;
+import com.leo.commons.utils.TNull;
 import com.s2dwt.core.resourcemanager.AResourceManager;
-import com.s2dwt.impcomp.TNull;
 
 public final class SwtDrawer_Batch<RM extends AResourceManager> extends ASwtDrawer
 {

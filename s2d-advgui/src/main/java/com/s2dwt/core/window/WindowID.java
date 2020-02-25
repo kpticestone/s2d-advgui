@@ -1,9 +1,9 @@
 package com.s2dwt.core.window;
 
-import com.leo.commons.utils.TypeSafeID;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.leo.commons.utils.TypeSafeID;
 
 public class WindowID extends TypeSafeID {
     private static final Map<String, WindowID> INSTANCES = new HashMap<>();

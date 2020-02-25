@@ -3,14 +3,14 @@ package com.s2dwt.core.stage;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.leo.commons.utils.Trigger;
 import com.s2dwt.core.application.ISwtApplicationController;
 import com.s2dwt.core.rendering.ISwtDrawerManager;
 import com.s2dwt.core.resourcemanager.AResourceManager;
 import com.s2dwt.core.screens.SwtScreen;
 import com.s2dwt.core.window.ASwtWindowDescriptor;
 import com.s2dwt.core.window.SwtWindow;
-import com.s2dwt.impcomp.Trigger;
-import com.s2dwt.impcomp.WindowID;
+import com.s2dwt.core.window.WindowID;
 
 public abstract class ASwtStage<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>> extends ASwtStage_750_Rendering<RM, DM> {
     // -------------------------------------------------------------------------------------------------------------------------

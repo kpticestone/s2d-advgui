@@ -13,7 +13,6 @@ import com.s2dwt.core.resourcemanager.AResourceManager;
 import com.s2dwt.core.stage.ASwtStage;
 import com.s2dwt.core.tabfolder.SwtTab;
 import com.s2dwt.core.tabfolder.SwtTabFolder;
-import com.s2dwt.impcomp.TOldCompatibilityCode;
 
 public class DemoTab_Canvas extends SwtTab
 {

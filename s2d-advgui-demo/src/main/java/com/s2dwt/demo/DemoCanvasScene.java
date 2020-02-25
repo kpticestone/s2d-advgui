@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Rectangle;
+import com.leo.commons.utils.TOldCompatibilityCode;
 import com.s2dwt.animations.AnimationManager;
 import com.s2dwt.animations.Animation_ChangeBounds;
 import com.s2dwt.animations.IAnimationListener_ChangeBounds;
@@ -14,7 +15,6 @@ import com.s2dwt.core.rendering.SwtDrawer_Batch;
 import com.s2dwt.core.rendering.SwtDrawer_Shapes;
 import com.s2dwt.core.resourcemanager.AResourceManager;
 import com.s2dwt.core.stage.ASwtStage;
-import com.s2dwt.impcomp.TOldCompatibilityCode;
 
 public class DemoCanvasScene extends ICanvasRenderer<AResourceManager, SwtDrawerManager<AResourceManager>>
 		implements IMyWidgetUpdateHandler {

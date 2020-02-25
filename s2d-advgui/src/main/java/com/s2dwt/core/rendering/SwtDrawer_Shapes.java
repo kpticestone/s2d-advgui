@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
-import com.s2dwt.impcomp.Ray2D;
+import com.leo.commons.geom.Ray2D;
 
 public final class SwtDrawer_Shapes extends ASwtDrawer
 {

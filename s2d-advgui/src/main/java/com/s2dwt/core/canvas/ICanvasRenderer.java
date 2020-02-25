@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.leo.spheres.core.utils.CalcUtils;
 import com.s2dwt.core.awidget.IInternalWidgetDrawer;
 import com.s2dwt.core.awidget.ISwtWidget;
 import com.s2dwt.core.camera.CameraHolder;
@@ -16,7 +17,6 @@ import com.s2dwt.core.resourcemanager.AResourceManager;
 import com.s2dwt.core.screens.MasterViewport;
 import com.s2dwt.core.screens.SlaveViewport;
 import com.s2dwt.core.stage.ASwtStage;
-import com.s2dwt.impcomp.CalcUtils;
 
 public abstract class ICanvasRenderer<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>> implements IInternalWidgetDrawer
 {

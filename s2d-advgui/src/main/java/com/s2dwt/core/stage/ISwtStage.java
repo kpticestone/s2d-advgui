@@ -5,13 +5,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.leo.commons.utils.Trigger;
 import com.s2dwt.core.application.ISwtApplicationController;
 import com.s2dwt.core.awidget.ISwtWidget;
 import com.s2dwt.core.rendering.ISwtDrawerManager;
 import com.s2dwt.core.resourcemanager.AResourceManager;
 import com.s2dwt.core.window.SwtWindow;
-import com.s2dwt.impcomp.Trigger;
-import com.s2dwt.impcomp.WindowID;
+import com.s2dwt.core.window.WindowID;
 
 public interface ISwtStage<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>> {
     // -------------------------------------------------------------------------------------------------------------------------

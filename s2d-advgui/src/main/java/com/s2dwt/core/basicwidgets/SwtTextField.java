@@ -11,12 +11,12 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.leo.commons.utils.Trigger;
 import com.s2dwt.core.awidget.ASwtWidget;
 import com.s2dwt.core.awidget.BorderDrawer2;
 import com.s2dwt.core.awidget.InternalWidgetDrawerBatch;
 import com.s2dwt.core.input.GuiUtils;
 import com.s2dwt.core.rendering.SwtDrawer_Batch;
-import com.s2dwt.impcomp.Trigger;
 
 public class SwtTextField extends ASwtWidget<TextField>
 {

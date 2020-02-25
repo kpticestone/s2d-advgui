@@ -6,9 +6,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.leo.commons.utils.TNull;
 import com.s2dwt.core.rendering.SwtDrawer_Batch;
 import com.s2dwt.core.stage.ISwtStage;
-import com.s2dwt.impcomp.TNull;
 
 public abstract class ASwtWidget<ACTOR extends Actor> extends ASwtWidget_970_Rendering<ACTOR>
 {

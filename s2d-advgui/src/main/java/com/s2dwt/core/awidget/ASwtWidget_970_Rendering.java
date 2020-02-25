@@ -14,11 +14,11 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.leo.commons.utils.TOldCompatibilityCode;
+import com.leo.commons.utils.Trigger;
 import com.s2dwt.core.rendering.ISwtDrawerManager;
 import com.s2dwt.core.rendering.SwtDrawer_Batch;
 import com.s2dwt.core.stage.ISwtStage;
-import com.s2dwt.impcomp.TOldCompatibilityCode;
-import com.s2dwt.impcomp.Trigger;
 
 public abstract class ASwtWidget_970_Rendering<ACTOR extends Actor> extends ASwtWidget_950_Calculating<ACTOR>
 {

@@ -9,8 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.leo.commons.utils.Trigger;
 import com.s2dwt.core.input.ISwtWidgetSelectable;
-import com.s2dwt.impcomp.Trigger;
 
 public abstract class ASwtWidgetSelectable<ACTOR extends Actor> extends ASwtWidget<ACTOR> implements ISwtWidgetSelectable {
     // -------------------------------------------------------------------------------------------------------------------------

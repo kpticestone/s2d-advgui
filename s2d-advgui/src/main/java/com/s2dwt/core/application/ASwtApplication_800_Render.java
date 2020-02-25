@@ -2,10 +2,10 @@ package com.s2dwt.core.application;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL30;
+import com.leo.commons.utils.SphThread;
 import com.s2dwt.core.rendering.ISwtDrawerManager;
 import com.s2dwt.core.resourcemanager.AResourceManager;
 import com.s2dwt.core.stage.ASwtStage;
-import com.s2dwt.impcomp.SphThread;
 
 public abstract class ASwtApplication_800_Render<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>, STAGE extends ASwtStage<RM, DM>> extends ASwtApplication_310_Events<RM, DM, STAGE> {
     // -------------------------------------------------------------------------------------------------------------------------

@@ -14,8 +14,8 @@ import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.leo.commons.utils.TNull;
 import com.s2dwt.core.stage.ISwtStage;
-import com.s2dwt.impcomp.TNull;
 
 public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwtWidget<ACTOR> {
     private static final Logger log = LoggerFactory.getLogger(ASwtWidget_000_Ground.class);

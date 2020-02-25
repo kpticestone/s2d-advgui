@@ -2,7 +2,6 @@ package com.s2dwt.demo;
 
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.s2dwt.animations.AAnimation;
 import com.s2dwt.animations.AnimationManager;
 import com.s2dwt.animations.Animation_ChangeBounds;

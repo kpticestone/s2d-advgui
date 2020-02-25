@@ -3,10 +3,10 @@ package com.s2dwt.core.awidget;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.leo.commons.utils.TOldCompatibilityCode;
 import com.s2dwt.core.layoutmanager.ASwtLayoutManager;
 import com.s2dwt.core.stage.ISwtStage;
 import com.s2dwt.core.window.ISwtWindow;
-import com.s2dwt.impcomp.TOldCompatibilityCode;
 
 public abstract class ASwtWidget_950_Calculating<ACTOR extends Actor> extends ASwtWidget_900_LayoutManager<ACTOR>
 {

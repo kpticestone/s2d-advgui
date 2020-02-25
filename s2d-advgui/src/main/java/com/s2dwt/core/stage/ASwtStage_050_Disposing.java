@@ -5,10 +5,10 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
+import com.leo.commons.utils.Trigger;
 import com.s2dwt.core.application.ISwtApplicationController;
 import com.s2dwt.core.rendering.ISwtDrawerManager;
 import com.s2dwt.core.resourcemanager.AResourceManager;
-import com.s2dwt.impcomp.Trigger;
 
 public abstract class ASwtStage_050_Disposing<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>> extends ASwtStage_010_QuickDraw<RM, DM> {
     // -------------------------------------------------------------------------------------------------------------------------

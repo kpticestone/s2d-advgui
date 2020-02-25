@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.utils.Align;
+import com.leo.commons.utils.Trigger;
 import com.s2dwt.core.awidget.ASwtWidget_ControllerLevel;
 import com.s2dwt.core.awidget.ISwtWidget;
 import com.s2dwt.core.awidget.InternalWidgetDrawerBatch;
@@ -19,7 +20,6 @@ import com.s2dwt.core.basicwidgets.SwtPanel;
 import com.s2dwt.core.input.keys.ASwtInputRegister_Keys;
 import com.s2dwt.core.layoutmanager.ASwtLayoutManager;
 import com.s2dwt.core.rendering.SwtDrawer_Batch;
-import com.s2dwt.impcomp.Trigger;
 
 public class SwtWindow extends ASwtWidget_ControllerLevel<WidgetGroup> implements ISwtWindow
 {
