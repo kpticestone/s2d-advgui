@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.leo.commons.geom.Ray2D;
+import com.leo.spheres.core.collider.Collider;
 
 public final class SwtDrawer_Shapes extends ASwtDrawer
 {
@@ -62,11 +63,11 @@ public final class SwtDrawer_Shapes extends ASwtDrawer
         this.sr.line(target.x1, target.y1, target.x2, target.y2);
     }
 
-    //    // -------------------------------------------------------------------------------------------------------------------------
-    //    public void drawCollider(Collider collider) {
-    //        collider.forEach(item -> item.drawShape(this.sr));
-    //    }
-    //
+    // -------------------------------------------------------------------------------------------------------------------------
+    public void drawCollider(Collider collider) {
+        collider.forEach(item -> item.drawShape(this.sr));
+    }
+
     // -------------------------------------------------------------------------------------------------------------------------
     public void rect(float x, float y, float width, float height)
     {
