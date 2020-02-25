@@ -4,8 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.leo.commons.utils.TOldCompatibilityCode;
 import com.s2dwt.core.camera.CameraHolder;
+import com.s2dwt.impcomp.TOldCompatibilityCode;
 
 public final class MasterViewport extends Viewport {
     // -------------------------------------------------------------------------------------------------------------------------

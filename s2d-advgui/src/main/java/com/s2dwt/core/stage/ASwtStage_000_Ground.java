@@ -1,5 +1,14 @@
 package com.s2dwt.core.stage;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.s2dwt.core.application.ISwtApplicationController;
@@ -8,14 +17,6 @@ import com.s2dwt.core.rendering.ISwtDrawerManager;
 import com.s2dwt.core.resourcemanager.AResourceManager;
 import com.s2dwt.core.screens.MasterViewport;
 import com.s2dwt.core.screens.SwtScreen;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 public abstract class ASwtStage_000_Ground<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>> extends Stage implements ISwtStage<RM, DM> {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -47,6 +48,9 @@ public abstract class ASwtStage_000_Ground<RM extends AResourceManager, DM exten
     
     // -------------------------------------------------------------------------------------------------------------------------
     private float guiScale = 1f;
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    private float delta = -1f;
 
     // -------------------------------------------------------------------------------------------------------------------------
     public ASwtStage_000_Ground(@Nonnull ISwtApplicationController<RM, DM> pApplicationController) {
@@ -140,6 +144,7 @@ public abstract class ASwtStage_000_Ground<RM extends AResourceManager, DM exten
     @Override
     public final void act(float delta) {
         super.act(delta);
+        this.delta = delta;
         for (IMyWidgetUpdateHandler a : this.updateHandler) {
             try {
                 a.act(delta);
@@ -164,6 +169,13 @@ public abstract class ASwtStage_000_Ground<RM extends AResourceManager, DM exten
     @Override
     public void setGuiScale(float pGuiScale) {
         this.guiScale = pGuiScale;
+    }
+    
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public final float getDelta()
+    {
+        return this.delta;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

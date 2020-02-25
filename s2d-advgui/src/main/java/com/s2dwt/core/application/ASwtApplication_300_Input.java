@@ -1,5 +1,7 @@
 package com.s2dwt.core.application;
 
+import javax.annotation.Nonnull;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.Controllers;
@@ -7,18 +9,19 @@ import com.s2dwt.core.rendering.ISwtDrawerManager;
 import com.s2dwt.core.resourcemanager.AResourceManager;
 import com.s2dwt.core.stage.ASwtStage;
 
-import javax.annotation.Nonnull;
-
-public abstract class ASwtApplication_300_Input<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>, STAGE extends ASwtStage<RM, DM>> extends ASwtApplication_150_ScreenStages<RM, DM, STAGE> {
+public abstract class ASwtApplication_300_Input<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>, STAGE extends ASwtStage<RM, DM>> extends ASwtApplication_150_ScreenStages<RM, DM, STAGE>
+{
     // -------------------------------------------------------------------------------------------------------------------------
     @Nonnull
     private final SwtApplicationInputDispatcher inputBroadCaster;
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public ASwtApplication_300_Input(DM pDrawerManager) {
+    public ASwtApplication_300_Input(DM pDrawerManager)
+    {
         super(pDrawerManager);
         Controllers.getControllers(); // in order to initialize the Controllers right away
-        if (Gdx.input.getInputProcessor() != null) {
+        if (Gdx.input.getInputProcessor() != null)
+        {
             throw new IllegalStateException("inputProcessor already exists. Did you create multiple GameHolders?"); //$NON-NLS-1$
         }
         this.inputBroadCaster = new SwtApplicationInputDispatcher();
@@ -27,22 +30,33 @@ public abstract class ASwtApplication_300_Input<RM extends AResourceManager, DM 
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public final SwtApplicationInputDispatcher getInputBroadCaster() {
+    public final SwtApplicationInputDispatcher getInputBroadCaster()
+    {
         return this.inputBroadCaster;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    final void handleInput() {
-        if (this.inputBroadCaster.hasKeyboardActivity()) {
+    final void handleInput() throws Exception
+    {
+        if (this.inputBroadCaster.hasKeyboardActivity())
+        {
             STAGE someStage = this.createStage();
             someStage.addDisposeListener(inputBroadCaster::detachKeyboard);
             this.inputBroadCaster.attach(someStage);
         }
-        this.inputBroadCaster.fetchUnassignedControllerActivity(controller -> {
-            STAGE someStage = this.createStage();
-            ControllerListener controllerListener = someStage.getControllerListener(controller);
-            someStage.addDisposeListener(() -> inputBroadCaster.detach(controllerListener));
-            this.inputBroadCaster.attach(controller, controllerListener);
+        this.inputBroadCaster.fetchUnassignedControllerActivity(controller ->
+        {
+            try
+            {
+                STAGE someStage = this.createStage();
+                ControllerListener controllerListener = someStage.getControllerListener(controller);
+                someStage.addDisposeListener(() -> inputBroadCaster.detach(controllerListener));
+                this.inputBroadCaster.attach(controller, controllerListener);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         });
     }
     // -------------------------------------------------------------------------------------------------------------------------

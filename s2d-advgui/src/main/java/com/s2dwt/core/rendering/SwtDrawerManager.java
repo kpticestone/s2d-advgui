@@ -47,6 +47,13 @@ public class SwtDrawerManager<RM extends AResourceManager> implements ISwtDrawer
         this.shapeRenderer = pOther.getShapeRenderer();
         this.resourceManager = pOther.getResourceManager();
     }
+    
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public SwtDrawerManager<RM> cloneDrawerWithOtherBatch(Batch batch, ShapeRenderer pShapeRenderer)
+    {
+        return new SwtDrawerManager<RM>(batch, pShapeRenderer, this.resourceManager);
+    }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override

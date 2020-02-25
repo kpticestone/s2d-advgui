@@ -9,7 +9,7 @@ import com.s2dwt.core.stage.ASwtStage;
 
 public abstract class SwtApplication<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>, STAGE extends ASwtStage<RM, DM>> extends ASwtApplication_800_Render<RM, DM, STAGE> {
     // -------------------------------------------------------------------------------------------------------------------------
-    public SwtApplication(DM pDrawerManager) {
+    public SwtApplication(DM pDrawerManager) throws Exception {
         super(pDrawerManager);
         this.registerScreen(SphScreenDescriptor_Loading.getInstance());
         this.registerScreen(SphScreenDescriptor_InputSelect.getInstance());

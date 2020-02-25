@@ -1,6 +1,6 @@
 package com.s2dwt.core.resourcemanager;
 
-import com.leo.commons.utils.Trigger;
+import com.s2dwt.impcomp.Trigger;
 
 public final class ResourceLoader {
     // -------------------------------------------------------------------------------------------------------------------------

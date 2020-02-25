@@ -1,13 +1,13 @@
 package com.s2dwt.core.awidget;
 
-import javax.annotation.Nonnull;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
+
+import javax.annotation.Nonnull;
 
 public class ListenerList<E> implements Collection<E> {
     private Collection<E> internal = new ArrayList<>();

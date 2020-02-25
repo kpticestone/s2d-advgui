@@ -1,17 +1,18 @@
 package com.s2dwt.core.application;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
+import java.util.function.Consumer;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.math.Vector3;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
-import java.util.function.Consumer;
 
 public final class SwtApplicationInputDispatcher implements ControllerListener, InputProcessor {
     // -------------------------------------------------------------------------------------------------------------------------

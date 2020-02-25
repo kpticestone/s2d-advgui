@@ -1,16 +1,16 @@
 package com.s2dwt.core.stage;
 
-import com.leo.commons.utils.Trigger;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.s2dwt.core.application.ISwtApplicationController;
 import com.s2dwt.core.rendering.ISwtDrawerManager;
 import com.s2dwt.core.resourcemanager.AResourceManager;
 import com.s2dwt.core.screens.SwtScreen;
 import com.s2dwt.core.window.ASwtWindowDescriptor;
 import com.s2dwt.core.window.SwtWindow;
-import com.s2dwt.core.window.WindowID;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.s2dwt.impcomp.Trigger;
+import com.s2dwt.impcomp.WindowID;
 
 public abstract class ASwtStage<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>> extends ASwtStage_750_Rendering<RM, DM> {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ public abstract class ASwtStage<RM extends AResourceManager, DM extends ISwtDraw
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public abstract void onInit();
+    public abstract void onInit() throws Exception;
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override

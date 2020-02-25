@@ -55,4 +55,7 @@ public interface ISwtDrawerManager<RM extends AResourceManager> {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
+    ISwtDrawerManager<RM> cloneDrawerWithOtherBatch(Batch batch, ShapeRenderer pShapeRenderer);
+
+    // -------------------------------------------------------------------------------------------------------------------------
 }

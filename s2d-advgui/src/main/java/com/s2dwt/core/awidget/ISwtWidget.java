@@ -1,15 +1,15 @@
 package com.s2dwt.core.awidget;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Group;
-import com.s2dwt.core.layoutmanager.ASwtLayoutManager;
-import com.s2dwt.core.stage.ISwtStage;
+import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import java.util.Collection;
-import java.util.List;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.s2dwt.core.layoutmanager.ASwtLayoutManager;
+import com.s2dwt.core.stage.ISwtStage;
 
 public interface ISwtWidget<PT extends Actor> {
     // -------------------------------------------------------------------------------------------------------------------------

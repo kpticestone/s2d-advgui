@@ -1,6 +1,6 @@
 package com.s2dwt.addons.selectbox;
 
-import com.leo.commons.utils.IInfoSupport;
+import com.s2dwt.impcomp.IInfoSupport;
 
 public final class SwtRenderer_InfoSupport implements IMyRenderer<IInfoSupport> {
     // -------------------------------------------------------------------------------------------------------------------------

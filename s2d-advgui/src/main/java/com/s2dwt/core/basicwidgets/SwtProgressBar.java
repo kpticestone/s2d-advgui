@@ -3,32 +3,48 @@ package com.s2dwt.core.basicwidgets;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
 import com.s2dwt.core.awidget.ASwtWidget;
+import com.s2dwt.core.awidget.InternalWidgetDrawerBatch;
+import com.s2dwt.core.rendering.SwtDrawer_Batch;
 
-public class SwtProgressBar extends ASwtWidget<ProgressBar> {
+public class SwtProgressBar extends ASwtWidget<ProgressBar>
+{
     // -------------------------------------------------------------------------------------------------------------------------
-    public SwtProgressBar(ASwtWidget<? extends Group> pParent) {
+    public SwtProgressBar(ASwtWidget<? extends Group> pParent)
+    {
         super(pParent, false);
         this.makeDrawBorderSupport();
         TextureRegion t1 = context.getResourceManager().getColorTextureRegion(Color.GREEN);
         int space = 8;
         int space2 = space * 2;
-        this.addDrawerClipableMiddle((batch, pScreenCoords, dims) -> batch.draw(t1, dims.x + space, dims.y + space, (dims.width - space2) * actor.getPercent(), dims.height - space2));
+        this.addDrawerClipableMiddle(new InternalWidgetDrawerBatch()
+        {
+            @Override
+            protected void _drawIt(SwtDrawer_Batch<?> batch, Vector2 pScreenCoords, Rectangle dims)
+            {
+                batch.draw(t1, dims.x + space, dims.y + space, (dims.width - space2) * actor.getPercent(), dims.height - space2);
+            }
+        });
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    protected ProgressBar createActor() {
+    protected ProgressBar createActor()
+    {
         ProgressBarStyle style = new ProgressBarStyle();
-//      style.knobBefore = new TextureRegionDrawable(context.resourceManager.getColorTextureRegion(Color.GREEN, 15, 15));
-//      style.knob = null; // context.getDrawable("ui/icon.png");
-//      style.knobAfter = null; // new TextureRegionDrawable(context.resourceManager.getColorTextureRegion(Color.BLACK));
-        ProgressBar back = new ProgressBar(0, 100, 1, false, style) {
+        //      style.knobBefore = new TextureRegionDrawable(context.resourceManager.getColorTextureRegion(Color.GREEN, 15, 15));
+        //      style.knob = null; // context.getDrawable("ui/icon.png");
+        //      style.knobAfter = null; // new TextureRegionDrawable(context.resourceManager.getColorTextureRegion(Color.BLACK));
+        ProgressBar back = new ProgressBar(0, 100, 1, false, style)
+        {
             @Override
-            public void draw(Batch batch, float parentAlpha) {
+            public void draw(Batch batch, float parentAlpha)
+            {
                 _internalDrawWidget(this, batch, parentAlpha, () -> super.draw(batch, parentAlpha));
             }
         };
@@ -37,7 +53,8 @@ public class SwtProgressBar extends ASwtWidget<ProgressBar> {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public void setValue(float val) {
+    public void setValue(float val)
+    {
         this.actor.setValue(val);
     }
 
@@ -49,7 +66,8 @@ public class SwtProgressBar extends ASwtWidget<ProgressBar> {
      *
      * @param size max size
      */
-    public void setMax(float size) {
+    public void setMax(float size)
+    {
         this.actor.setRange(0, size);
     }
 

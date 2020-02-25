@@ -22,12 +22,12 @@ public class SphScreen_Loading<RM extends AResourceManager, DM extends ISwtDrawe
         super(pStage);
 
         SwtImage starfield = new SwtImage(this);
-        starfield.setImage("ui2/starfield.png");
+        starfield.setImage("ui/starfield.png");
         starfield.setScalingMode(Scaling.fill);
         starfield.setBounds(0, 0, 0, 0);
 
         SwtImage logo = new SwtImage(this);
-        logo.setImage("ui2/scene-1.png");
+        logo.setImage("icons/128/yinyang.png");
         logo.setBounds(0, 0, 0, 0);
         logo.setScalingMode(Scaling.fit);
         logo.setAlign(Align.top);

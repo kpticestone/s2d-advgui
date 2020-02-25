@@ -21,9 +21,9 @@ public class BorderDrawer2 {
     public BorderDrawer2(ISwtStage<?, ?> context) {
         this.context = context;
         this.tr = this.context.getResourceManager().getColorTextureRegion(Color.WHITE, 1, 1);
-        this.corner2 = this.context.getResourceManager().getTextureRegion("ui2/button-corner-2019-08-11.png");
-        this.borderhor = this.context.getResourceManager().getTextureRegion("ui2/button-hor-2019-08-11.png");
-        this.borderver = this.context.getResourceManager().getTextureRegion("ui2/button-ver-2019-08-11.png");
+        this.corner2 = this.context.getResourceManager().getTextureRegion("ui/button-corner-2019-08-11.png");
+        this.borderhor = this.context.getResourceManager().getTextureRegion("ui/button-hor-2019-08-11.png");
+        this.borderver = this.context.getResourceManager().getTextureRegion("ui/button-ver-2019-08-11.png");
     }
 
     public void setBorderColor(Color color) {

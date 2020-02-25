@@ -1,10 +1,10 @@
 package com.s2dwt.core.screens;
 
-import com.leo.commons.singstar.ISingStarAutowire;
-import com.leo.commons.singstar.ISingStarDescriptor;
-import com.s2dwt.core.stage.ASwtStage;
-
 import javax.annotation.Nonnull;
+
+import com.s2dwt.core.stage.ASwtStage;
+import com.s2dwt.impcomp.ISingStarAutowire;
+import com.s2dwt.impcomp.ISingStarDescriptor;
 
 public abstract class SwtScreenDescriptor<PT extends ASwtStage<?, ?>, PU extends SwtScreen<?, ?>>
         implements ISingStarAutowire, ISingStarDescriptor<String> {
@@ -14,7 +14,7 @@ public abstract class SwtScreenDescriptor<PT extends ASwtStage<?, ?>, PU extends
         this.id = id;
     }
 
-    public abstract PU createScreen(@Nonnull PT pStage);
+    public abstract PU createScreen(@Nonnull PT pStage) throws Exception;
 
     @Override
     public String getID() {

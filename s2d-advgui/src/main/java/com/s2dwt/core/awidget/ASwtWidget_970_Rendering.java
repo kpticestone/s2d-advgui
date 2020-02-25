@@ -1,21 +1,77 @@
 package com.s2dwt.core.awidget;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.leo.commons.utils.TOldCompatibilityCode;
-import com.leo.commons.utils.Trigger;
+import com.s2dwt.core.rendering.ISwtDrawerManager;
+import com.s2dwt.core.rendering.SwtDrawer_Batch;
 import com.s2dwt.core.stage.ISwtStage;
+import com.s2dwt.impcomp.TOldCompatibilityCode;
+import com.s2dwt.impcomp.Trigger;
 
-public abstract class ASwtWidget_970_Rendering<ACTOR extends Actor> extends ASwtWidget_950_Calculating<ACTOR> {
+public abstract class ASwtWidget_970_Rendering<ACTOR extends Actor> extends ASwtWidget_950_Calculating<ACTOR>
+{
+    // -------------------------------------------------------------------------------------------------------------------------
+    public static enum WidetLayer
+    {
+        BACKGROUND, MIDDLE, FOREGROUND,
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    static class DrawableHolder
+    {
+        boolean clip;
+        IInternalWidgetDrawer drawer;
+
+        public DrawableHolder(boolean clip, IInternalWidgetDrawer drawer)
+        {
+            this.clip = clip;
+            this.drawer = drawer;
+        }
+
+        public void drawIt(Actor base, ISwtDrawerManager<?> batchdr, Vector2 v2, Rectangle drawingRect)
+        {
+            if (this.clip)
+            {
+                if (base.clipBegin())
+                {
+                    try
+                    {
+                        this.drawer.drawIt(batchdr, v2, drawingRect);
+                        batchdr.getBatch().flush();
+                    }
+                    finally
+                    {
+                        base.clipEnd();
+                    }
+                }
+//                else
+//                {
+//                    System.err.println("cant clip 2 @ "+ base);
+//                }
+            }
+            else
+            {
+                this.drawer.drawIt(batchdr, v2, drawingRect);
+            }
+        }
+
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
     static float AX = .0f;
+
     // -------------------------------------------------------------------------------------------------------------------------
     static Color COL_BLUE_100 = new Color(AX, AX, 1f, 1f);
     static Color COL_BLUE_075 = new Color(AX, AX, .75f, .9f);
@@ -24,9 +80,12 @@ public abstract class ASwtWidget_970_Rendering<ACTOR extends Actor> extends ASwt
     static Color COL_BLUE_000 = new Color(AX, AX, 0f, 1f);
 
     // -------------------------------------------------------------------------------------------------------------------------
-    private final List<IInternalWidgetDrawer> drawerBackground = new ArrayList<>();
-    private final List<IInternalWidgetDrawer> drawerForeground = new ArrayList<>();
-    private final List<IInternalWidgetDrawer> drawerClipableMiddle = new ArrayList<>();
+    //    private final List<IInternalWidgetDrawer> drawerBackground = new ArrayList<>();
+    //    private final List<IInternalWidgetDrawer> drawerForeground = new ArrayList<>();
+    //    private final List<IInternalWidgetDrawer> drawerClipableMiddle = new ArrayList<>();
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    private final Map<WidetLayer, Set<DrawableHolder>> drawer = new HashMap<>();
 
     // -------------------------------------------------------------------------------------------------------------------------
     private final Rectangle drawingRect = new Rectangle();
@@ -35,114 +94,137 @@ public abstract class ASwtWidget_970_Rendering<ACTOR extends Actor> extends ASwt
     protected boolean clip = false;
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public ASwtWidget_970_Rendering(ISwtStage<?, ?> pContext) {
+    private Vector2 v2 = new Vector2();
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public ASwtWidget_970_Rendering(ISwtStage<?, ?> pContext)
+    {
         super(pContext);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public ASwtWidget_970_Rendering(ISwtWidget<? extends Group> pParent, boolean focusable) {
+    public ASwtWidget_970_Rendering(ISwtWidget<? extends Group> pParent, boolean focusable)
+    {
         super(pParent, focusable);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public void setClip(boolean clip) {
+    public final void addDrawer(WidetLayer layer, boolean clip, IInternalWidgetDrawer drawer)
+    {
+        Set<DrawableHolder> kk = this.drawer.get(layer);
+        if (kk == null)
+        {
+            kk = new LinkedHashSet<>();
+            this.drawer.put(layer, kk);
+        }
+        kk.add(new DrawableHolder(clip, drawer));
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public void setClip(boolean clip)
+    {
         this.clip = clip;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    protected final void makeDrawBorderSupport() {
+    protected final void makeDrawBorderSupport()
+    {
         TextureRegion br1 = this.context.getResourceManager().getColorTextureRegion(Color.WHITE, 1, 1);
-        TextureRegion cr1 = this.context.getTextureRegion("ui2/corner-1.png");
-        this.drawerBackground.add((batch, pScreenCoords, re) -> {
-            batch.setColor(Color.CYAN);
-            batch.draw(br1, re.x + 2, re.y + 2, re.width - 4, 2);
-            batch.draw(br1, re.x + 2, re.y + re.height - 4, re.width - 4, 2);
-            batch.draw(br1, re.x + 2, re.y + 2, 2, re.height - 4);
-            batch.draw(br1, re.x + re.width - 4, re.y + 2, 2, re.height - 4);
-            batch.setColor(Color.CYAN);
-            batch.draw(cr1, re.x, re.y + re.height - 11, 11, 11);
-            batch.draw(cr1, re.x + re.width, re.y + re.height - 11, -11, 11);
-            batch.draw(cr1, re.x + re.width, re.y + 11, -11, -11);
-            batch.draw(cr1, re.x, re.y + 11, 11, -11);
-            batch.setColor(Color.WHITE);
+        TextureRegion cr1 = this.context.getTextureRegion("ui/corner-1.png");
+        this.addDrawer(WidetLayer.BACKGROUND, false, new InternalWidgetDrawerBatch()
+        {
+            @Override
+            protected void _drawIt(SwtDrawer_Batch<?> batch, Vector2 pScreenCoords, Rectangle re)
+            {
+                batch.setColor(Color.CYAN);
+                batch.draw(br1, re.x + 2, re.y + 2, re.width - 4, 2);
+                batch.draw(br1, re.x + 2, re.y + re.height - 4, re.width - 4, 2);
+                batch.draw(br1, re.x + 2, re.y + 2, 2, re.height - 4);
+                batch.draw(br1, re.x + re.width - 4, re.y + 2, 2, re.height - 4);
+                batch.setColor(Color.CYAN);
+                batch.draw(cr1, re.x, re.y + re.height - 11, 11, 11);
+                batch.draw(cr1, re.x + re.width, re.y + re.height - 11, -11, 11);
+                batch.draw(cr1, re.x + re.width, re.y + 11, -11, -11);
+                batch.draw(cr1, re.x, re.y + 11, 11, -11);
+                batch.setColor(Color.WHITE);
+            }
         });
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public final void addDrawerBackground(IInternalWidgetDrawer pDrawer) {
-        this.drawerBackground.add(pDrawer);
+    public final void addDrawerBackground(IInternalWidgetDrawer pDrawer)
+    {
+        this.addDrawer(WidetLayer.BACKGROUND, false, pDrawer);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public final void addDrawerForeground(IInternalWidgetDrawer pDrawer) {
-        this.drawerForeground.add(pDrawer);
+    public final void addDrawerClipableBackground(IInternalWidgetDrawer pDrawer)
+    {
+        this.addDrawer(WidetLayer.BACKGROUND, true, pDrawer);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public final void addDrawerClipableMiddle(IInternalWidgetDrawer pDrawer) {
-        this.drawerClipableMiddle.add(pDrawer);
+    public final void addDrawerClipableMiddle(IInternalWidgetDrawer pDrawer)
+    {
+        this.addDrawer(WidetLayer.MIDDLE, true, pDrawer);
     }
 
-    Vector2 v2 = new Vector2();
+    // -------------------------------------------------------------------------------------------------------------------------
+    public final void addDrawerForeground(IInternalWidgetDrawer pDrawer)
+    {
+        this.addDrawer(WidetLayer.FOREGROUND, false, pDrawer);
+    }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    protected final void _internalDrawWidget(Actor base, Batch batch, float parentAlpha, Trigger pOrg) {
+    public final void addDrawerClipableForeground(IInternalWidgetDrawer pDrawer)
+    {
+        this.addDrawer(WidetLayer.FOREGROUND, true, pDrawer);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    protected final void _internalDrawWidget(Actor base, Batch batch, float parentAlpha, Trigger pOrg)
+    {
         if (!this.isVisible()) return;
 
         this.v2.set(0, 0);
         this.v2 = base.localToScreenCoordinates(this.v2);
         Rectangle stagedims = this.context.getStageDimensions();
-        this.v2.x-= stagedims.x;
-        this.v2.y+= stagedims.y;
-        
+        this.v2.x -= stagedims.x;
+        this.v2.y += stagedims.y;
+
         this.drawingRect.set(base.getX(), base.getY(), base.getWidth(), base.getHeight());
-        for (IInternalWidgetDrawer a : this.drawerBackground) {
-            a.drawIt(batch, this.v2, this.drawingRect);
-            batch.setColor(Color.WHITE);
-        }
-        if (this.clip || TOldCompatibilityCode.TRUE) {
+
+        this.loopDrawer(WidetLayer.BACKGROUND, base, batch, this.v2, this.drawingRect);
+
+        if (!this.clip) // || TOldCompatibilityCode.TRUE)
+        {
             pOrg.onTrigger();
-        } else {
-            if (base.clipBegin()) {
-                try {
+        }
+        else
+        {
+            if (base.clipBegin())
+            {
+                try
+                {
                     pOrg.onTrigger();
-                } finally {
+                }
+                finally
+                {
+                    batch.flush();
                     base.clipEnd();
                 }
             }
-        }
-
-        if (!this.drawerClipableMiddle.isEmpty()) {
-            if (TOldCompatibilityCode.TRUE) {
-                for (IInternalWidgetDrawer a : this.drawerClipableMiddle) {
-                    if (a != null) {
-                        a.drawIt(batch, this.v2, this.drawingRect);
-                        batch.setColor(Color.WHITE);
-                    }
-                }
-            } else {
-                if (base.clipBegin()) {
-                    try {
-                        for (IInternalWidgetDrawer a : this.drawerClipableMiddle) {
-                            if (a != null) {
-                                a.drawIt(batch, this.v2, this.drawingRect);
-                                batch.setColor(Color.WHITE);
-                            }
-                        }
-                    } finally {
-                        base.clipEnd();
-                    }
-                }
+            else
+            {
+                System.err.println("cant clip");
             }
         }
 
-        for (IInternalWidgetDrawer a : this.drawerForeground) {
-            a.drawIt(batch, this.v2, this.drawingRect);
-            batch.setColor(Color.WHITE);
-        }
+        this.loopDrawer(WidetLayer.MIDDLE, base, batch, this.v2, this.drawingRect);
+        this.loopDrawer(WidetLayer.FOREGROUND, base, batch, v2, drawingRect);
 
-        if( TOldCompatibilityCode.FALSE)    
-        if (this.isFocusable() && this.context.getKeyboardFocus() == this.actor) {
+        if (TOldCompatibilityCode.FALSE) if (this.isFocusable() && this.context.getKeyboardFocus() == this.actor)
+        {
             batch.setColor(Color.RED);
             TextureRegion br1 = this.context.getResourceManager().getColorTextureRegion(Color.WHITE, 1, 1);
             batch.draw(br1, this.drawingRect.x, this.drawingRect.y - 2, this.drawingRect.width, 2);
@@ -151,6 +233,29 @@ public abstract class ASwtWidget_970_Rendering<ACTOR extends Actor> extends ASwt
             batch.draw(br1, this.drawingRect.x - 2, this.drawingRect.y, 2, this.drawingRect.height);
             batch.draw(br1, this.drawingRect.x + this.drawingRect.width, this.drawingRect.y, 2, this.drawingRect.height);
             batch.setColor(Color.WHITE);
+        }
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    protected void loopDrawer(WidetLayer background, Actor base, Batch batch, Vector2 v22, Rectangle drawingRect2)
+    {
+        ISwtDrawerManager<?> dm = this.getContext().getDrawerManager();
+        Matrix4 pm = batch.getProjectionMatrix();
+        Matrix4 tm = batch.getTransformMatrix();
+        
+        ShapeRenderer srx = dm.getShapeRenderer();
+        srx.setProjectionMatrix(pm);
+        srx.setTransformMatrix(tm);
+        
+        ISwtDrawerManager<?> useDm = dm.cloneDrawerWithOtherBatch(batch, srx);
+        Set<DrawableHolder> d1 = this.drawer.get(background);
+        if (d1 != null)
+        {
+            for (DrawableHolder a : d1)
+            {
+                a.drawIt(base, useDm, this.v2, this.drawingRect);
+                batch.setColor(Color.WHITE);
+            }
         }
     }
 

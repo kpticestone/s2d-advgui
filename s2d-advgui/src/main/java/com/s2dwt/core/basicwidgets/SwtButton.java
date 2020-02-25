@@ -15,13 +15,14 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputEvent.Type;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
-import com.s2dwt.core.SwtColor;
 import com.s2dwt.core.awidget.ASwtWidgetSelectable;
 import com.s2dwt.core.awidget.BorderDrawer2;
-import com.s2dwt.core.awidget.IInternalWidgetDrawer;
 import com.s2dwt.core.awidget.ISwtWidget;
+import com.s2dwt.core.awidget.InternalWidgetDrawerBatch;
+import com.s2dwt.core.rendering.SwtDrawer_Batch;
 
-public class SwtButton extends ASwtWidgetSelectable<Button> {
+public class SwtButton extends ASwtWidgetSelectable<Button>
+{
     // -------------------------------------------------------------------------------------------------------------------------
     String myText = null;
 
@@ -29,63 +30,85 @@ public class SwtButton extends ASwtWidgetSelectable<Button> {
     String myIcon = null;
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public SwtButton(ISwtWidget<? extends Group> pParent, String text) {
+    public SwtButton(ISwtWidget<? extends Group> pParent, String text)
+    {
         this(pParent);
         this.myText = text;
         this.addEnabledStateListener((b) -> this.actor.setDisabled(!b));
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public SwtButton(ISwtWidget<? extends Group> pParent) {
+    public SwtButton(ISwtWidget<? extends Group> pParent)
+    {
         super(pParent);
 
         BorderDrawer2 borderDrawer = new BorderDrawer2(this.context);
         BitmapFont a = this.context.getResourceManager().getFont(.5f, true);
         float lh = a.getLineHeight() - a.getAscent() + a.getDescent();
-        this.addDrawerForeground(new IInternalWidgetDrawer() {
+        this.addDrawerForeground(new InternalWidgetDrawerBatch()
+        {
             @Override
-            public void drawIt(Batch pBatch, Vector2 pScreenCoords, Rectangle pDims) {
+            protected void _drawIt(SwtDrawer_Batch<?> pBatch, Vector2 pScreenCoords, Rectangle pDims)
+            {
                 borderDrawer.setGenericColors(enabled, isFocused(), hovered);
-                borderDrawer.drawIt(pBatch, pDims);
+                borderDrawer.drawIt(pBatch.getBatch(), pDims);
                 a.setColor(Color.WHITE);
-                if (myIcon != null) {
+                if (myIcon != null)
+                {
                     TextureRegion check = SwtButton.this.context.getTextureRegion(myIcon);
-                    if (myText == null) {
+                    if (myText == null)
+                    {
                         pBatch.draw(check, pDims.x + (pDims.width - 16) / 2f, pDims.y + (pDims.height - 16) / 2f, 16, 16);
-                    } else {
+                    }
+                    else
+                    {
                         pBatch.draw(check, pDims.x + 4, pDims.y + 4, 16, 16);
                     }
                 }
-                if (myText != null) {
-                    if (myIcon == null) {
+                if (myText != null)
+                {
+                    if (myIcon == null)
+                    {
                         GlyphLayout gl = new GlyphLayout(a, myText);
-                        a.draw(pBatch, gl, pDims.x + (pDims.width - gl.width) / 2f, pDims.y + pDims.height - (pDims.height - gl.height) / 2f);
-                    } else {
-                        a.draw(pBatch, SwtButton.this.myText, pDims.x + 24, pDims.y + (pDims.height) - (pDims.height - lh) / 2f);
+                        a.draw(pBatch.getBatch(), gl, pDims.x + (pDims.width - gl.width) / 2f, pDims.y + pDims.height - (pDims.height - gl.height) / 2f);
+                    }
+                    else
+                    {
+                        a.draw(pBatch.getBatch(), SwtButton.this.myText, pDims.x + 24, pDims.y + (pDims.height) - (pDims.height - lh) / 2f);
                     }
                 }
             }
+
         });
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    protected Button _createActor() {
+    protected Button _createActor()
+    {
         ButtonStyle style = new ButtonStyle();
-        Button back = new Button(style) {
+        Button back = new Button(style)
+        {
             @Override
-            public void draw(Batch batch, float parentAlpha) {
-                _internalDrawWidget(this, batch, parentAlpha, () -> {
+            public void draw(Batch batch, float parentAlpha)
+            {
+                _internalDrawWidget(this, batch, parentAlpha, () ->
+                {
                     // super.draw(batch, parentAlpha);
                 });
             }
         };
-        back.addListener(new EventListener() {
+        back.addListener(new EventListener()
+        {
             @Override
-            public boolean handle(Event event) {
-                if (event instanceof InputEvent) {
-                    if (((InputEvent) event).getType() == Type.keyTyped) {
-                        if (((InputEvent) event).getKeyCode() == Keys.ENTER || ((InputEvent) event).getKeyCode() == Keys.SPACE) {
+            public boolean handle(Event event)
+            {
+                if (event instanceof InputEvent)
+                {
+                    if (((InputEvent)event).getType() == Type.keyTyped)
+                    {
+                        if (((InputEvent)event).getKeyCode() == Keys.ENTER || ((InputEvent)event).getKeyCode() == Keys.SPACE)
+                        {
                             callListeners(0);
                             return true;
                         }
@@ -98,17 +121,20 @@ public class SwtButton extends ASwtWidgetSelectable<Button> {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public void setText(String string) {
+    public void setText(String string)
+    {
         this.myText = string;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public String getText() {
+    public String getText()
+    {
         return this.myText;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public void setImage(String string) {
+    public void setImage(String string)
+    {
         this.myIcon = string;
     }
 

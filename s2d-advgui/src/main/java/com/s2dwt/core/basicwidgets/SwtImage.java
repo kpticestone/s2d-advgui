@@ -1,13 +1,13 @@
 package com.s2dwt.core.basicwidgets;
 
+import java.util.Objects;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Scaling;
 import com.s2dwt.core.awidget.ASwtWidget;
-
-import java.util.Objects;
 
 public class SwtImage extends ASwtWidget<Image> {
     // -------------------------------------------------------------------------------------------------------------------------

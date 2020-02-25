@@ -1,17 +1,17 @@
 package com.s2dwt.core.application;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+
 import com.s2dwt.core.rendering.ISwtDrawerManager;
 import com.s2dwt.core.resourcemanager.AResourceManager;
 import com.s2dwt.core.screens.SwtScreen;
 import com.s2dwt.core.screens.SwtScreenDescriptor;
 import com.s2dwt.core.stage.ASwtStage;
-import com.s2dwt.core.window.SwtWindow;
-
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 public abstract class ASwtApplication_150_ScreenStages<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>, STAGE extends ASwtStage<RM, DM>> extends ASwtApplication_000_Ground<RM, DM, STAGE> {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ public abstract class ASwtApplication_150_ScreenStages<RM extends AResourceManag
         super(pDrawerManager);
         this.zero = (STAGE) new ASwtStage<RM, DM>(new ISwtApplicationController<>() {
             @Override
-            public SwtScreen<RM, DM> activateScreen(String id) {
+            public SwtScreen<RM, DM> activateScreen(String id) throws Exception {
                 return ASwtApplication_150_ScreenStages.this.activateScreen(-1, id);
             }
 
@@ -61,7 +61,7 @@ public abstract class ASwtApplication_150_ScreenStages<RM extends AResourceManag
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public final SwtScreen<RM, DM> activateScreen(int stageNr, String id) {
+    public final SwtScreen<RM, DM> activateScreen(int stageNr, String id) throws Exception {
         STAGE someStage = stageNr == -1 ? this.zero : this.stages.get(stageNr);
         SwtScreenDescriptor<STAGE, ? extends SwtScreen<RM, DM>> screenDescriptor = this.registeredScreens.get(id);
         SwtScreen<RM, DM> theScreen = screenDescriptor.createScreen(someStage);
@@ -70,11 +70,11 @@ public abstract class ASwtApplication_150_ScreenStages<RM extends AResourceManag
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    protected final STAGE createStage() {
+    protected final STAGE createStage() throws Exception {
         int stageNr = this.stages.size();
         STAGE someStage = this._createStage(new ISwtApplicationController<>() {
             @Override
-            public SwtScreen<RM, DM> activateScreen(String id) {
+            public SwtScreen<RM, DM> activateScreen(String id) throws Exception {
                 return ASwtApplication_150_ScreenStages.this.activateScreen(stageNr, id);
             }
 
