@@ -5,6 +5,9 @@ package com.leo.commons.utils;
  */
 public class LeoTodoException extends RuntimeException {
     // -------------------------------------------------------------------------------------------------------------------------
+    private static final long serialVersionUID = 1L;
+
+    // -------------------------------------------------------------------------------------------------------------------------
     public LeoTodoException() {
         super();
     }
@@ -23,4 +26,6 @@ public class LeoTodoException extends RuntimeException {
     public LeoTodoException(Throwable cause) {
         super(cause);
     }
+
+    // -------------------------------------------------------------------------------------------------------------------------
 }

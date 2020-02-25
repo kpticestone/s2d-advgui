@@ -34,6 +34,7 @@ public class UUID implements Serializable, UUIDSupport {
         return random(null);
     }
 
+    // -------------------------------------------------------------------------------------------------------------------------
     public static UUID random(String prefix) {
         return new UUID((prefix != null ? prefix + "-" : "") + java.util.UUID.randomUUID().toString());
     }
@@ -64,11 +65,13 @@ public class UUID implements Serializable, UUIDSupport {
         return this.uid.length();
     }
 
+    // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public UUID getUID() {
         return this;
     }
 
+    // -------------------------------------------------------------------------------------------------------------------------
     public static UUID get(UUIDSupport uuidSupport) {
         if (uuidSupport == null) {
             return null;
@@ -76,11 +79,13 @@ public class UUID implements Serializable, UUIDSupport {
         return uuidSupport.getUID();
     }
 
+    // -------------------------------------------------------------------------------------------------------------------------
     public static UUID get(String uuidStr) {
         if (uuidStr == null || uuidStr.isEmpty()) {
             return null;
         }
         return new UUID(uuidStr);
     }
+
     // -------------------------------------------------------------------------------------------------------------------------
 }

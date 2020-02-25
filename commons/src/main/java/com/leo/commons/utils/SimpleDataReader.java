@@ -60,7 +60,10 @@ public class SimpleDataReader extends InputStream implements Closeable {
 
     // -------------------------------------------------------------------------------------------------------------------------
     public long readLong() {
-        return (((long) this.arr[this.offset++] << 56) + ((long) (this.arr[this.offset++] & 255) << 48) + ((long) (this.arr[this.offset++] & 255) << 40) + ((long) (this.arr[this.offset++] & 255) << 32) + ((long) (this.arr[this.offset++] & 255) << 24) + ((this.arr[this.offset++] & 255) << 16) + ((this.arr[this.offset++] & 255) << 8) + ((this.arr[this.offset++] & 255)));
+        return (((long) this.arr[this.offset++] << 56) + ((long) (this.arr[this.offset++] & 255) << 48)
+                + ((long) (this.arr[this.offset++] & 255) << 40) + ((long) (this.arr[this.offset++] & 255) << 32)
+                + ((long) (this.arr[this.offset++] & 255) << 24) + ((this.arr[this.offset++] & 255) << 16)
+                + ((this.arr[this.offset++] & 255) << 8) + ((this.arr[this.offset++] & 255)));
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

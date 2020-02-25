@@ -13,6 +13,7 @@ public class SphThread {
         }
     }
 
+    // -------------------------------------------------------------------------------------------------------------------------
     public static void endlessLoop() {
         while (Thread.currentThread().isAlive()) {
             sleep(1000);

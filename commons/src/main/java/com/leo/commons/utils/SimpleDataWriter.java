@@ -6,8 +6,10 @@ import java.io.OutputStream;
 public final class SimpleDataWriter extends OutputStream implements Closeable {
     // -------------------------------------------------------------------------------------------------------------------------
     private final byte[] arr;
+
     // -------------------------------------------------------------------------------------------------------------------------
     private final Trigger closable;
+    
     // -------------------------------------------------------------------------------------------------------------------------
     private int offset = 0;
 
@@ -31,7 +33,6 @@ public final class SimpleDataWriter extends OutputStream implements Closeable {
         }
         this.offset += max;
     }
-
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
@@ -81,5 +82,6 @@ public final class SimpleDataWriter extends OutputStream implements Closeable {
     public void write(int b) {
         this.arr[this.offset++] = (byte) (b);
     }
+    
     // -------------------------------------------------------------------------------------------------------------------------
 }

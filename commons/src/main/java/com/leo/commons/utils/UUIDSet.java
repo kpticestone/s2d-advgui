@@ -94,8 +94,7 @@ public final class UUIDSet implements Iterable<UUID> {
 
     // -------------------------------------------------------------------------------------------------------------------------
     public void forEach(UUIDConsumer pCallback) {
-        this.internal.forEach(someUid ->
-        {
+        this.internal.forEach(someUid -> {
             if (someUid != null) {
                 pCallback.accept(someUid);
             }
@@ -120,6 +119,7 @@ public final class UUIDSet implements Iterable<UUID> {
         return null;
     }
 
+    // -------------------------------------------------------------------------------------------------------------------------
     public static UUIDSet parse(Collection<String> strings) {
         UUIDSet uuidSet = new UUIDSet();
         for (String string : strings) {

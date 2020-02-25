@@ -6,9 +6,11 @@ import java.math.RoundingMode;
 public class TMath {
     // -------------------------------------------------------------------------------------------------------------------------
     @SuppressWarnings("nls")
-    final static String[] forms = new String[]{"Byte", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"};
+    final static String[] forms = new String[] { "Byte", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB" };
+
     // -------------------------------------------------------------------------------------------------------------------------
-    final static char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+    final static char[] hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+    
     // -------------------------------------------------------------------------------------------------------------------------
     final static int radix = 1 << 4;
 
@@ -44,7 +46,8 @@ public class TMath {
     public final static String makeReadableByteValueRange(long byteValue1, long byteValue2, String del) {
         Object[] res1 = _makeReadableByteValue(byteValue1);
         Object[] res2 = _makeReadableByteValue(byteValue2);
-        // if( res == null ) return "byteValue to big to makeReadable: '" + byteValue + "'";
+        // if( res == null ) return "byteValue to big to makeReadable: '" + byteValue +
+        // "'";
         // return round((Double)res[0], 2) + " " + res[1];
         String back = "";
         back += round(((Double) res1[0]).doubleValue(), 2);
@@ -69,8 +72,7 @@ public class TMath {
         do {
             buf[--charPos] = hexDigits[i & mask];
             i >>>= 4;
-        }
-        while (i != 0);
+        } while (i != 0);
         while (charPos-- > 0) {
             buf[charPos] = '0';
         }
