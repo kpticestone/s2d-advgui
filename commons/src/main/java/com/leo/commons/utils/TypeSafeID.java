@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public abstract class TypeSafeID {
     // -------------------------------------------------------------------------------------------------------------------------
-    private final String internalId;
+    protected final String internalId;
 
     // -------------------------------------------------------------------------------------------------------------------------
     protected TypeSafeID(String id) {
