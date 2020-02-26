@@ -8,10 +8,10 @@
     <version>1.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>../parent</module>
-        <module>../commons</module>
-        <module>../singstar</module>
-        <module>../s2d-advgui</module>
-        <module>../s2d-advgui-demo</module>
+        <module>parent</module>
+        <module>commons</module>
+        <module>singstar</module>
+        <module>s2d-advgui</module>
+        <module>s2d-advgui-demo</module>
     </modules>
 </project>
