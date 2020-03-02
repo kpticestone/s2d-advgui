@@ -8,10 +8,12 @@ import javax.annotation.Nullable;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
+
 import de.s2d_advgui.core.layoutmanager.ASwtLayoutManager;
 import de.s2d_advgui.core.stage.ISwtStage;
+import de.s2d_advgui.core.utils.IRectangleSupport;
 
-public interface ISwtWidget<PT extends Actor> {
+public interface ISwtWidget<PT extends Actor> extends IRectangleSupport {
     // -------------------------------------------------------------------------------------------------------------------------
     PT getActor();
 
@@ -64,6 +66,7 @@ public interface ISwtWidget<PT extends Actor> {
 
     // -------------------------------------------------------------------------------------------------------------------------
     void setBounds(float pX, float pY, float pWidth, float pHeight);
+
     void setPosition(float pX, float pY);
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -91,12 +94,17 @@ public interface ISwtWidget<PT extends Actor> {
     // -------------------------------------------------------------------------------------------------------------------------
     boolean isHovered();
 
+    // -------------------------------------------------------------------------------------------------------------------------
     default void onChildAdded(ISwtWidget<?> a) {
         ISwtWidget<? extends Group> parent = getParent();
         if (parent != null) {
             parent.onChildAdded(a);
         }
     }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Nullable
+    ASwtLayoutData getSwtLayoutData();
 
     // -------------------------------------------------------------------------------------------------------------------------
 }

@@ -1,9 +1,11 @@
 package de.s2d_advgui.core.awidget;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
+
 import de.s2d_advgui.core.layoutmanager.ASwtLayoutManager;
 import de.s2d_advgui.core.stage.ISwtStage;
 
@@ -11,6 +13,10 @@ public abstract class ASwtWidget_900_LayoutManager<ACTOR extends Actor> extends 
     // -------------------------------------------------------------------------------------------------------------------------
     @Nullable
     protected ASwtLayoutManager layoutmanager = null;
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Nullable
+    private ASwtLayoutData swtLayoutData;
 
     // -------------------------------------------------------------------------------------------------------------------------
     public ASwtWidget_900_LayoutManager(ISwtStage<?, ?> pContext) {
@@ -31,6 +37,18 @@ public abstract class ASwtWidget_900_LayoutManager<ACTOR extends Actor> extends 
         } else {
             this.layoutmanager = pManager;
         }
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public final void setLayoutData(@Nonnull ASwtLayoutData pSwtLayoutData) {
+        this.swtLayoutData = pSwtLayoutData;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Nullable
+    @Override
+    public final ASwtLayoutData getSwtLayoutData() {
+        return this.swtLayoutData;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

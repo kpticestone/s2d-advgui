@@ -5,9 +5,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 
 import de.s2d_advgui.core.stage.ISwtStage;
-import de.s2d_advgui.core.utils.IRectangleSupport;
 
-public abstract class ASwtWidget_200_Coordinates<ACTOR extends Actor> extends ASwtWidget_050_Disposing<ACTOR> implements IRectangleSupport {
+public abstract class ASwtWidget_200_Coordinates<ACTOR extends Actor> extends ASwtWidget_050_Disposing<ACTOR> {
     // -------------------------------------------------------------------------------------------------------------------------
     // protected float x = 0, y = 0, w = 0, h = 0;
     protected final Rectangle bounds = new Rectangle();
@@ -42,6 +41,7 @@ public abstract class ASwtWidget_200_Coordinates<ACTOR extends Actor> extends AS
     }
     
     // -------------------------------------------------------------------------------------------------------------------------
+    @Override
     public final Rectangle getBounds() {
         return new Rectangle(this.bounds); // das originale "bounds" verlässt nicht diese Klasse!
     }
