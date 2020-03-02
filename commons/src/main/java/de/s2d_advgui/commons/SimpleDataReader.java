@@ -1,9 +1,8 @@
 package de.s2d_advgui.commons;
 
-import java.io.Closeable;
 import java.io.InputStream;
 
-public class SimpleDataReader extends InputStream implements Closeable {
+public class SimpleDataReader extends InputStream {
     // -------------------------------------------------------------------------------------------------------------------------
     int offset = 0;
     // -------------------------------------------------------------------------------------------------------------------------

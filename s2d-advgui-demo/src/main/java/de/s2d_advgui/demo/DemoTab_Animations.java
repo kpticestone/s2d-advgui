@@ -2,11 +2,12 @@ package de.s2d_advgui.demo;
 
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Rectangle;
+
 import de.s2d_advgui.animations.AAnimation;
 import de.s2d_advgui.animations.AnimationManager;
-import de.s2d_advgui.animations.Animation_ChangeBounds;
-import de.s2d_advgui.animations.IAnimationListener_ChangeBounds;
 import de.s2d_advgui.core.basicwidgets.SwtButton;
+import de.s2d_advgui.core.geom.animations.Animation_ChangeBounds;
+import de.s2d_advgui.core.geom.animations.IAnimationListener_ChangeBounds;
 import de.s2d_advgui.core.tabfolder.SwtTab;
 import de.s2d_advgui.core.tabfolder.SwtTabFolder;
 

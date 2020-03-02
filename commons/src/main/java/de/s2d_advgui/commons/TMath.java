@@ -25,7 +25,7 @@ public class TMath {
         for (String form : forms) {
             if (currentByteValue < 1024) {
                 Object[] back = new Object[2];
-                back[0] = currentByteValue;
+                back[0] = Double.valueOf(currentByteValue);
                 back[1] = form;
                 return back;
             }

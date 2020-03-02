@@ -12,6 +12,9 @@ public abstract class ASwtWidget_950_Calculating<ACTOR extends Actor> extends AS
 {
     // -------------------------------------------------------------------------------------------------------------------------
     private boolean negativePositions = true;
+    
+    // -------------------------------------------------------------------------------------------------------------------------
+    private boolean hasAlreadyFirstCalculationDone = false;
 
     // -------------------------------------------------------------------------------------------------------------------------
     public ASwtWidget_950_Calculating(ISwtStage<?, ?> pContext)
@@ -30,14 +33,15 @@ public abstract class ASwtWidget_950_Calculating<ACTOR extends Actor> extends AS
     public final boolean calcPositions()
     {
         float wi, hh, newX, newY, newW, newH;
+        Rectangle bnds = this.getBounds();
         if (this.parent == null)
         {
             wi = this.context.getWidth();
             hh = this.context.getHeight();
             newX = 0;
             newY = 0;
-            newW = this.w > 0 ? this.w : wi + this.w;
-            newH = this.h > 0 ? this.h : hh + this.h;
+            newW = bnds.width > 0 ? bnds.width : wi + bnds.width;
+            newH = bnds.height > 0 ? bnds.height : hh + bnds.height;
             if (TOldCompatibilityCode.TRUE)
             {
                 newW = newW / this.context.getGuiScale();
@@ -51,16 +55,16 @@ public abstract class ASwtWidget_950_Calculating<ACTOR extends Actor> extends AS
             {
                 wi = this.parent.getActor().getWidth();
                 hh = this.parent.getActor().getHeight();
-                newW = this.w > 0 ? this.w : wi + this.w;
-                newH = this.h > 0 ? this.h : hh + this.h;
-                newX = !negativePositions || this.x >= 0 ? this.x : wi + this.x;
-                if (!negativePositions || this.y >= 0)
+                newW = bnds.width > 0 ? bnds.width : wi + bnds.width;
+                newH = bnds.height > 0 ? bnds.height : hh + bnds.height;
+                newX = !negativePositions || bnds.x >= 0 ? bnds.x : wi + bnds.x;
+                if (!negativePositions || bnds.y >= 0)
                 {
-                    newY = hh - newH - this.y;
+                    newY = hh - newH - bnds.y;
                 }
                 else
                 {
-                    newY = -this.y - newH;
+                    newY = -bnds.y - newH;
                 }
                 this.actor.setBounds(newX, newY, newW, newH);
             }
@@ -71,7 +75,16 @@ public abstract class ASwtWidget_950_Calculating<ACTOR extends Actor> extends AS
             }
         }
         this.calcPositionsOfChildren();
+        if( !hasAlreadyFirstCalculationDone )
+        {
+            hasAlreadyFirstCalculationDone = true;
+            onFirstCalculationDone();
+        }
         return true;
+    }
+    
+    // -------------------------------------------------------------------------------------------------------------------------
+    public void onFirstCalculationDone() {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

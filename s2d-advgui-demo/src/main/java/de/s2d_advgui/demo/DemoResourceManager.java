@@ -6,6 +6,7 @@ import java.util.Set;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.kotcrab.vis.ui.VisUI;
+
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
 import de.s2d_advgui.core.resourcemanager.ResourceLoader;
 
@@ -20,21 +21,6 @@ public class DemoResourceManager extends AResourceManager {
     public DemoResourceManager() {
         // DON
     }
-
-//  // -------------------------------------------------------------------------------------------------------------------------
-//  @Override
-//  public BitmapFont getFont(float scale, boolean useInt) {
-//      return TNull.checkNull(this.scaledFonts.computeIfAbsent(scale, s -> {
-//          FreeTypeFontGenerator generator = new FreeTypeFontGenerator(load("ui/font/Minecraftia.ttf"));
-//          FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-//          parameter.size = 16;
-//          BitmapFont back = generator.generateFont(parameter);
-//          back.getData().setScale(scale * 0.01f);
-//          back.setUseIntegerPositions(useInt);
-//          back.setColor(Color.WHITE);
-//          return back;
-//      }));
-//  }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override

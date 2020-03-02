@@ -59,7 +59,7 @@ public class SwtSelectBox<T> extends SwtPanel {
                 });
                 hhe += 36;
             }
-            pan.setBounds(this.x, this.y + this.h, 200, Math.min(150, hhe));
+            pan.setBounds(this.getX(), this.getY() + this.getHeight(), 200, Math.min(150, hhe));
 //          content.setBounds(0, -hhe, 100, hhe);
             this.context.registerHook(() -> {
                 this.panna.dispose();

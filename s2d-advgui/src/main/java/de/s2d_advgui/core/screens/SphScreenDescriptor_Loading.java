@@ -13,7 +13,7 @@ public final class SphScreenDescriptor_Loading<RM extends AResourceManager, DM e
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Nonnull
-    private final static SphScreenDescriptor_Loading INSTANCE = new SphScreenDescriptor_Loading();
+    private final static SphScreenDescriptor_Loading INSTANCE = new SphScreenDescriptor_Loading<>();
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Nonnull

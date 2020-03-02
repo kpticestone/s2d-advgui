@@ -7,13 +7,16 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import de.s2d_advgui.animations.AnimationManager;
+import de.s2d_advgui.core.awidget.IMyWidgetUpdateHandler;
 import de.s2d_advgui.core.rendering.ISwtDrawerManager;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
 import de.s2d_advgui.core.screens.SwtScreen;
 import de.s2d_advgui.core.screens.SwtScreenDescriptor;
 import de.s2d_advgui.core.stage.ASwtStage;
 
-public abstract class ASwtApplication_150_ScreenStages<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>, STAGE extends ASwtStage<RM, DM>> extends ASwtApplication_000_Ground<RM, DM, STAGE> {
+public abstract class ASwtApplication_150_ScreenStages<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>, STAGE extends ASwtStage<RM, DM>>
+        extends ASwtApplication_000_Ground<RM, DM, STAGE> {
     // -------------------------------------------------------------------------------------------------------------------------
     protected final Map<String, SwtScreenDescriptor<STAGE, ? extends SwtScreen<RM, DM>>> registeredScreens = new LinkedHashMap<>();
 
@@ -29,7 +32,13 @@ public abstract class ASwtApplication_150_ScreenStages<RM extends AResourceManag
     @SuppressWarnings("unchecked")
     public ASwtApplication_150_ScreenStages(DM pDrawerManager) {
         super(pDrawerManager);
+        AnimationManager.initWithoutThread();
         this.zero = (STAGE) new ASwtStage<RM, DM>(new ISwtApplicationController<>() {
+            @Override
+            public void registerLoadReady() {
+                ASwtApplication_150_ScreenStages.this.registerLoadReady();
+            }
+
             @Override
             public SwtScreen<RM, DM> activateScreen(String id) throws Exception {
                 return ASwtApplication_150_ScreenStages.this.activateScreen(-1, id);
@@ -50,6 +59,7 @@ public abstract class ASwtApplication_150_ScreenStages<RM extends AResourceManag
                 // DON
             }
         };
+        this.enableStageAnims(this.zero);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -79,6 +89,11 @@ public abstract class ASwtApplication_150_ScreenStages<RM extends AResourceManag
             }
 
             @Override
+            public void registerLoadReady() {
+                ASwtApplication_150_ScreenStages.this.registerLoadReady();
+            }
+
+            @Override
             public DM getDrawerManager() {
                 return ASwtApplication_150_ScreenStages.this.drawerManager;
             }
@@ -88,6 +103,7 @@ public abstract class ASwtApplication_150_ScreenStages<RM extends AResourceManag
 //              return actWin(id);
 //          }
         });
+        enableStageAnims(someStage);
         this.stages.add(someStage);
         this.updateSplitScreenArrangements(this.stages.size());
         someStage.onInit();
@@ -96,6 +112,22 @@ public abstract class ASwtApplication_150_ScreenStages<RM extends AResourceManag
             this.updateSplitScreenArrangements(this.stages.size());
         });
         return someStage;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    private void enableStageAnims(STAGE someStage) {
+        someStage.addUpdateHandler(new IMyWidgetUpdateHandler() {
+            @Override
+            public void act(float delta) {
+                try {
+//              long t1 = System.currentTimeMillis();
+                    AnimationManager.getInstance().doUpdate();
+//              System.err.println("anim cost: " + (System.currentTimeMillis()-t1) + "msec");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
 //  // -------------------------------------------------------------------------------------------------------------------------

@@ -1,6 +1,8 @@
-package de.s2d_advgui.animations;
+package de.s2d_advgui.core.geom.animations;
 
 import com.badlogic.gdx.math.Rectangle;
+
+import de.s2d_advgui.animations.AAnimation;
 
 public class Animation_ChangeBounds extends AAnimation {
 	private final Rectangle src;

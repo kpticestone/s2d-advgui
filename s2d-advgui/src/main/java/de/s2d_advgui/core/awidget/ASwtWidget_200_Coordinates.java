@@ -1,12 +1,16 @@
 package de.s2d_advgui.core.awidget;
 
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import de.s2d_advgui.core.stage.ISwtStage;
 
-public abstract class ASwtWidget_200_Coordinates<ACTOR extends Actor> extends ASwtWidget_050_Disposing<ACTOR> {
+import de.s2d_advgui.core.stage.ISwtStage;
+import de.s2d_advgui.core.utils.IRectangleSupport;
+
+public abstract class ASwtWidget_200_Coordinates<ACTOR extends Actor> extends ASwtWidget_050_Disposing<ACTOR> implements IRectangleSupport {
     // -------------------------------------------------------------------------------------------------------------------------
-    protected float x = 0, y = 0, w = 0, h = 0;
+    // protected float x = 0, y = 0, w = 0, h = 0;
+    protected final Rectangle bounds = new Rectangle();
 
     // -------------------------------------------------------------------------------------------------------------------------
     public ASwtWidget_200_Coordinates(ISwtStage<?, ?> pContext) {
@@ -21,23 +25,34 @@ public abstract class ASwtWidget_200_Coordinates<ACTOR extends Actor> extends AS
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final void setBounds(float x, float y, float w, float h) {
-        boolean changed = this.x != x || this.y != y || this.w != w || this.h != h;
+        boolean changed = this.bounds.x != x || this.bounds.y != y || this.bounds.width != w || this.bounds.height != h;
         if (changed) {
-            this.x = x;
-            this.y = y;
-            this.w = w;
-            this.h = h;
+            this.bounds.x = x;
+            this.bounds.y = y;
+            this.bounds.width = w;
+            this.bounds.height = h;
         }
         this.calcPositions();
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
+    public final void setBounds(Rectangle src) {
+        this.setBounds(src.x, src.y, src.width, src.height);
+    }
+    
+    // -------------------------------------------------------------------------------------------------------------------------
+    public final Rectangle getBounds() {
+        return new Rectangle(this.bounds); // das originale "bounds" verlässt nicht diese Klasse!
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
     public final void setPosition(float x, float y) {
-        boolean changed = this.x != x || this.y != y;
+        boolean changed = this.bounds.x != x || this.bounds.y != y;
         if (changed) {
-            this.x = x;
-            this.y = y;
+            this.bounds.x = x;
+            this.bounds.y = y;
         }
         this.calcPositions();
     }
@@ -51,25 +66,45 @@ public abstract class ASwtWidget_200_Coordinates<ACTOR extends Actor> extends AS
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final float getWidth() {
-        return this.w;
+        return this.bounds.width;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final float getHeight() {
-        return this.h;
+        return this.bounds.height;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final float getX() {
-        return this.x;
+        return this.bounds.x;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final float getY() {
-        return this.y;
+        return this.bounds.y;
+    }
+    
+    // -------------------------------------------------------------------------------------------------------------------------
+    public final void setX(float x) {
+        this.bounds.x = x;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public final void setY(float y) {
+        this.bounds.y = y;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public final void setWidth(float width) {
+        this.bounds.width = width;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public final void setHeight(float height) {
+        this.bounds.height = height;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

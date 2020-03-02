@@ -1,15 +1,16 @@
-package de.s2d_advgui.demo;
+package de.s2d_advgui.demo.cases.canvas;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Rectangle;
-import de.s2d_advgui.commons.TOldCompatibilityCode;
+
 import de.s2d_advgui.animations.AnimationManager;
-import de.s2d_advgui.animations.Animation_ChangeBounds;
-import de.s2d_advgui.animations.IAnimationListener_ChangeBounds;
+import de.s2d_advgui.commons.TOldCompatibilityCode;
 import de.s2d_advgui.core.awidget.IMyWidgetUpdateHandler;
 import de.s2d_advgui.core.canvas.ICanvasRenderer;
+import de.s2d_advgui.core.geom.animations.Animation_ChangeBounds;
+import de.s2d_advgui.core.geom.animations.IAnimationListener_ChangeBounds;
 import de.s2d_advgui.core.rendering.SwtDrawerManager;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
 import de.s2d_advgui.core.rendering.SwtDrawer_Shapes;

@@ -1,9 +1,8 @@
 package de.s2d_advgui.commons;
 
-import java.io.Closeable;
 import java.io.OutputStream;
 
-public final class SimpleDataWriter extends OutputStream implements Closeable {
+public final class SimpleDataWriter extends OutputStream {
     // -------------------------------------------------------------------------------------------------------------------------
     private final byte[] arr;
 

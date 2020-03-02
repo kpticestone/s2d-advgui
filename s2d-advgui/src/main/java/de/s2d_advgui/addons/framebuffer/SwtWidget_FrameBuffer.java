@@ -36,7 +36,7 @@ public class SwtWidget_FrameBuffer extends ASwtWidget<WidgetGroup>
                 }
             }
         });
-        this.h = 200;
+        this.setHeight(200);
         this.makeDrawBorderSupport();
     }
 

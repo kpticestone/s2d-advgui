@@ -16,19 +16,19 @@ public abstract class TypeSafeID {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        return Objects.equals(internalId, ((TypeSafeID) o).internalId);
+        return Objects.equals(this.internalId, ((TypeSafeID) o).internalId);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
-        return internalId;
+        return this.internalId;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public int hashCode() {
-        return Objects.hash(internalId);
+        return Objects.hash(this.internalId);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

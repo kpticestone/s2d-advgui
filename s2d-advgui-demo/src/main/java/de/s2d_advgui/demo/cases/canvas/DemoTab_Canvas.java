@@ -1,9 +1,10 @@
-package de.s2d_advgui.demo;
+package de.s2d_advgui.demo.cases.canvas;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
+
 import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
 import de.s2d_advgui.core.canvas.SwtCanvas;
 import de.s2d_advgui.core.layoutmanager.SwtLayoutManager_Flow;
@@ -13,6 +14,7 @@ import de.s2d_advgui.core.resourcemanager.AResourceManager;
 import de.s2d_advgui.core.stage.ASwtStage;
 import de.s2d_advgui.core.tabfolder.SwtTab;
 import de.s2d_advgui.core.tabfolder.SwtTabFolder;
+import de.s2d_advgui.demo.DemoStage;
 
 public class DemoTab_Canvas extends SwtTab
 {

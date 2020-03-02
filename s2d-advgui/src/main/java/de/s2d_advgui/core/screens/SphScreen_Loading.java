@@ -1,61 +1,72 @@
 package de.s2d_advgui.core.screens;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Scaling;
-import de.s2d_advgui.core.basicwidgets.SwtImage;
+
+import de.s2d_advgui.animations.AnimationGroup_Sequence;
+import de.s2d_advgui.animations.AnimationManager;
+import de.s2d_advgui.animations.impl.Animation_Sleep;
 import de.s2d_advgui.core.basicwidgets.SwtLabel;
-import de.s2d_advgui.core.basicwidgets.SwtProgressBar;
+import de.s2d_advgui.core.geom.animations.AnimationListener_RectangleSupport;
+import de.s2d_advgui.core.geom.animations.Animation_ChangeBounds;
 import de.s2d_advgui.core.rendering.ISwtDrawerManager;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
 import de.s2d_advgui.core.resourcemanager.ResourceLoader;
 import de.s2d_advgui.core.stage.ASwtStage;
 
-public class SphScreen_Loading<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>> extends SwtScreen<RM, DM> {
+public class SphScreen_Loading<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>>
+        extends SwtScreen<RM, DM> {
+    // -------------------------------------------------------------------------------------------------------------------------
+    private SwtLabel label;
+
     // -------------------------------------------------------------------------------------------------------------------------
     public SphScreen_Loading(@Nonnull ASwtStage<RM, DM> pStage) {
         super(pStage);
+//        SwtImage logo = new SwtImage(this);
+//        logo.setImage("splashscreens/s2d-advgui.jpg");
+//        logo.setBounds(0, 0, 0, 0);
+//        logo.setScalingMode(Scaling.fill);
 
-        SwtImage starfield = new SwtImage(this);
-        starfield.setImage("ui/starfield.png");
-        starfield.setScalingMode(Scaling.fill);
-        starfield.setBounds(0, 0, 0, 0);
+        this.label = new SwtLabel(this);
+        this.label.setText("s2d-advgui loading resources...");
+        this.label.setAlign(Align.center);
+        this.label.setBounds(0, -150, 0, 150);
+    }
 
-        SwtImage logo = new SwtImage(this);
-        logo.setImage("icons/128/yinyang.png");
-        logo.setBounds(0, 0, 0, 0);
-        logo.setScalingMode(Scaling.fit);
-        logo.setAlign(Align.top);
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public void onFirstCalculationDone() {
+        int boxWi = 300;
+        int boxHe = 100;
+        float wiwi = this.actor.getWidth();
+        float hehe = this.actor.getHeight();
+        float heha = (hehe - boxHe) / 2f;
+        AnimationGroup_Sequence animGroup = new AnimationGroup_Sequence();
+        Set<ResourceLoader> myLoaders = this.drawerManager.getResourceManager().getLoaders();
+        for (ResourceLoader ll : myLoaders) {
+            Rectangle src = new Rectangle(-boxWi, heha, boxWi, boxHe);
+            Rectangle half = new Rectangle((wiwi - boxWi) / 2f, heha, boxWi, boxHe);
+            Rectangle dst = new Rectangle(wiwi, heha, boxWi, boxHe);
 
-        SwtLabel loadingLabel = new SwtLabel(this);
-        loadingLabel.setBounds(0, -50, 0, 50);
-        loadingLabel.setAlign(Align.center);
-        loadingLabel.setFontColor(Color.WHITE);
+            SwtLoadingBox someBox = new SwtLoadingBox(this, ll);
+            someBox.setLayoutNegativePositions(false);
+            someBox.setBounds(src);
 
-        SwtProgressBar loadingBar = new SwtProgressBar(this);
-        loadingBar.setBounds(100, -100, -200, 50);
+            AnimationListener_RectangleSupport r1 = new AnimationListener_RectangleSupport(someBox);
+            animGroup.add(new Animation_ChangeBounds(0f, 100f, src, half, r1));
+            animGroup.add(new Animation_Sleep(0f, 500f, () -> ll.doLoad()));
+            animGroup.add(new Animation_ChangeBounds(0f, 100f, half, dst, r1));
+        }
 
-        List<ResourceLoader> loaderIterator = new ArrayList<>(this.drawerManager.getResourceManager().getLoaders());
-
-        loadingBar.setMax(loaderIterator.size());
-        int[] current = { 0 };
-
-        this.addUpdateHandler(delta -> {
-            if (current[0] < loaderIterator.size()) {
-                loadingBar.setValue(current[0] + 1);
-                ResourceLoader loader = loaderIterator.get(current[0]);
-                loadingLabel.setText(loader.getTitle());
-                loader.doLoad();
-                ++current[0];
-            } else {
-                applicationController.activateScreen(SphScreenDescriptor_InputSelect.ID);
-            }
+        animGroup.setCloseListener(() -> {
+            this.label.setText("loadings ready... press any key or button");
+            this.applicationController.registerLoadReady();
         });
+        AnimationManager.getInstance().startAnimation(animGroup);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

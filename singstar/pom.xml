@@ -6,7 +6,7 @@
     <parent>
         <groupId>de.s2d-advgui</groupId>
         <artifactId>parent</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.2-SNAPSHOT</version>
         <relativePath>../parent</relativePath>
     </parent>
     <artifactId>singstar</artifactId>
@@ -19,7 +19,7 @@
         <dependency>
             <groupId>de.s2d-advgui</groupId>
             <artifactId>commons</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>1.0.2-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

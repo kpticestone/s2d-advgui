@@ -2,6 +2,7 @@ package de.s2d_advgui.demo;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+
 import de.s2d_advgui.core.application.SwtApplicationListener;
 import de.s2d_advgui.core.rendering.ISwtDrawerManager;
 import de.s2d_advgui.core.rendering.SwtDrawerManager;

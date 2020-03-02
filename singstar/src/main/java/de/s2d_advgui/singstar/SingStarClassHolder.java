@@ -29,13 +29,13 @@ public class SingStarClassHolder {
     ));
 
     public void put(Object instance) {
-        instances.add(instance);
+        this.instances.add(instance);
         Class<?> clazz = instance.getClass();
         boolean isPrimary = clazz.isAnnotationPresent(Primary.class);
 
         forEachSuperclass(clazz, superClass -> {
             if (!IGNORE_CLASSES.contains(superClass)) {
-                internal.computeIfAbsent(superClass, ClassEntry::new).add(instance, isPrimary);
+                this.internal.computeIfAbsent(superClass, ClassEntry::new).add(instance, isPrimary);
             }
         });
     }
@@ -72,11 +72,11 @@ public class SingStarClassHolder {
     }
 
     public boolean containsKey(Class toWire) {
-        return internal.containsKey(toWire);
+        return this.internal.containsKey(toWire);
     }
 
     private <T> ClassEntry<T> getInternal(Class<T> clazz) {
-        ClassEntry entry = internal.get(clazz);
+        ClassEntry entry = this.internal.get(clazz);
         if (entry == null) {
             throw new NoSuchElementException(String.format("no singleton for %s exists", clazz));
         }
@@ -85,7 +85,7 @@ public class SingStarClassHolder {
     }
 
     public void forEach(Consumer<Object> c) {
-        instances.forEach(c);
+        this.instances.forEach(c);
     }
 
     public static class ClassEntry<T> {
@@ -98,10 +98,10 @@ public class SingStarClassHolder {
         }
 
         private void add(T instance, boolean isPrimary) {
-            T previous = instances.add(instance);
+            T previous = this.instances.add(instance);
             if (previous != null) {
                 log.error("Duplicated Handlers for '{}': {} <-> {}",
-                        forClass.getSimpleName(),
+                        this.forClass.getSimpleName(),
                         instance.getClass().getSimpleName(),
                         previous.getClass().getSimpleName()
                 );
@@ -117,7 +117,7 @@ public class SingStarClassHolder {
         Map<Object, T> idMap = new HashMap<>();
 
         private T add(T instance) {
-            if (use.add(instance)) {
+            if (this.use.add(instance)) {
                 if (instance instanceof ISingStarDescriptor) {
                     return this.idMap.put(((ISingStarDescriptor) instance).getID(), instance);
                 }
@@ -128,17 +128,17 @@ public class SingStarClassHolder {
         @Nonnull
         @Override
         public Iterator<T> iterator() {
-            return use.iterator();
+            return this.use.iterator();
         }
 
         @Override
         public int size() {
-            return use.size();
+            return this.use.size();
         }
 
         @Override
         public Optional<T> get(Object id) {
-            return Optional.ofNullable(idMap.get(id));
+            return Optional.ofNullable(this.idMap.get(id));
         }
     }
 }

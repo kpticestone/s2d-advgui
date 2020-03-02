@@ -1,67 +1,113 @@
 package de.s2d_advgui.demo;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.badlogic.gdx.math.Rectangle;
+
+import de.s2d_advgui.animations.AnimationManager;
+import de.s2d_advgui.commons.IInfoSupport;
 import de.s2d_advgui.core.basicwidgets.SwtButton;
-import de.s2d_advgui.core.basicwidgets.SwtLabel;
 import de.s2d_advgui.core.basicwidgets.SwtPanel;
+import de.s2d_advgui.core.geom.animations.AnimationListener_RectangleSupport;
+import de.s2d_advgui.core.geom.animations.Animation_ChangeBounds;
 import de.s2d_advgui.core.rendering.ISwtDrawerManager;
 import de.s2d_advgui.core.screens.SwtScreen;
 import de.s2d_advgui.core.stage.ASwtStage;
-import de.s2d_advgui.core.tabfolder.SwtTabFolder;
+import de.s2d_advgui.singstar.IC_ClazzRegisterObjectContainer;
+import de.s2d_advgui.singstar.SingStar;
 
 public class DemoScreen extends SwtScreen<DemoResourceManager, ISwtDrawerManager<DemoResourceManager>> {
     // -------------------------------------------------------------------------------------------------------------------------
+    private final static IC_ClazzRegisterObjectContainer<ASwtWidgetTestCase> CONT = SingStar.getInstance()
+            .getObjectContainer(ASwtWidgetTestCase.class);
+
+    // -------------------------------------------------------------------------------------------------------------------------
     public DemoScreen(ASwtStage<DemoResourceManager, ISwtDrawerManager<DemoResourceManager>> pStage) {
         super(pStage);
-        SwtPanel panel1 = new SwtPanel(this, true);
-        panel1.setBounds(10, 10, -20, 35);
+    }
 
-        SwtLabel title = new SwtLabel(panel1, "Scene2D Widget Toolkit ÖÄÜ#+!§$");
-        title.setBounds(20, 5, -140, -10);
+    static class X1 {
+        ASwtWidgetTestCase someTestCase;
+        SwtButton button;
+        SwtPanel border;
+        Rectangle oo;
 
-        SwtLabel zoom = new SwtLabel(panel1);
-        zoom.setBounds(-75, 5, 50, 25);
-        zoom.setText("1");
-        {
-            SwtButton btn = new SwtButton(panel1);
-            btn.setText("-");
-            btn.setBounds(-100, 5, 25, 25);
-            btn.addListener(btnx -> {
-                float was = context.getGuiScale();
-                was -= .1f;
-                if (was <= 1f)
-                    was = 1f;
-                zoom.setText(String.valueOf(was));
-                context.setGuiScale(was);
-            });
+        public X1(ASwtWidgetTestCase someTestCase) {
+            this.someTestCase = someTestCase;
         }
-        {
-            SwtButton btn = new SwtButton(panel1);
-            btn.setText("+");
-            btn.setBounds(-25, 5, 25, 25);
-            btn.addListener(btnx -> {
-                float was = context.getGuiScale();
-                was += .1f;
-                if (was > 4f) {
-                    was = 4f;
-                }
-                zoom.setText(String.valueOf(was));
-                context.setGuiScale(was);
+    }
+
+    private Map<String, X1> x1s = new HashMap<>();
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public void onFirstCalculationDone() {
+        super.onFirstCalculationDone();
+
+        float wii = this.actor.getWidth();
+        float hee = this.actor.getHeight();
+
+        int aty = 0;
+        for (ASwtWidgetTestCase someTestCase : CONT.values()) {
+
+            IInfoSupport infoSupport = someTestCase.getInfo();
+
+            SwtButton btn = new SwtButton(this);
+            btn.setText(infoSupport.getLabel());
+            btn.setBounds(0, aty, 150, 30);
+
+            X1 x1 = new X1(someTestCase);
+
+            x1.oo = new Rectangle(150, aty, 30, 30);
+            x1.button = btn;
+
+            SwtPanel border = new SwtPanel(this, true);
+            border.setLayoutNegativePositions(false);
+            border.setBounds(x1.oo);
+
+            someTestCase.buildTests(border);
+
+            x1.border = border;
+
+            btn.addLeftClickListener(() -> {
+                activate(x1);
             });
+
+            this.x1s.put(someTestCase.getID(), x1);
+
+            aty += 35;
+        }
+    }
+
+//    SwtButton lastButton = null;
+//    SwtPanel lastPanel = null;
+
+    X1 lastX1 = null;
+
+    void activate(X1 x1) {
+        float wii = this.actor.getWidth();
+        float hee = this.actor.getHeight();
+
+        if (this.lastX1 != null) {
+            this.lastX1.button.setEnabled();
+            Rectangle dst = this.lastX1.oo;
+            Animation_ChangeBounds ani = new Animation_ChangeBounds(0f, 500f, this.lastX1.border.getBounds(), dst,
+                    new AnimationListener_RectangleSupport(this.lastX1.border));
+            AnimationManager.getInstance().startAnimation(ani);
         }
 
-        SwtPanel panel2 = new SwtPanel(this, true);
-        panel2.setBounds(10, 55, -20, -65);
+        x1.button.setDisabled();
 
-        SwtTabFolder folderA = new SwtTabFolder(panel2);
+        SwtPanel border = x1.border;
 
-        DemoTab_Animations tabAnims = new DemoTab_Animations(folderA);
-        DemoTab_Canvas tabCanvas = new DemoTab_Canvas(folderA);
-        DemoTab_ComboBoxes tabCom = new DemoTab_ComboBoxes(folderA);
-        DemoTab_Tree tabTree = new DemoTab_Tree(folderA);
-        DemoTab_Buttons tabButtons = new DemoTab_Buttons(folderA);
-        DemoTab_Texts tabTexts = new DemoTab_Texts(folderA);
-        DemoTab_Images tabImages = new DemoTab_Images(folderA);
-        DemoTab_CheckBoxes tabCheckBoxes = new DemoTab_CheckBoxes(folderA);
+        this.lastX1 = x1;
+
+        Rectangle dst = new Rectangle(200, 0, wii - 200, hee);
+        Animation_ChangeBounds ani = new Animation_ChangeBounds(0f, 1000f, border.getBounds(), dst,
+                new AnimationListener_RectangleSupport(border));
+        AnimationManager.getInstance().startAnimation(ani);
+
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

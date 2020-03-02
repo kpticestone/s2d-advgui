@@ -9,6 +9,6 @@ public abstract class ASingStarDescriptor<T> implements ISingStarDescriptor<T> {
 
     @Override
     public final T getID() {
-        return id;
+        return this.id;
     }
 }
