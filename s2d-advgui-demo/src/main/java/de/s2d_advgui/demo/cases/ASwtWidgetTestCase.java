@@ -1,4 +1,4 @@
-package de.s2d_advgui.demo;
+package de.s2d_advgui.demo.cases;
 
 import javax.annotation.Nonnull;
 

@@ -9,10 +9,12 @@ import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+
 import de.s2d_advgui.commons.Trigger;
 import de.s2d_advgui.core.input.ISwtWidgetSelectable;
 
-public abstract class ASwtWidgetSelectable<ACTOR extends Actor> extends ASwtWidget<ACTOR> implements ISwtWidgetSelectable {
+public abstract class ASwtWidgetSelectable<ACTOR extends Actor> extends ASwtWidget<ACTOR>
+        implements ISwtWidgetSelectable {
     // -------------------------------------------------------------------------------------------------------------------------
     private final Set<Consumer<Integer>> listeners = new LinkedHashSet<>();
 
@@ -60,11 +62,11 @@ public abstract class ASwtWidgetSelectable<ACTOR extends Actor> extends ASwtWidg
                 if (event instanceof InputEvent) {
                     InputEvent ii = (InputEvent) event;
                     switch (ii.getType()) {
-                        case touchDown:
-                            callListeners(ii.getButton());
-                            return true;
-                        default:
-                            break;
+                    case touchDown:
+                        callListeners(ii.getButton());
+                        return true;
+                    default:
+                        break;
                     }
                 }
                 return false;

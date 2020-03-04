@@ -6,46 +6,37 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
+
 import de.s2d_advgui.commons.TNull;
+import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
 import de.s2d_advgui.core.stage.ISwtStage;
 
-public abstract class ASwtWidget<ACTOR extends Actor> extends ASwtWidget_970_Rendering<ACTOR>
-{
+public abstract class ASwtWidget<ACTOR extends Actor> extends ASwtWidget_970_Rendering<ACTOR> {
     // -------------------------------------------------------------------------------------------------------------------------
-    public ASwtWidget(ISwtStage<?, ?> pContext)
-    {
+    public ASwtWidget(ISwtStage<?, ?> pContext) {
         super(pContext);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public ASwtWidget(ISwtWidget<? extends Group> pParent, boolean focusable)
-    {
+    public ASwtWidget(ISwtWidget<? extends Group> pParent, boolean focusable) {
         super(TNull.checkNull(pParent), focusable);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Deprecated
-    public ACTOR getActor_OnlyForDevelopmentAndHasToBeDeletedLater()
-    {
+    public ACTOR getActor_OnlyForDevelopmentAndHasToBeDeletedLater() {
         return this.actor;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public void makeNewBorder()
-    {
+    public void makeNewBorder() {
         BorderDrawer2 borderDrawer = new BorderDrawer2(this.context);
-        this.addDrawerBackground(new InternalWidgetDrawerBatch()
-        {
+        this.addDrawerBackground(new InternalWidgetDrawerBatch() {
             @Override
-            protected void _drawIt(SwtDrawer_Batch<?> batch, Vector2 pScreenCoords, Rectangle pDims)
-            {
-                if (isEnabled())
-                {
+            protected void _drawIt(SwtDrawer_Batch<?> batch, Vector2 pScreenCoords, Rectangle pDims) {
+                if (isEnabled()) {
                     batch.setColor(new Color(0f, 1f, 1f, .75f));
-                }
-                else
-                {
+                } else {
                     batch.setColor(new Color(.5f, 0f, 0f, .75f));
                 }
                 borderDrawer.drawIt(batch.getBatch(), pDims);
@@ -54,8 +45,7 @@ public abstract class ASwtWidget<ACTOR extends Actor> extends ASwtWidget_970_Ren
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public void makeOldBorder()
-    {
+    public void makeOldBorder() {
         TextureRegion trYEL = this.context.getColor_Selected();
         TextureRegion trREG = this.context.getColor_Unselected();
         TextureRegion tr = this.context.getResourceManager().getColorTextureRegion(Color.WHITE, 1, 1);
@@ -64,17 +54,12 @@ public abstract class ASwtWidget<ACTOR extends Actor> extends ASwtWidget_970_Ren
         TextureRegion borderver = this.context.getResourceManager().getTextureRegion("ui/border-1-ver.png");
         TextureRegion trDIS = this.context.getColor_Disabled();
 
-        this.addDrawerBackground(new InternalWidgetDrawerBatch()
-        {
+        this.addDrawerBackground(new InternalWidgetDrawerBatch() {
             @Override
-            protected void _drawIt(SwtDrawer_Batch<?> pBatch, Vector2 pScreenCoords, Rectangle pDims)
-            {
-                if (isEnabled())
-                {
+            protected void _drawIt(SwtDrawer_Batch<?> pBatch, Vector2 pScreenCoords, Rectangle pDims) {
+                if (isEnabled()) {
                     pBatch.setColor(new Color(0f, 1f, 1f, .75f));
-                }
-                else
-                {
+                } else {
                     pBatch.setColor(new Color(.5f, 0f, 0f, .75f));
                 }
                 pBatch.draw(tr, pDims.x + 2, pDims.y + 2, pDims.width - 4, pDims.height - 4);

@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+
 import de.s2d_advgui.commons.TNull;
 import de.s2d_advgui.core.stage.ISwtStage;
 
@@ -182,6 +183,7 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
             }
         }
     }
+
     // -------------------------------------------------------------------------------------------------------------------------
     @Nullable
     @Override

@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
+
 import de.s2d_advgui.commons.Trigger;
 import de.s2d_advgui.core.stage.ISwtStage;
 

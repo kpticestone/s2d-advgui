@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+
 import de.s2d_advgui.core.awidget.ASwtWidget;
 import de.s2d_advgui.core.input.ASwtMouseMoveListener;
 import de.s2d_advgui.core.input.ISwtScrollListener;
@@ -20,7 +21,8 @@ import de.s2d_advgui.core.input.keys.ASwtInputRegister_Keys;
 import de.s2d_advgui.core.rendering.ISwtDrawerManager;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
 
-public final class SwtCanvas<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>> extends ASwtWidget<WidgetGroup> {
+public final class SwtCanvas<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>>
+        extends ASwtWidget<WidgetGroup> {
     // -------------------------------------------------------------------------------------------------------------------------
     @Nullable
     private ISwtScrollListener scrollListener;
@@ -92,50 +94,50 @@ public final class SwtCanvas<RM extends AResourceManager, DM extends ISwtDrawerM
     // -------------------------------------------------------------------------------------------------------------------------
     boolean handleInput(WidgetGroup pWidget, InputEvent pInputEvent) {
         switch (pInputEvent.getType()) {
-            case exit:
-                this.context.setScrollFocus(null);
-                this.context.setKeyboardFocus(null);
-                return true;
-            case touchDragged:
-            case mouseMoved:
-                this.context.setScrollFocus(pWidget);
-                this.context.setKeyboardFocus(pWidget);
-                if (this.mouseMoveHandler != null) {
-                    Vector2 rii = decodeCoords(pInputEvent);
-                    for (ASwtMouseMoveListener a : this.mouseMoveHandler) {
-                        if (a.onMouseMove(rii.x, rii.y, 0)) {
-                            return true;
-                        }
+        case exit:
+            this.context.setScrollFocus(null);
+            this.context.setKeyboardFocus(null);
+            return true;
+        case touchDragged:
+        case mouseMoved:
+            this.context.setScrollFocus(pWidget);
+            this.context.setKeyboardFocus(pWidget);
+            if (this.mouseMoveHandler != null) {
+                Vector2 rii = decodeCoords(pInputEvent);
+                for (ASwtMouseMoveListener a : this.mouseMoveHandler) {
+                    if (a.onMouseMove(rii.x, rii.y, 0)) {
+                        return true;
                     }
                 }
-                return false; // nachfolgende Events sollen trotzdem noch gelten.
-            case scrolled:
-                if (this.scrollListener != null) {
-                    return this.scrollListener.onScroll(pInputEvent.getScrollAmount());
-                }
-                break;
-            case touchUp:
-                if (this.mouseMoveHandler != null) {
-                    Vector2 rii = decodeCoords(pInputEvent);
-                    for (ASwtMouseMoveListener a : this.mouseMoveHandler) {
-                        if (a.onMouseUp(rii.x, rii.y, pInputEvent.getButton())) {
-                            return true;
-                        }
+            }
+            return false; // nachfolgende Events sollen trotzdem noch gelten.
+        case scrolled:
+            if (this.scrollListener != null) {
+                return this.scrollListener.onScroll(pInputEvent.getScrollAmount());
+            }
+            break;
+        case touchUp:
+            if (this.mouseMoveHandler != null) {
+                Vector2 rii = decodeCoords(pInputEvent);
+                for (ASwtMouseMoveListener a : this.mouseMoveHandler) {
+                    if (a.onMouseUp(rii.x, rii.y, pInputEvent.getButton())) {
+                        return true;
                     }
                 }
-                break;
-            case touchDown:
-                if (this.mouseMoveHandler != null) {
-                    Vector2 rii = decodeCoords(pInputEvent);
-                    for (ASwtMouseMoveListener a : this.mouseMoveHandler) {
-                        if (a.onMouseDown(rii.x, rii.y, pInputEvent.getButton())) {
-                            return true;
-                        }
+            }
+            break;
+        case touchDown:
+            if (this.mouseMoveHandler != null) {
+                Vector2 rii = decodeCoords(pInputEvent);
+                for (ASwtMouseMoveListener a : this.mouseMoveHandler) {
+                    if (a.onMouseDown(rii.x, rii.y, pInputEvent.getButton())) {
+                        return true;
                     }
                 }
-                break;
-            default:
-                break;
+            }
+            break;
+        default:
+            break;
         }
         return false;
     }

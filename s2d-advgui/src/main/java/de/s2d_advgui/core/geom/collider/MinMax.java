@@ -1,9 +1,9 @@
 package de.s2d_advgui.core.geom.collider;
 
+import javax.annotation.Nonnull;
+
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-
-import javax.annotation.Nonnull;
 
 public class MinMax {
     private boolean empty = true;
@@ -14,7 +14,6 @@ public class MinMax {
 
     private float width = 0;
     private float height = 0;
-
 
     // -------------------------------------------------------------------------------------------------------------------------
     @SuppressWarnings("null")
@@ -57,7 +56,6 @@ public class MinMax {
         this.width = this.x2 - this.x1;
         this.height = this.y2 - this.y1;
     }
-
 
     // -------------------------------------------------------------------------------------------------------------------------
     public float getHeight() {

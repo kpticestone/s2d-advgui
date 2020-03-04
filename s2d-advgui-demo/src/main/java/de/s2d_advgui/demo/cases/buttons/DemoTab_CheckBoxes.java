@@ -1,10 +1,11 @@
-package de.s2d_advgui.demo;
+package de.s2d_advgui.demo.cases.buttons;
 
 import de.s2d_advgui.core.basicwidgets.SwtButton;
 import de.s2d_advgui.core.basicwidgets.SwtCheckbox;
 import de.s2d_advgui.core.tabfolder.SwtTab;
 import de.s2d_advgui.core.tabfolder.SwtTabFolder;
 
+@Deprecated
 public class DemoTab_CheckBoxes extends SwtTab {
     public DemoTab_CheckBoxes(SwtTabFolder pParent) {
         super(pParent, "checkboxes");

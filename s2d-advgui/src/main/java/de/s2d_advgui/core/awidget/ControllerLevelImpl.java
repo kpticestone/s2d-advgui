@@ -14,6 +14,7 @@ import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+
 import de.s2d_advgui.core.input.ISwtScrollListener;
 import de.s2d_advgui.core.input.axis.ASwtInputRegister_Axis;
 import de.s2d_advgui.core.input.axis.SwtInputHolder_Axis;
@@ -64,10 +65,12 @@ public class ControllerLevelImpl implements IControllerLevel {
             ISwtActionRunner_Keys worker = s.getRunner();
             for (int keyCode : s.getKeyCodes(this.isCtrl.isControllerMode())) {
                 if (keyCode < 256) {
-                    if (this.workers[keyCode] != null) throw new RuntimeException("keycode '" + keyCode + "' of handler " + pInputKeyHandler + " already used"); //$NON-NLS-1$ //$NON-NLS-2$
+                    if (this.workers[keyCode] != null) throw new RuntimeException(
+                            "keycode '" + keyCode + "' of handler " + pInputKeyHandler + " already used"); //$NON-NLS-1$ //$NON-NLS-2$
                     this.workers[keyCode] = worker;
                 } else {
-                    if (this.higherWorkers.containsKey(keyCode)) throw new RuntimeException("keycode '" + keyCode + "' of handler " + pInputKeyHandler + " already used"); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+                    if (this.higherWorkers.containsKey(keyCode)) throw new RuntimeException(
+                            "keycode '" + keyCode + "' of handler " + pInputKeyHandler + " already used"); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
                     this.higherWorkers.put(keyCode, worker);
                 }
 
@@ -77,7 +80,8 @@ public class ControllerLevelImpl implements IControllerLevel {
             }
             this.scrollListeners.addAll(s.getScrollListeners());
             for (int buttons : s.getMouseButtons()) {
-                Set<ISwtActionRunner_Keys> into = this.mouseButtonRunners.computeIfAbsent(buttons, b -> new LinkedHashSet<>());
+                Set<ISwtActionRunner_Keys> into = this.mouseButtonRunners.computeIfAbsent(buttons,
+                        b -> new LinkedHashSet<>());
                 into.add(worker);
             }
         }
@@ -195,22 +199,26 @@ public class ControllerLevelImpl implements IControllerLevel {
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    public final boolean _onEvent_ControllerAccelerometerMoved(Controller controller, int accelerometerCode, Vector3 value) {
-        System.err.println("SwtScreen._onEvent_ControllerAccelerometerMoved(" + accelerometerCode + ", " + value + ");");
+    public final boolean _onEvent_ControllerAccelerometerMoved(Controller controller, int accelerometerCode,
+            Vector3 value) {
+        System.err
+                .println("SwtScreen._onEvent_ControllerAccelerometerMoved(" + accelerometerCode + ", " + value + ");");
         return false;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final boolean _onEvent_TouchDown(int screenX, int screenY, int pointer, int button) {
-        System.err.println("SwtScreen._onEvent_TouchDown(" + screenX + ", " + screenY + ", " + pointer + ", " + button + ");");
+        System.err.println(
+                "SwtScreen._onEvent_TouchDown(" + screenX + ", " + screenY + ", " + pointer + ", " + button + ");");
         return false;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final boolean _onEvent_TouchUp(int screenX, int screenY, int pointer, int button) {
-        System.err.println("SwtScreen._onEvent_TouchUp(" + screenX + ", " + screenY + ", " + pointer + ", " + button + ");");
+        System.err.println(
+                "SwtScreen._onEvent_TouchUp(" + screenX + ", " + screenY + ", " + pointer + ", " + button + ");");
         return false;
     }
 

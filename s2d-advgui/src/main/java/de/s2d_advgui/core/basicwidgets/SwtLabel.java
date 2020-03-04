@@ -61,8 +61,8 @@ public class SwtLabel extends ASwtWidget<Label> {
 
     // -------------------------------------------------------------------------------------------------------------------------
     public void setFontScale(float scale) {
-        //LabelStyle style = this.actor.getStyle();
-        //style.font = this.context.getResourceManager().getFont(scale, true);
+        // LabelStyle style = this.actor.getStyle();
+        // style.font = this.context.getResourceManager().getFont(scale, true);
         this.actor.setFontScale(scale);
         this.actor.layout();
     }

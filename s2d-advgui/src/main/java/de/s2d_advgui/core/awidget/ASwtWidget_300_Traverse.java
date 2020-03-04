@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+
 import de.s2d_advgui.core.stage.ISwtStage;
 
 public abstract class ASwtWidget_300_Traverse<ACTOR extends Actor> extends ASwtWidget_200_Coordinates<ACTOR> {
@@ -40,14 +41,14 @@ public abstract class ASwtWidget_300_Traverse<ACTOR extends Actor> extends ASwtW
                     if (event instanceof InputEvent) {
                         InputEvent ii = (InputEvent) event;
                         switch (ii.getType()) {
-                            case enter:
-                                ASwtWidget_300_Traverse.this.hovered = true;
-                                return true;
-                            case exit:
-                                ASwtWidget_300_Traverse.this.hovered = false;
-                                return true;
-                            default:
-                                break;
+                        case enter:
+                            ASwtWidget_300_Traverse.this.hovered = true;
+                            return true;
+                        case exit:
+                            ASwtWidget_300_Traverse.this.hovered = false;
+                            return true;
+                        default:
+                            break;
                         }
                     }
                     return false;
@@ -55,10 +56,8 @@ public abstract class ASwtWidget_300_Traverse<ACTOR extends Actor> extends ASwtW
             });
             this.actor.addListener(new InputListener() {
                 @Override
-                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) 
-                {
-                    if( button == 0 )
-                    {
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    if (button == 0) {
                         focus();
                     }
                     return false;

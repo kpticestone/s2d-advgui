@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
+
 import de.s2d_advgui.core.SwtColor;
 import de.s2d_advgui.core.awidget.ASwtWidget;
 import de.s2d_advgui.core.awidget.BorderDrawer2;
@@ -24,24 +25,21 @@ import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
 
-public class SwtComboBox<T> extends ASwtWidget<SelectBox<T>>
-{
+public class SwtComboBox<T> extends ASwtWidget<SelectBox<T>> {
     // -------------------------------------------------------------------------------------------------------------------------
     private final Set<Consumer<T>> selectListener = new LinkedHashSet<>();
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public SwtComboBox(ISwtWidget<? extends Group> pParent)
-    {
+    public SwtComboBox(ISwtWidget<? extends Group> pParent) {
         super(pParent, true);
         BorderDrawer2 bodr = new BorderDrawer2(this.context);
-        this.addDrawerBackground(new InternalWidgetDrawerBatch()
-        {
+        this.addDrawerBackground(new InternalWidgetDrawerBatch() {
             @Override
-            protected void _drawIt(SwtDrawer_Batch<?> pBatch, Vector2 pScreenCoords, Rectangle pDims)
-            {
-                bodr.setGenericColors(enabled, isFocused(), hovered);
+            protected void _drawIt(SwtDrawer_Batch<?> pBatch, Vector2 pScreenCoords, Rectangle pDims) {
+                bodr.setGenericColors(SwtComboBox.this.enabled, isFocused(), SwtComboBox.this.hovered);
                 bodr.drawIt(pBatch.getBatch(), pDims);
-                bodr.drawIt(pBatch.getBatch(), pDims.x + pDims.width - pDims.height, pDims.y, pDims.height, pDims.height);
+                bodr.drawIt(pBatch.getBatch(), pDims.x + pDims.width - pDims.height, pDims.y, pDims.height,
+                        pDims.height);
             }
 
         });
@@ -49,32 +47,27 @@ public class SwtComboBox<T> extends ASwtWidget<SelectBox<T>>
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    protected SelectBox<T> createActor()
-    {
+    protected SelectBox<T> createActor() {
         BitmapFont fo = this.context.getResourceManager().getFont(.5f, true);
         Skin najs = this.context.getResourceManager().getSkin();
         SelectBoxStyle style = najs.get(SelectBoxStyle.class);
-        style.background = new TextureRegionDrawable(this.context.getResourceManager().getColorTextureRegion(SwtColor.TRANSPARENT));
+        style.background = new TextureRegionDrawable(
+                this.context.getResourceManager().getColorTextureRegion(SwtColor.TRANSPARENT));
         style.background.setLeftWidth(10);
         style.background.setRightWidth(10);
         style.font = fo;
         style.listStyle.font = fo;
-        SelectBox<T> back = new SelectBox<>(style)
-        {
+        SelectBox<T> back = new SelectBox<>(style) {
             @Override
-            public void draw(com.badlogic.gdx.graphics.g2d.Batch batch, float parentAlpha)
-            {
+            public void draw(com.badlogic.gdx.graphics.g2d.Batch batch, float parentAlpha) {
                 _internalDrawWidget(this, batch, parentAlpha, () -> super.draw(batch, parentAlpha));
             }
         };
-        back.addListener(new ChangeListener()
-        {
+        back.addListener(new ChangeListener() {
             @Override
-            public void changed(ChangeEvent pChangeEvent, Actor pActor)
-            {
+            public void changed(ChangeEvent pChangeEvent, Actor pActor) {
                 T value = back.getSelected();
-                for (Consumer<T> a : SwtComboBox.this.selectListener)
-                {
+                for (Consumer<T> a : SwtComboBox.this.selectListener) {
                     a.accept(value);
                 }
             }
@@ -84,43 +77,36 @@ public class SwtComboBox<T> extends ASwtWidget<SelectBox<T>>
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public final void addSelectionListener(Consumer<T> pListener)
-    {
+    public final void addSelectionListener(Consumer<T> pListener) {
         this.selectListener.add(pListener);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public void setValues(Array<T> values)
-    {
+    public void setValues(Array<T> values) {
         this.actor.setItems(values);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public void setValues(Collection<T> ents)
-    {
+    public void setValues(Collection<T> ents) {
         Array<T> use = new Array<>(ents.size());
-        for (T x : ents)
-        {
+        for (T x : ents) {
             use.add(x);
         }
         this.actor.setItems(use);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public void setValues(T... ents)
-    {
+    public void setValues(T... ents) {
         this.actor.setItems(ents);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public void setSelection(T pValue)
-    {
+    public void setSelection(T pValue) {
         this.actor.setSelected(pValue);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public T getSelected()
-    {
+    public T getSelected() {
         return this.actor.getSelected();
     }
 

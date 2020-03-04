@@ -7,20 +7,22 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Scaling;
+
 import de.s2d_advgui.core.awidget.ASwtWidget;
+import de.s2d_advgui.core.awidget.ISwtWidget;
 
 public class SwtImage extends ASwtWidget<Image> {
     // -------------------------------------------------------------------------------------------------------------------------
     private String img;
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public SwtImage(ASwtWidget<? extends Group> pParent) {
+    public SwtImage(ISwtWidget<? extends Group> pParent) {
         super(pParent, false);
         this.actor.setScaling(Scaling.fit);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public SwtImage(ASwtWidget<? extends Group> pParent, String pResourceId) {
+    public SwtImage(ISwtWidget<? extends Group> pParent, String pResourceId) {
         this(pParent);
         this.setImage(pResourceId);
     }

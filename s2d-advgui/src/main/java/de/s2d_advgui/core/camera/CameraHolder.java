@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+
 import de.s2d_advgui.core.utils.CalcUtils;
 
 public final class CameraHolder {
@@ -71,7 +72,8 @@ public final class CameraHolder {
     public void unproject(Vector2 in, Vector2 out) {
         OrthographicCamera cam = this.camera;
         Vector3 totrans = new Vector3(in.x, in.y, 0);
-        Vector3 oxx = unproject(cam, totrans, this.getLastDims().x, this.getLastDims().y, this.getLastDims().width, this.getLastDims().height);
+        Vector3 oxx = unproject(cam, totrans, this.getLastDims().x, this.getLastDims().y, this.getLastDims().width,
+                this.getLastDims().height);
         out.x = oxx.x;
         out.y = oxx.y;
 
@@ -92,7 +94,8 @@ public final class CameraHolder {
      * @param viewportHeight
      * @return
      */
-    public Vector3 unproject(Camera cam, Vector3 screenCoords, float viewportX, float viewportY, float viewportWidth, float viewportHeight) {
+    public Vector3 unproject(Camera cam, Vector3 screenCoords, float viewportX, float viewportY, float viewportWidth,
+            float viewportHeight) {
         float x = screenCoords.x, y = screenCoords.y;
         x = x - viewportX;
         y = y - viewportY;

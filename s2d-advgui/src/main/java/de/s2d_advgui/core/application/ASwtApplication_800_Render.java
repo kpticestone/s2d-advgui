@@ -2,12 +2,14 @@ package de.s2d_advgui.core.application;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL30;
-import de.s2d_advgui.core.resourcemanager.AResourceManager;
+
 import de.s2d_advgui.commons.SphThread;
 import de.s2d_advgui.core.rendering.ISwtDrawerManager;
+import de.s2d_advgui.core.resourcemanager.AResourceManager;
 import de.s2d_advgui.core.stage.ASwtStage;
 
-public abstract class ASwtApplication_800_Render<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>, STAGE extends ASwtStage<RM, DM>> extends ASwtApplication_310_Events<RM, DM, STAGE> {
+public abstract class ASwtApplication_800_Render<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>, STAGE extends ASwtStage<RM, DM>>
+        extends ASwtApplication_310_Events<RM, DM, STAGE> {
     // -------------------------------------------------------------------------------------------------------------------------
     public ASwtApplication_800_Render(DM pDrawerManager) {
         super(pDrawerManager);
@@ -16,7 +18,8 @@ public abstract class ASwtApplication_800_Render<RM extends AResourceManager, DM
     // -------------------------------------------------------------------------------------------------------------------------
     /**
      * Wird nur vom Scene2d-ApplicationListener aufgerufen.
-     * @throws Exception 
+     * 
+     * @throws Exception
      */
     public final void render() throws Exception {
         float delta = Gdx.graphics.getDeltaTime();

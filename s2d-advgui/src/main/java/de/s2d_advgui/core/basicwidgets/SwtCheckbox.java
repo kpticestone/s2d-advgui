@@ -15,46 +15,42 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent.Type;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
+
 import de.s2d_advgui.core.SwtColor;
-import de.s2d_advgui.core.awidget.ASwtWidget;
 import de.s2d_advgui.core.awidget.ASwtWidgetSelectable;
 import de.s2d_advgui.core.awidget.BorderDrawer2;
+import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
 
-public class SwtCheckbox extends ASwtWidgetSelectable<CheckBox>
-{
-
+public class SwtCheckbox extends ASwtWidgetSelectable<CheckBox> {
     // -------------------------------------------------------------------------------------------------------------------------
     String myText;
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public SwtCheckbox(ASwtWidget<? extends Group> pParent, String text)
-    {
+    public SwtCheckbox(ISwtWidget<? extends Group> pParent, String text) {
         super(pParent);
         this.setText(text);
-        TextureRegion check = context.getTextureRegion("icons/128/snowflake.png");
+        TextureRegion check = this.context.getTextureRegion("icons/128/snowflake.png");
         BorderDrawer2 borderDrawer = new BorderDrawer2(this.context);
-        BitmapFont a = context.getResourceManager().getFont(.5f, true);
+        BitmapFont a = this.context.getResourceManager().getFont(.5f, true);
         float lh = a.getLineHeight() - a.getAscent() + a.getDescent();
-        this.addDrawerForeground(new InternalWidgetDrawerBatch()
-        {
+        this.addDrawerForeground(new InternalWidgetDrawerBatch() {
             @Override
-            protected void _drawIt(SwtDrawer_Batch<?> pBatch, Vector2 pScreenCoords, Rectangle pDims)
-            {
-                borderDrawer.setGenericColors(enabled, isFocused(), hovered);
+            protected void _drawIt(SwtDrawer_Batch<?> pBatch, Vector2 pScreenCoords, Rectangle pDims) {
+                borderDrawer.setGenericColors(SwtCheckbox.this.enabled, isFocused(), SwtCheckbox.this.hovered);
                 borderDrawer.drawIt(pBatch.getBatch(), pDims);
 
-                borderDrawer.setBackgroundColor(enabled ? Color.BLACK : Color.DARK_GRAY);
-                borderDrawer.setBorderColor(enabled ? SwtColor.BORDER_COLOR_CYAN : Color.GRAY);
+                borderDrawer.setBackgroundColor(SwtCheckbox.this.enabled ? Color.BLACK : Color.DARK_GRAY);
+                borderDrawer.setBorderColor(SwtCheckbox.this.enabled ? SwtColor.BORDER_COLOR_CYAN : Color.GRAY);
                 borderDrawer.drawIt(pBatch.getBatch(), pDims.x, pDims.y, pDims.height, pDims.height);
 
-                if (isChecked())
-                {
+                if (isChecked()) {
                     pBatch.draw(check, pDims.x + 6, pDims.y + 6, 11, 11);
                 }
 
-                a.draw(pBatch.getBatch(), SwtCheckbox.this.myText + " (" + isChecked() + ")", pDims.x + (pDims.height * 1.25f), pDims.y + (pDims.height) - (pDims.height - lh) / 2f);
+                a.draw(pBatch.getBatch(), SwtCheckbox.this.myText + " (" + isChecked() + ")",
+                        pDims.x + (pDims.height * 1.25f), pDims.y + (pDims.height) - (pDims.height - lh) / 2f);
             }
 
         });
@@ -63,8 +59,7 @@ public class SwtCheckbox extends ASwtWidgetSelectable<CheckBox>
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    protected CheckBox _createActor()
-    {
+    protected CheckBox _createActor() {
         // Skin style = new ButtonStyle();
         // style.down = new
         // TextureRegionDrawable(context.resourceManager.getColorTextureRegion(Color.GREEN));
@@ -74,48 +69,40 @@ public class SwtCheckbox extends ASwtWidgetSelectable<CheckBox>
         // style.up = new
         // TextureRegionDrawable(context.resourceManager.getColorTextureRegion(Color.BLUE));
         // this.makeDrawBorderSupport();
-        CheckBoxStyle aa = context.getResourceManager().getSkin().get(CheckBoxStyle.class);
+        CheckBoxStyle aa = this.context.getResourceManager().getSkin().get(CheckBoxStyle.class);
         System.err.println("aa:" + aa);
         CheckBoxStyle cbs = new CheckBoxStyle();
-        cbs.font = context.getResourceManager().getFont(.5f, false);
+        cbs.font = this.context.getResourceManager().getFont(.5f, false);
         cbs.checkedOffsetX = 0;
-        cbs.checkboxOff = context.getDrawable("icons/128/signaling_disk_green.png");
+        cbs.checkboxOff = this.context.getDrawable("icons/128/signaling_disk_green.png");
         cbs.checkboxOff.setMinWidth(16);
         cbs.checkboxOff.setMinHeight(16);
         cbs.checkboxOff.setLeftWidth(100);
-        cbs.checkboxOn = context.getDrawable("icons/128/signaling_disk_red.png");
+        cbs.checkboxOn = this.context.getDrawable("icons/128/signaling_disk_red.png");
         cbs.checkboxOn.setMinHeight(16);
         cbs.checkboxOn.setMinWidth(16);
-        //      CheckBox back = new CheckBox(null, context.getResourceManager().getSkin())
-        CheckBox back = new CheckBox(null, cbs)
-        {
+        // CheckBox back = new CheckBox(null, context.getResourceManager().getSkin())
+        CheckBox back = new CheckBox(null, cbs) {
             @Override
-            public void draw(Batch batch, float parentAlpha)
-            {
-                _internalDrawWidget(this, batch, parentAlpha, () ->
-                {
+            public void draw(Batch batch, float parentAlpha) {
+                _internalDrawWidget(this, batch, parentAlpha, () -> {
                     // super.draw(batch, parentAlpha);
                 });
             }
         };
         back.getLabel().setFontScale(.75f);
         back.left();
-        back.addListener(new EventListener()
-        {
+        back.addListener(new EventListener() {
             @Override
-            public boolean handle(Event event)
-            {
-                if (event instanceof ChangeEvent)
-                {
+            public boolean handle(Event event) {
+                if (event instanceof ChangeEvent) {
                     onInternalChanged();
                     return false;
                 }
-                if (event instanceof InputEvent)
-                {
-                    if (((InputEvent)event).getType() == Type.keyTyped)
-                    {
-                        if (((InputEvent)event).getKeyCode() == Keys.ENTER || ((InputEvent)event).getKeyCode() == Keys.SPACE)
-                        {
+                if (event instanceof InputEvent) {
+                    if (((InputEvent) event).getType() == Type.keyTyped) {
+                        if (((InputEvent) event).getKeyCode() == Keys.ENTER
+                                || ((InputEvent) event).getKeyCode() == Keys.SPACE) {
                             toggle();
                             return true;
                         }
@@ -129,35 +116,30 @@ public class SwtCheckbox extends ASwtWidgetSelectable<CheckBox>
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    private void onInternalChanged()
-    {
+    private void onInternalChanged() {
         callListeners(0);
         this.focus();
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public void toggle()
-    {
+    public void toggle() {
         this.actor.setChecked(!this.actor.isChecked());
         this.focus();
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public boolean isChecked()
-    {
+    public boolean isChecked() {
         return this.actor.isChecked();
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public void setText(String text)
-    {
+    public void setText(String text) {
         this.myText = text;
         this.actor.setText(text);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public void setChecked(boolean pChecked)
-    {
+    public void setChecked(boolean pChecked) {
         this.actor.setChecked(pChecked);
     }
 

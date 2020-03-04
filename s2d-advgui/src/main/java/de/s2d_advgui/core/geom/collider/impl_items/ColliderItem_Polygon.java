@@ -1,5 +1,7 @@
 package de.s2d_advgui.core.geom.collider.impl_items;
 
+import javax.annotation.Nonnull;
+
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Circle;
@@ -7,11 +9,11 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import de.s2d_advgui.core.geom.collider.ColliderItem;
-import de.s2d_advgui.core.geom.Ray2D;
+
 import de.s2d_advgui.commons.BiConsumerFloat;
 import de.s2d_advgui.commons.TNull;
-import javax.annotation.Nonnull;
+import de.s2d_advgui.core.geom.Ray2D;
+import de.s2d_advgui.core.geom.collider.ColliderItem;
 
 public final class ColliderItem_Polygon extends ColliderItem<Polygon> {
     // -------------------------------------------------------------------------------------------------------------------------

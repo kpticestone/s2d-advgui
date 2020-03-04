@@ -1,17 +1,18 @@
 package de.s2d_advgui.core.geom.collider;
 
+import java.util.Arrays;
+import java.util.function.Consumer;
+
+import javax.annotation.Nonnull;
+
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
-import de.s2d_advgui.core.geom.Ray2D;
+
 import de.s2d_advgui.commons.BiConsumerFloat;
+import de.s2d_advgui.core.geom.Ray2D;
 import de.s2d_advgui.core.utils.CalcUtils;
-
-import javax.annotation.Nonnull;
-
-import java.util.Arrays;
-import java.util.function.Consumer;
 
 public class Collider {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -29,7 +30,8 @@ public class Collider {
 
     // -------------------------------------------------------------------------------------------------------------------------
     Collider(@Nonnull ColliderItem<?>[] newItems) {
-        // TODO: Sort the Items by volume... as bigger the shape is, the chance to hit em is also bigger
+        // TODO: Sort the Items by volume... as bigger the shape is, the chance to hit
+        // em is also bigger
         this.items = newItems;
 
         MinMax minmax = new MinMax();

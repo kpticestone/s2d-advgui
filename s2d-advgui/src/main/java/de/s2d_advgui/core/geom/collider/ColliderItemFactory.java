@@ -1,18 +1,19 @@
 package de.s2d_advgui.core.geom.collider;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Shape2D;
+
+import de.s2d_advgui.commons.TNull;
 import de.s2d_advgui.core.geom.collider.impl_items.ColliderItem_Circle;
 import de.s2d_advgui.core.geom.collider.impl_items.ColliderItem_Polygon;
 import de.s2d_advgui.core.geom.collider.impl_items.ColliderItem_Rectangle;
-import de.s2d_advgui.commons.TNull;
-
-import javax.annotation.Nonnull;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public final class ColliderItemFactory {
     // -------------------------------------------------------------------------------------------------------------------------

@@ -1,5 +1,7 @@
 package de.s2d_advgui.core.geom.collider;
 
+import javax.annotation.Nonnull;
+
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Circle;
@@ -8,10 +10,10 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
-import de.s2d_advgui.core.utils.PolygonUtils;
-import de.s2d_advgui.core.geom.Ray2D;
+
 import de.s2d_advgui.commons.BiConsumerFloat;
-import javax.annotation.Nonnull;
+import de.s2d_advgui.core.geom.Ray2D;
+import de.s2d_advgui.core.utils.PolygonUtils;
 
 public abstract class ColliderItem<T extends Shape2D> {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -47,7 +49,7 @@ public abstract class ColliderItem<T extends Shape2D> {
     // -------------------------------------------------------------------------------------------------------------------------
     public static boolean overlaps(@Nonnull Polygon pPolygon, @Nonnull Rectangle pRect) {
         Polygon rPoly = PolygonUtils.byRect(pRect);
-        //rPoly.setPosition(pRect.x, pRect.y);
+        // rPoly.setPosition(pRect.x, pRect.y);
         return Intersector.overlapConvexPolygons(rPoly, pPolygon);
     }
 

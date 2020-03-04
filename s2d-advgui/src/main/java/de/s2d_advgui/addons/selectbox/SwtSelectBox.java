@@ -2,6 +2,7 @@ package de.s2d_advgui.addons.selectbox;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+
 import de.s2d_advgui.addons.SwtItemPanel;
 import de.s2d_advgui.core.awidget.ASwtWidget;
 import de.s2d_advgui.core.basicwidgets.SwtPanel;
@@ -67,7 +68,7 @@ public class SwtSelectBox<T> extends SwtPanel {
             });
             pan.getActor().setOrigin(0, -hhe);
             pan.getActor().layout();
-            
+
 //          pan.actor.setScrollBarPositions(true, true);
 //          pan.actor.setForceScroll(true, true);
 //          pan.actor.layout();

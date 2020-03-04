@@ -4,11 +4,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+
 import de.s2d_advgui.core.SwtColor;
 import de.s2d_advgui.core.stage.ISwtStage;
 
 public class BorderDrawer2 {
-
+    // -------------------------------------------------------------------------------------------------------------------------
     private final ISwtStage<?, ?> context;
     private TextureRegion tr;
     private TextureRegion corner2;
@@ -18,6 +19,7 @@ public class BorderDrawer2 {
     private Color borderColor = SwtColor.BORDER_COLOR_CYAN;
     private Color backgroundColor = SwtColor.BORDER_COLOR_CYAN_DARK;
 
+    // -------------------------------------------------------------------------------------------------------------------------
     public BorderDrawer2(ISwtStage<?, ?> context) {
         this.context = context;
         this.tr = this.context.getResourceManager().getColorTextureRegion(Color.WHITE, 1, 1);
@@ -26,18 +28,22 @@ public class BorderDrawer2 {
         this.borderver = this.context.getResourceManager().getTextureRegion("ui/button-ver-2019-08-11.png");
     }
 
+    // -------------------------------------------------------------------------------------------------------------------------
     public void setBorderColor(Color color) {
         this.borderColor = color;
     }
 
+    // -------------------------------------------------------------------------------------------------------------------------
     public void setBackgroundColor(Color backgroundColor) {
         this.backgroundColor = backgroundColor;
     }
 
+    // -------------------------------------------------------------------------------------------------------------------------
     public void drawIt(Batch batch, Rectangle dims) {
         this.drawIt(batch, dims.x, dims.y, dims.width, dims.height);
     }
 
+    // -------------------------------------------------------------------------------------------------------------------------
     public void drawIt(Batch batch, float x, float y, float width, float height) {
         int si = 7;
 
@@ -58,6 +64,7 @@ public class BorderDrawer2 {
         batch.draw(this.borderver, x + width, y + si, -si, height - si * 2);
     }
 
+    // -------------------------------------------------------------------------------------------------------------------------
     public void setGenericColors(boolean enabled, boolean focused, boolean hovered) {
         if (!enabled) {
             this.setBackgroundColor(Color.DARK_GRAY);
@@ -68,4 +75,5 @@ public class BorderDrawer2 {
         }
     }
 
+    // -------------------------------------------------------------------------------------------------------------------------
 }

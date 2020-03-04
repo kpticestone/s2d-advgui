@@ -1,4 +1,4 @@
-package de.s2d_advgui.demo;
+package de.s2d_advgui.demo.cases.animations;
 
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Rectangle;

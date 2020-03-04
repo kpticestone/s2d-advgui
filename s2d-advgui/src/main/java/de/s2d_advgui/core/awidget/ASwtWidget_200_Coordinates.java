@@ -8,7 +8,6 @@ import de.s2d_advgui.core.stage.ISwtStage;
 
 public abstract class ASwtWidget_200_Coordinates<ACTOR extends Actor> extends ASwtWidget_050_Disposing<ACTOR> {
     // -------------------------------------------------------------------------------------------------------------------------
-    // protected float x = 0, y = 0, w = 0, h = 0;
     protected final Rectangle bounds = new Rectangle();
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -39,7 +38,7 @@ public abstract class ASwtWidget_200_Coordinates<ACTOR extends Actor> extends AS
     public final void setBounds(Rectangle src) {
         this.setBounds(src.x, src.y, src.width, src.height);
     }
-    
+
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final Rectangle getBounds() {
@@ -86,7 +85,7 @@ public abstract class ASwtWidget_200_Coordinates<ACTOR extends Actor> extends AS
     public final float getY() {
         return this.bounds.y;
     }
-    
+
     // -------------------------------------------------------------------------------------------------------------------------
     public final void setX(float x) {
         this.bounds.x = x;

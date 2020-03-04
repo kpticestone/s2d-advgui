@@ -1,4 +1,4 @@
-package de.s2d_advgui.demo.cases.buttons;
+package de.s2d_advgui.core.tabledata;
 
 import de.s2d_advgui.core.awidget.ASwtLayoutData;
 

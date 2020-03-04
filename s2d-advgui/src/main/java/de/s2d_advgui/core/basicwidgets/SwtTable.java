@@ -3,6 +3,7 @@ package de.s2d_advgui.core.basicwidgets;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+
 import de.s2d_advgui.core.awidget.ASwtWidget;
 
 public class SwtTable extends ASwtWidget<Table> {
@@ -10,7 +11,7 @@ public class SwtTable extends ASwtWidget<Table> {
     public SwtTable(ASwtWidget<? extends Group> pParent) {
         super(pParent, false);
     }
-    
+
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public boolean getIgnoreOnCalcPos() {
