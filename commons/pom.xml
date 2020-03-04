@@ -10,6 +10,7 @@
         <relativePath>../parent</relativePath>
     </parent>
     <artifactId>commons</artifactId>
+	<name>de.s2d-advgui.commons</name>
     <dependencies>
     </dependencies>
 </project>

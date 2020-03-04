@@ -10,6 +10,7 @@
         <relativePath>../parent</relativePath>
     </parent>
     <artifactId>s2d-advgui-demo</artifactId>
+	<name>de.s2d-advgui.s2d-advgui-demo</name>
     <dependencies>
         <dependency>
             <groupId>de.s2d-advgui</groupId>

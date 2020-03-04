@@ -10,6 +10,7 @@
         <relativePath>../parent</relativePath>
     </parent>
     <artifactId>singstar</artifactId>
+	<name>de.s2d-advgui.singstar</name>
     <dependencies>
         <dependency>
             <groupId>org.reflections</groupId>
