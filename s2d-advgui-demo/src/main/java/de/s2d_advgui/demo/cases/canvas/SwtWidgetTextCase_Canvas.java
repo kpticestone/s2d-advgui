@@ -9,7 +9,7 @@ import de.s2d_advgui.core.awidget.ASwtWidget;
 import de.s2d_advgui.demo.cases.ASwtWidgetTestCase;
 import de.s2d_advgui.demo.cases.ASwtWidgetTestPanel;
 
-public class SwtWidgetTextCase_Canvas extends ASwtWidgetTestCase {
+public final class SwtWidgetTextCase_Canvas extends ASwtWidgetTestCase {
     // -------------------------------------------------------------------------------------------------------------------------
     @Nonnull
     public final static String ID = "Canvas"; //$NON-NLS-1$

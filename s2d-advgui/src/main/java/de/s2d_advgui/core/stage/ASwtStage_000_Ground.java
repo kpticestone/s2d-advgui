@@ -65,7 +65,7 @@ public abstract class ASwtStage_000_Ground<RM extends AResourceManager, DM exten
     public final MasterViewport getViewport() {
         return (MasterViewport) super.getViewport();
     }
-
+    
     // -------------------------------------------------------------------------------------------------------------------------
     @Nonnull
     @Override

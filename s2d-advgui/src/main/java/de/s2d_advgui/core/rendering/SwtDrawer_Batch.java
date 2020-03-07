@@ -15,7 +15,6 @@ import com.badlogic.gdx.utils.Align;
 
 import de.s2d_advgui.commons.TNull;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
-import de.s2d_advgui.core.tabledata.SwtTableData;
 
 public final class SwtDrawer_Batch<RM extends AResourceManager> extends ASwtDrawer {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -144,6 +143,18 @@ public final class SwtDrawer_Batch<RM extends AResourceManager> extends ASwtDraw
             this.batch.setColor(1f, 1f, 1f, 1f / segments * i);
             this.batch.draw(this.white, x, y, 0, 0, len, pThickness, 1f, 1f, curAngle + (180 - gamma));
         }
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public void draw(String ppo, Rectangle rr) {
+        TextureRegion ppox = this.resourceManager.getTextureRegion(ppo);
+        this.draw(ppox, rr.x, rr.y, rr.width, rr.height);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public void draw(String ppo, float x, float y, float width, float height) {
+        TextureRegion ppox = this.resourceManager.getTextureRegion(ppo);
+        this.draw(ppox, x, y, width, height);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

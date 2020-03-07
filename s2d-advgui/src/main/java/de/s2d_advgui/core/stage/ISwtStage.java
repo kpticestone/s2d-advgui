@@ -5,10 +5,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.viewport.Viewport;
+
 import de.s2d_advgui.core.application.ISwtApplicationController;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.rendering.ISwtDrawerManager;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
+import de.s2d_advgui.core.screens.MasterViewport;
 import de.s2d_advgui.core.window.SwtWindow;
 import de.s2d_advgui.core.window.WindowID;
 import de.s2d_advgui.commons.Trigger;
@@ -85,6 +88,9 @@ public interface ISwtStage<RM extends AResourceManager, DM extends ISwtDrawerMan
 
     // -------------------------------------------------------------------------------------------------------------------------
     float getDelta();
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    MasterViewport getViewport();
 
     // -------------------------------------------------------------------------------------------------------------------------
 }

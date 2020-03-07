@@ -1,69 +1,71 @@
 package de.s2d_advgui.demo.cases.canvas;
 
+import javax.annotation.Nonnull;
+
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Group;
 
 import de.s2d_advgui.animations.AnimationManager;
-import de.s2d_advgui.commons.TOldCompatibilityCode;
 import de.s2d_advgui.core.awidget.IMyWidgetUpdateHandler;
-import de.s2d_advgui.core.canvas.ICanvasRenderer;
+import de.s2d_advgui.core.awidget.ISwtWidget;
+import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
+import de.s2d_advgui.core.camera.CameraHolder;
+import de.s2d_advgui.core.canvas.SwtCanvas;
 import de.s2d_advgui.core.geom.animations.Animation_ChangeBounds;
 import de.s2d_advgui.core.geom.animations.IAnimationListener_ChangeBounds;
 import de.s2d_advgui.core.rendering.SwtDrawerManager;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
-import de.s2d_advgui.core.rendering.SwtDrawer_Shapes;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
-import de.s2d_advgui.core.stage.ASwtStage;
+import de.s2d_advgui.core.utils.RectangleFactory;
 
-public class DemoCanvasScene extends ICanvasRenderer<AResourceManager, SwtDrawerManager<AResourceManager>>
+public class SwtCanvas_DemoScene1 extends SwtCanvas<AResourceManager, SwtDrawerManager<AResourceManager>>
         implements IMyWidgetUpdateHandler {
     // -------------------------------------------------------------------------------------------------------------------------
     private double time = 0;
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public DemoCanvasScene(ASwtStage<?, ?> stage, SwtDrawerManager<AResourceManager> pDrawerManager) {
-        super(stage, pDrawerManager);
-        this.newAnim();
-    }
+    Rectangle cur = new Rectangle(0, 0, 192, 108);
 
     // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    public void act(float delta) {
-        this.time += delta;
+    Rectangle src = null;
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    Rectangle dst = null;
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public SwtCanvas_DemoScene1(@Nonnull ISwtWidget<? extends Group> pParent) {
+        super(pParent, new SwtDrawerManager<>(pParent.getContext().getResourceManager()));
+        this.newAnim();
+        this.addUpdateHandler(delta -> this.time += delta);
+        this.addDrawerBackground(new InternalWidgetDrawerBatch() {
+            @Override
+            protected void _drawIt(SwtDrawer_Batch<?> batch, Vector2 pScreenCoords, Rectangle dims) {
+                batch.setColor(0.6f, 0.6f, 0.8f, .75f);
+                batch.draw("icons/128/cow.png", RectangleFactory.explode(dims, -10));
+            }
+        });
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     protected void _drawIt(Rectangle dimensions) {
-        this.cameraHolder.setWantedZoom(1f);
-        this.cameraHolder.getCamera().update();
+        CameraHolder cameraHolder = this.drawerManager.getCameraHolder();
+        cameraHolder.setWantedZoom(1f);
+        cameraHolder.getCamera().update();
 
         Batch bb = this.drawerManager.getBatch();
-        bb.setProjectionMatrix(this.cameraHolder.getCamera().combined);
+        bb.setProjectionMatrix(cameraHolder.getCamera().combined);
         ShapeRenderer sr = this.drawerManager.getShapeRenderer();
-        sr.setProjectionMatrix(this.cameraHolder.getCamera().combined);
+        sr.setProjectionMatrix(cameraHolder.getCamera().combined);
 
-        if (TOldCompatibilityCode.FALSE) {
-            try (SwtDrawer_Shapes sd = this.drawerManager.startShapesDrawer()) {
-                sd.drawCross(0, 0, 100);
-                sd.rect(-dimensions.width / 2f + 1, -dimensions.height / 2f + 1, dimensions.width - 2,
-                        dimensions.height - 2);
-            }
-        }
-        AResourceManager rm = this.drawerManager.getResourceManager();
         try (SwtDrawer_Batch<AResourceManager> bd = this.drawerManager.startBatchDrawer()) {
-//			System.err.println("cur: " + cur);
-            bd.draw(rm.getTextureRegion("icons/128/convertible_blue.png"), this.cur.x, this.cur.y, this.cur.width,
-                    this.cur.height);
+            bd.draw("icons/128/convertible_blue.png", this.cur);
         }
     }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    Rectangle cur = new Rectangle(0, 0, 192, 108);
-    Rectangle src = null;
-    Rectangle dst = null;
 
     // -------------------------------------------------------------------------------------------------------------------------
     void newAnim() {
@@ -89,13 +91,12 @@ public class DemoCanvasScene extends ICanvasRenderer<AResourceManager, SwtDrawer
             this.dst.width = 300;
         if (this.dst.height > 300)
             this.dst.height = 300;
-//		System.err.println("dst: " + dst);
 
         Animation_ChangeBounds back = new Animation_ChangeBounds(0f, 1000f, this.src, this.dst,
                 new IAnimationListener_ChangeBounds() {
                     @Override
                     public void onChange(Rectangle pRect) {
-                        DemoCanvasScene.this.cur.set(pRect);
+                        SwtCanvas_DemoScene1.this.cur.set(pRect);
                     }
                 });
         back.setCloseListener(() -> {
