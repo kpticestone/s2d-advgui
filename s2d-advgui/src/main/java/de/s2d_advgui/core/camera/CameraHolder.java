@@ -1,7 +1,5 @@
 package de.s2d_advgui.core.camera;
 
-import javax.annotation.Nonnull;
-
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Polygon;
@@ -10,6 +8,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import de.s2d_advgui.core.utils.CalcUtils;
+
+import javax.annotation.Nonnull;
 
 public final class CameraHolder {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -80,12 +80,13 @@ public final class CameraHolder {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
+
     /**
      * Die unproject-Methoden an der Standard-Camera-Implementierung unterstützt
      * leider unsere Canvas-Platzierungen nicht richtig, weil diese immer von einer
      * vollen Fenster-Höhe ausgehen. Deshalb gibt es nun eine leicht abgewandelte
      * Fassung hier... :D
-     * 
+     *
      * @param cam
      * @param screenCoords
      * @param viewportX
@@ -103,6 +104,11 @@ public final class CameraHolder {
         screenCoords.y = -((2 * y) / viewportHeight - 1);
         screenCoords.prj(cam.invProjectionView);
         return screenCoords;
+    }
+
+    public Vector2 project(Vector2 v) {
+        Vector3 project = getCamera().project(new Vector3(v, 0));
+        return v.set(project.x, -project.y);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
