@@ -1,15 +1,16 @@
 package de.s2d_advgui.core.awidget;
 
-import java.util.Collection;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import de.s2d_advgui.core.layoutmanager.ASwtLayoutManager;
+import de.s2d_advgui.core.rendering.ISwtDrawerManager;
+import de.s2d_advgui.core.resourcemanager.AResourceManager;
 import de.s2d_advgui.core.stage.ISwtStage;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.List;
 
 public interface ISwtWidget<PT extends Actor> {
     // -------------------------------------------------------------------------------------------------------------------------

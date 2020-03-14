@@ -8,6 +8,8 @@ import java.util.function.Consumer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import de.s2d_advgui.core.rendering.ISwtDrawerManager;
+import de.s2d_advgui.core.resourcemanager.AResourceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
