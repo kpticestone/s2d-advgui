@@ -2,6 +2,7 @@ package de.s2d_advgui.core.camera;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -64,7 +65,7 @@ public final class CameraHolder {
             this.wantedZoom = this.wantedZoom - (distance / 2f);
         }
         float mod = pAmount / (10f / this.wantedZoom);
-        this.wantedZoom = Math.max(this.wantedZoom + mod, .01f);
+        this.wantedZoom = MathUtils.clamp(this.wantedZoom + mod, .01f,10000f);
         return true;
     }
 
