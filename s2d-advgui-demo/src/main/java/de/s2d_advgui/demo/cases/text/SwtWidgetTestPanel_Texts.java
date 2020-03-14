@@ -6,13 +6,14 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.basicwidgets.SwtTextField;
+import de.s2d_advgui.core.tabledata.ESwtTableMode;
 import de.s2d_advgui.demo.cases.ASwtWidgetTestPanelWidth2DimRaster;
 import de.s2d_advgui.demo.cases.ICons;
 
 final class SwtWidgetTestPanel_Texts extends ASwtWidgetTestPanelWidth2DimRaster {
     // -------------------------------------------------------------------------------------------------------------------------
     SwtWidgetTestPanel_Texts(ISwtWidget<? extends Group> pParent) {
-        super(pParent, 50);
+        super(pParent, ESwtTableMode.AUTOSIZEBYCHILDREN, 30);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

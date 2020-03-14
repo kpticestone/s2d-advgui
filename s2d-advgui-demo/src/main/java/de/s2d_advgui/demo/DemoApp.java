@@ -7,25 +7,25 @@ import de.s2d_advgui.core.application.SwtApplication;
 import de.s2d_advgui.core.rendering.ISwtDrawerManager;
 
 public class DemoApp extends SwtApplication<DemoResourceManager, ISwtDrawerManager<DemoResourceManager>, DemoStage> {
-	// -------------------------------------------------------------------------------------------------------------------------
-	public DemoApp(ISwtDrawerManager<DemoResourceManager> pDrawerManager) throws Exception {
-		super(pDrawerManager);
-		this.registerScreen(DemoScreenDescriptor.getInstance());
-	}
+    // -------------------------------------------------------------------------------------------------------------------------
+    public DemoApp(ISwtDrawerManager<DemoResourceManager> pDrawerManager) throws Exception {
+        super(pDrawerManager);
+        this.registerScreen(DemoScreenDescriptor.getInstance());
+    }
 
-	// -------------------------------------------------------------------------------------------------------------------------
-	@Override
-	protected DemoStage _createStage(
-			ISwtApplicationController<DemoResourceManager, ISwtDrawerManager<DemoResourceManager>> pApplicationController) {
-		DemoStage stage = new DemoStage(pApplicationController);
-		return stage;
-	}
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    protected DemoStage _createStage(
+            ISwtApplicationController<DemoResourceManager, ISwtDrawerManager<DemoResourceManager>> pApplicationController) {
+        DemoStage stage = new DemoStage(pApplicationController);
+        return stage;
+    }
 
-	// -------------------------------------------------------------------------------------------------------------------------
-	@Override
-	protected String getTitle() {
-		return "Scene2D Widget Toolkit Demo (" + Gdx.graphics.getFramesPerSecond() + " fps)";
-	}
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    protected String getTitle() {
+        return "Scene2D Widget Toolkit Demo (" + Gdx.graphics.getFramesPerSecond() + " fps)";
+    }
 
-	// -------------------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------------------------------
 }

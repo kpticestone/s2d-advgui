@@ -33,7 +33,12 @@ public final class TableDataManager {
     private final int o1;
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public TableDataManager(AResourceManager pRm, String pTextureResource, int pColumnCount, int pRowCount) {
+    private final ESwtTableMode mode;
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public TableDataManager(AResourceManager pRm, String pTextureResource, ESwtTableMode pMode, int pColumnCount,
+            int pRowCount) {
+        this.mode = pMode;
         this.tableData = new SwtTableData(pColumnCount, pRowCount);
         this.pRowCount = pRowCount;
         this.pColumnCount = pColumnCount;
@@ -96,16 +101,28 @@ public final class TableDataManager {
 
     // -------------------------------------------------------------------------------------------------------------------------
     void _calculate(ISwtWidget<?> pWidget, float width, float height) {
-        if(TOldCompatibilityCode.FALSE)
+        if (TOldCompatibilityCode.FALSE)
             if (this.tableData.renews[0] == width && this.tableData.renews[1] == height) return;
         this.tableData.renews[0] = width;
         this.tableData.renews[1] = height;
-        
+
         for (int i = 0; i < this.pColumnCount; i++) {
             this.tableData.columnWidths[i] = 0f;
         }
         for (int i = 0; i < this.pRowCount; i++) {
             this.tableData.rowHeights[i] = 0f;
+        }
+        if (this.mode == ESwtTableMode.FULLFILL) {
+            float restHeight = height - (this.pRowCount + 1) * this.o1;
+            float restWidth = width - (this.pColumnCount + 1) * this.o1;
+            float oneHeight = restHeight / this.pRowCount;
+            float oneWidth = restWidth / this.pColumnCount;
+            for (ISwtWidget<?> a : pWidget.getChildren()) {
+                ASwtLayoutData ld = a.getSwtLayoutData();
+                if (ld instanceof SwtLayoutDataCellPosition) {
+                    a.setSize(oneWidth, oneHeight);
+                }
+            }
         }
         for (ISwtWidget<?> a : pWidget.getChildren()) {
             ASwtLayoutData ld = a.getSwtLayoutData();

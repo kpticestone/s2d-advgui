@@ -8,13 +8,14 @@ import com.badlogic.gdx.utils.Align;
 
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.basicwidgets.SwtLabel;
+import de.s2d_advgui.core.tabledata.ESwtTableMode;
 import de.s2d_advgui.demo.cases.ASwtWidgetTestPanelWidth2DimRaster;
 import de.s2d_advgui.demo.cases.ICons;
 
 final class SwtWidgetTestPanel_Labels extends ASwtWidgetTestPanelWidth2DimRaster {
     // -------------------------------------------------------------------------------------------------------------------------
     SwtWidgetTestPanel_Labels(ISwtWidget<? extends Group> pParent) {
-        super(pParent, 50);
+        super(pParent, ESwtTableMode.FULLFILL, 50);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

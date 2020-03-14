@@ -188,6 +188,7 @@ public abstract class SwtCanvas<RM extends AResourceManager, DM extends ISwtDraw
     // -------------------------------------------------------------------------------------------------------------------------
     /**
      * convert coordinates from scene into coordinates of the swtcanvas
+     * 
      * @param pX
      * @param pY
      * @return
@@ -200,6 +201,12 @@ public abstract class SwtCanvas<RM extends AResourceManager, DM extends ISwtDraw
                 ld.width, ld.height);
         Vector2 dke = this.getActor().screenToLocalCoordinates(new Vector2(ooo.x, sd.height - ooo.y));
         return dke;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Nonnull
+    public final DM getDrawerManager() {
+        return this.drawerManager;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

@@ -8,13 +8,14 @@ import com.badlogic.gdx.utils.Array;
 
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.basicwidgets.SwtComboBox;
+import de.s2d_advgui.core.tabledata.ESwtTableMode;
 import de.s2d_advgui.demo.cases.ASwtWidgetTestPanelWidth2DimRaster;
 import de.s2d_advgui.demo.cases.ICons;
 
 final class SwtWidgetTestPanel_ComboBoxes extends ASwtWidgetTestPanelWidth2DimRaster {
     // -------------------------------------------------------------------------------------------------------------------------
     SwtWidgetTestPanel_ComboBoxes(ISwtWidget<? extends Group> pParent) {
-        super(pParent, 50);
+        super(pParent, ESwtTableMode.AUTOSIZEBYCHILDREN, 30);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

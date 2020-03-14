@@ -29,8 +29,8 @@ public abstract class ASwtWidget_200_Coordinates<ACTOR extends Actor> extends AS
             this.bounds.y = y;
             this.bounds.width = w;
             this.bounds.height = h;
+            this.calcPositions();
         }
-        this.calcPositions();
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -52,8 +52,19 @@ public abstract class ASwtWidget_200_Coordinates<ACTOR extends Actor> extends AS
         if (changed) {
             this.bounds.x = x;
             this.bounds.y = y;
+            this.calcPositions();
         }
-        this.calcPositions();
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public final void setSize(float pWidth, float pHeight) {
+        boolean changed = this.bounds.width != pWidth || this.bounds.height != pHeight;
+        if (changed) {
+            this.bounds.width = pWidth;
+            this.bounds.height = pHeight;
+            this.calcPositions();
+        }
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

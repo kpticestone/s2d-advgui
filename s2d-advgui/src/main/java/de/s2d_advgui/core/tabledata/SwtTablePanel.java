@@ -9,12 +9,11 @@ import de.s2d_advgui.core.resourcemanager.AResourceManager;
 
 public class SwtTablePanel extends SwtPanel {
     // -------------------------------------------------------------------------------------------------------------------------
-    public SwtTablePanel(ISwtWidget<? extends Group> pParent, int pColumnCount, int pRowCount) {
+    public SwtTablePanel(ISwtWidget<? extends Group> pParent, ESwtTableMode pMode, int pColumnCount, int pRowCount) {
         super(pParent, false);
         AResourceManager rm = pParent.getContext().getResourceManager();
-        TableDataManager layout = new TableDataManager(rm, "borders/white-round-5.png",
+        TableDataManager layout = new TableDataManager(rm, "borders/white-round-5.png", pMode,
                 pColumnCount, pRowCount);
-        
         this.addDrawerBackground(layout.getBatchDrawer(Color.GREEN));
         this.setLayoutManager(layout.getLayoutManager());
     }

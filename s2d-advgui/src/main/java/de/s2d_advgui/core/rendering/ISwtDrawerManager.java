@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Matrix4;
+
 import de.s2d_advgui.core.camera.CameraHolder;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
 
@@ -40,17 +41,28 @@ public interface ISwtDrawerManager<RM extends AResourceManager> {
 
     // -------------------------------------------------------------------------------------------------------------------------
     default ISwtBatchSaver batchSave() {
+        return this.batchSave(false);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    default ISwtBatchSaver batchSave(boolean stopBatch) {
         Batch pBatch = this.getBatch();
         ShapeRenderer sr = this.getShapeRenderer();
         Matrix4 pjm = new Matrix4(pBatch.getProjectionMatrix());
         Matrix4 tmj = new Matrix4(pBatch.getTransformMatrix());
         Matrix4 pm = new Matrix4(sr.getProjectionMatrix());
         Matrix4 ps = new Matrix4(sr.getTransformMatrix());
+        if (stopBatch) {
+            pBatch.end();
+        }
         return () -> {
             pBatch.setTransformMatrix(tmj);
             pBatch.setProjectionMatrix(pjm);
             sr.setProjectionMatrix(pm);
             sr.setTransformMatrix(ps);
+            if (stopBatch) {
+                pBatch.begin();
+            }
         };
     }
 

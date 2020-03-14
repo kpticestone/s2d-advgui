@@ -6,7 +6,6 @@ import java.util.Map;
 import com.badlogic.gdx.math.Rectangle;
 
 import de.s2d_advgui.animations.AnimationManager;
-import de.s2d_advgui.animations.IAnimationListener_Close;
 import de.s2d_advgui.commons.IInfoSupport;
 import de.s2d_advgui.core.basicwidgets.SwtButton;
 import de.s2d_advgui.core.basicwidgets.SwtPanel;
@@ -39,9 +38,6 @@ public class DemoScreen extends SwtScreen<DemoResourceManager, ISwtDrawerManager
     @Override
     public void onFirstCalculationDone() {
         super.onFirstCalculationDone();
-
-        float wii = this.actor.getWidth();
-        float hee = this.actor.getHeight();
 
         int aty = 0;
         for (ASwtWidgetTestCase someTestCase : CONT.values()) {
@@ -83,12 +79,7 @@ public class DemoScreen extends SwtScreen<DemoResourceManager, ISwtDrawerManager
             Rectangle dst = ello.oo;
             Animation_ChangeBounds ani = new Animation_ChangeBounds(0f, 500f, ello.border.getBounds(), dst,
                     new AnimationListener_RectangleSupport(ello.border));
-            ani.setCloseListener(new IAnimationListener_Close() {
-                @Override
-                public void onAnimationClosed() throws Exception {
-                    ello.border.disposeChildren();
-                }
-            });
+            ani.setCloseListener(() -> ello.border.disposeChildren());
             AnimationManager.getInstance().startAnimation(ani);
         }
 
@@ -102,6 +93,9 @@ public class DemoScreen extends SwtScreen<DemoResourceManager, ISwtDrawerManager
         Rectangle dst = new Rectangle(200, 0, wii - 200, hee);
         Animation_ChangeBounds ani = new Animation_ChangeBounds(0f, 1000f, border.getBounds(), dst,
                 new AnimationListener_RectangleSupport(border));
+        ani.setCloseListener(() -> {
+            border.setBounds(200, 0, -200, 0);
+        });
         AnimationManager.getInstance().startAnimation(ani);
     }
 
