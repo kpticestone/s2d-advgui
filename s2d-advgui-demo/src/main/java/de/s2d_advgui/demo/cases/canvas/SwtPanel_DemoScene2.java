@@ -69,6 +69,8 @@ public class SwtPanel_DemoScene2 extends SwtPanel {
     public SwtPanel_DemoScene2(ISwtWidget<? extends Group> pParent) {
         super(pParent, false);
 
+        // this.setClip(true);
+
         SwtCanvas_DemoScene2 canvas = new SwtCanvas_DemoScene2(this, true);
         canvas.setBounds(0, 0, 0, 0);
 
@@ -132,10 +134,18 @@ public class SwtPanel_DemoScene2 extends SwtPanel {
                 @Override
                 protected void _drawIt(SwtDrawer_Shapes sd, Vector2 pScreenCoords, Rectangle pDims) {
                     sd.setColor(Color.YELLOW);
-                    sd.getRenderer().line(pDims.x, pDims.y, pDims.x + curJhh.minX, pDims.y + curJhh.minY);
-                    sd.getRenderer().line(pDims.x, pDims.y, pDims.x + curJhh.maxX, pDims.y + curJhh.maxY);
-                    sd.getRenderer().line(pDims.x, pDims.y, pDims.x + curJhh.minX, pDims.y + curJhh.maxY);
-                    sd.getRenderer().line(pDims.x, pDims.y, pDims.x + curJhh.maxX, pDims.y + curJhh.minY);
+                    sd.getRenderer().line(
+                            pDims.x, pDims.y,
+                            pDims.x + curJhh.minX, pDims.y + curJhh.minY);
+                    sd.getRenderer().line(
+                            pDims.x + pDims.width, pDims.y + pDims.height,
+                            pDims.x + curJhh.maxX, pDims.y + curJhh.maxY);
+                    sd.getRenderer().line(
+                            pDims.x, pDims.y + pDims.height,
+                            pDims.x + curJhh.minX, pDims.y + curJhh.maxY);
+                    sd.getRenderer().line(
+                            pDims.x + pDims.width, pDims.y,
+                            pDims.x + curJhh.maxX, pDims.y + curJhh.minY);
 
                     sd.setColor(Color.BLACK);
 

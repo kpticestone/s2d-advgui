@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -42,9 +41,9 @@ public class SwtCanvas_DemoScene2 extends SwtCanvas<AResourceManager, SwtDrawerM
 
     // -------------------------------------------------------------------------------------------------------------------------
     private void zoomAnim() {
-        float rndZoom = .2f + new RandomXS128().nextFloat()*.2f;
+        float rndZoom = .2f + new RandomXS128().nextFloat() * .2f;
         this.drawerManager.getCameraHolder().setWantedZoom(rndZoom);
-        AnimationManager.getInstance().startAnimation(new Animation_Sleep(0f, 2500f, ()-> {
+        AnimationManager.getInstance().startAnimation(new Animation_Sleep(0f, 2500f, () -> {
             zoomAnim();
         }));
     }
@@ -55,8 +54,7 @@ public class SwtCanvas_DemoScene2 extends SwtCanvas<AResourceManager, SwtDrawerM
         Rectangle src = new Rectangle(this.entity);
         Rectangle dst = new Rectangle(-20 + rnd.nextInt(40), -20 + rnd.nextInt(40),
                 20 + rnd.nextInt(10),
-                20 + rnd.nextInt(10)
-                );
+                20 + rnd.nextInt(10));
         // dst.setPosition(20, 10);
         IAnimationListener_ChangeBounds pListener = pRect -> this.entity.set(pRect);
         Animation_ChangeBounds an = new Animation_ChangeBounds(0f, 5000f, src, dst, pListener);
@@ -92,7 +90,7 @@ public class SwtCanvas_DemoScene2 extends SwtCanvas<AResourceManager, SwtDrawerM
 
         ShapeRenderer sr = this.drawerManager.getShapeRenderer();
         sr.setProjectionMatrix(cam.combined);
-        
+
         TextureRegion rr = this.drawerManager.getResourceManager().getColorTextureRegion(Color.BROWN);
 
         try (SwtDrawer_Batch<AResourceManager> bd = this.drawerManager.startBatchDrawer()) {

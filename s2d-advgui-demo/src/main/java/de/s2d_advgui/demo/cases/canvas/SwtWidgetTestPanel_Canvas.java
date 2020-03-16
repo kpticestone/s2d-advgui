@@ -13,13 +13,13 @@ import de.s2d_advgui.demo.cases.ICons;
 public class SwtWidgetTestPanel_Canvas extends ASwtWidgetTestPanelWidth2DimRaster {
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtWidgetTestPanel_Canvas(ISwtWidget<? extends Group> pParent) {
-        super(pParent, ESwtTableMode.FULLFILL, 100);
+        super(pParent, ESwtTableMode.FULLFILL, 100, 2);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     protected void fillBuilds(List<ICons> builds) {
-        if (TOldCompatibilityCode.TRUE) {
+        if (TOldCompatibilityCode.FALSE) {
             builds.add(new ICons("regular", pParent -> {
                 return new SwtCanvas_DemoScene1(pParent);
             }));
@@ -28,10 +28,10 @@ public class SwtWidgetTestPanel_Canvas extends ASwtWidgetTestPanelWidth2DimRaste
                 back.setDisabled();
                 return back;
             }));
-            builds.add(new ICons("mouse coordinates 1", pParent -> {
-                return new SwtPanel_DemoScene2b(pParent);
-            }));
         }
+        builds.add(new ICons("mouse coordinates 1", pParent -> {
+            return new SwtPanel_DemoScene2b(pParent);
+        }));
         builds.add(new ICons("entity coordinates 1", pParent -> {
             return new SwtPanel_DemoScene2(pParent);
         }));
