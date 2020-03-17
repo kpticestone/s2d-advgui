@@ -79,6 +79,7 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
             paractor.addActor(this.actor);
         }
         this.parent.getChildren().add(this);
+        this.parent.calcPositions();
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -168,6 +169,7 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final void act(float delta) {
+        this.recalc();
         for (IMyWidgetUpdateHandler a : this.updateHandler) {
             try {
                 a.act(delta);
@@ -184,6 +186,9 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
         }
     }
 
+    // -------------------------------------------------------------------------------------------------------------------------
+    abstract boolean recalc();
+    
     // -------------------------------------------------------------------------------------------------------------------------
     @Nullable
     @Override

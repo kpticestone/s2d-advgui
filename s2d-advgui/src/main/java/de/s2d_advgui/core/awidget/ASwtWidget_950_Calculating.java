@@ -17,6 +17,9 @@ public abstract class ASwtWidget_950_Calculating<ACTOR extends Actor> extends AS
     private boolean hasAlreadyFirstCalculationDone = false;
 
     // -------------------------------------------------------------------------------------------------------------------------
+    private boolean doRecalc = false;
+
+    // -------------------------------------------------------------------------------------------------------------------------
     public ASwtWidget_950_Calculating(ISwtStage<?, ?> pContext) {
         super(pContext);
     }
@@ -29,6 +32,15 @@ public abstract class ASwtWidget_950_Calculating<ACTOR extends Actor> extends AS
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final boolean calcPositions() {
+        this.doRecalc = true;
+        return true;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    final boolean recalc() {
+        if (!this.doRecalc) return false;
+        this.doRecalc = false;
         float wi, hh, newX, newY, newW, newH;
         Rectangle bnds = this.getBounds();
         if (this.parent == null) {
