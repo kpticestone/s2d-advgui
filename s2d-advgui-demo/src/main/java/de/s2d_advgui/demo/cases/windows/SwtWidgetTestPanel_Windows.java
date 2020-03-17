@@ -20,7 +20,7 @@ final class SwtWidgetTestPanel_Windows extends ASwtWidgetTestPanel {
         SwtButton btnModal2 = new SwtButton(this, "open modeless");
         btnModal2.setBounds(5, 35, 150, 25);
         btnModal2.addLeftClickListener(() -> {
-            new SwtWindow(pParent, "91238921", false, 620, 400);
+            new SwtWindow(pParent, "91238921", false, 640, 200);
         });
 
         SwtButton btnModal3 = new SwtButton(this, "show message");

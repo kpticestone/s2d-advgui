@@ -26,6 +26,7 @@ import de.s2d_advgui.core.basicwidgets.SwtPanel;
 import de.s2d_advgui.core.input.keys.ASwtInputRegister_Keys;
 import de.s2d_advgui.core.layoutmanager.ASwtLayoutManager;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
+import de.s2d_advgui.core.utils.RectangleFactory;
 
 public class SwtWindow extends ASwtWidget_ControllerLevel<WidgetGroup> implements ISwtWindow {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -90,6 +91,7 @@ public class SwtWindow extends ASwtWidget_ControllerLevel<WidgetGroup> implement
             int prefHeight) {
         super(top(pParent), false, modal);
         this.modal = modal;
+        this.setBounds(0, 0, prefWidth, prefHeight);
         this.setLayoutNegativePositions(false);
         this.prefWidth = prefWidth;
         this.prefHeight = prefHeight;
@@ -150,8 +152,20 @@ public class SwtWindow extends ASwtWidget_ControllerLevel<WidgetGroup> implement
             }
 
         });
-
-        this.windowPanel.setBounds(200, 200, 400, 400);
+        this.addDrawerForeground((pBatchDrawer, pScreenCoords, dims) -> {
+            try (SwtDrawer_Batch<?> batch = pBatchDrawer.startBatchDrawer()) {
+                if (inDrag) {
+                    batch.drawText("jasdjsao: " + getBounds() + "/" + getParent(), dims, Align.center, .5f, true, Color.RED);
+                    batch.drawBorder("/borders/white-round-5.png", RectangleFactory.explode(dims, -10));
+                }
+                else if( TOldCompatibilityCode.FALSE)
+                {
+                    batch.setColor(Color.GRAY);
+                    batch.drawBorder("/borders/white-round-5.png", RectangleFactory.explode(dims, -10));
+                }
+            }
+        });
+        // this.windowPanel.setBounds(200, 200, 400, 400);
 
         this.title = new SwtLabel(this.windowPanel, titleLabel);
         this.title.setColor(Color.CYAN);
@@ -200,7 +214,9 @@ public class SwtWindow extends ASwtWidget_ControllerLevel<WidgetGroup> implement
             this.actor.setBounds(0, 0, dims.width, dims.height);
         } else {
             Rectangle myBnds = this.getBounds();
-            this.actor.setBounds(myBnds.x, myBnds.y, myBnds.width, dims.height - myBnds.height);
+            this.actor.setBounds(myBnds.x, dims.height - myBnds.y - myBnds.height, myBnds.width, myBnds.height);
+            
+            // this.actor.setBounds(myBnds.x, myBnds.y, myBnds.width, myBnds.height);
         }
     }
 
@@ -289,8 +305,9 @@ public class SwtWindow extends ASwtWidget_ControllerLevel<WidgetGroup> implement
                         if (inDrag) {
                             Rectangle bnds = getBounds();
                             float newX = bnds.getX() + (inputEvent.getStageX() - dragX);
-                            float newY = bnds.getY() + (inputEvent.getStageY() - dragY);
+                            float newY = bnds.getY() - (inputEvent.getStageY() - dragY);
                             setPosition(newX, newY);
+                            title.setText(newX + "|"+ newY + "-" + bnds.width + "|" + bnds.height);
                             if (TOldCompatibilityCode.FALSE) {
                                 actor.setPosition(newX, newY);
                             }
