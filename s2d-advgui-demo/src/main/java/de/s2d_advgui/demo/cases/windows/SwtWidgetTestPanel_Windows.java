@@ -14,8 +14,19 @@ final class SwtWidgetTestPanel_Windows extends ASwtWidgetTestPanel {
         SwtButton btnModal1 = new SwtButton(this, "open modal");
         btnModal1.setBounds(5, 5, 150, 25);
         btnModal1.addLeftClickListener(() -> {
-            new SwtWindow(pParent, "91238921", 620, 400);
-            
+            new SwtWindow(pParent, "91238921", true, 620, 400);
+        });
+
+        SwtButton btnModal2 = new SwtButton(this, "open modeless");
+        btnModal2.setBounds(5, 35, 150, 25);
+        btnModal2.addLeftClickListener(() -> {
+            new SwtWindow(pParent, "91238921", false, 620, 400);
+        });
+
+        SwtButton btnModal3 = new SwtButton(this, "show message");
+        btnModal3.setBounds(5, 65, 150, 25);
+        btnModal3.addLeftClickListener(() -> {
+            SwtWindow.showMessage(pParent, "message dialog", "message for the dialog");
         });
     }
 

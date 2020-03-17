@@ -3,6 +3,7 @@ package de.s2d_advgui.core.awidget;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
@@ -11,7 +12,7 @@ import javax.annotation.Nonnull;
 
 public class ListenerList<E> implements Collection<E> {
     // -------------------------------------------------------------------------------------------------------------------------
-    private Collection<E> internal = new ArrayList<>();
+    private List<E> internal = new ArrayList<>();
     private Consumer<E> onAddConsumer;
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -111,6 +112,28 @@ public class ListenerList<E> implements Collection<E> {
     @Override
     public void clear() {
         this.internal.clear();
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public boolean bringToEnd(E pEntry) {
+        int wason = this.internal.indexOf(pEntry);
+        if (wason > 0) {
+            this.internal.remove(wason);
+            this.internal.add(0, pEntry);
+            return true;
+        }
+        return false;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public boolean bringToFront(E pEntry) {
+        int wason = this.internal.indexOf(pEntry);
+        if (wason > 0) {
+            this.internal.remove(wason);
+            this.internal.add(pEntry);
+            return true;
+        }
+        return false;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

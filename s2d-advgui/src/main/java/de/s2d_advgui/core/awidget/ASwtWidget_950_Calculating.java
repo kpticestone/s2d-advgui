@@ -56,7 +56,10 @@ public abstract class ASwtWidget_950_Calculating<ACTOR extends Actor> extends AS
             }
             this.actor.setBounds(newX, newY, newW, newH);
         } else {
-            if (!(this instanceof ISwtWindow)) {
+            if (this instanceof ISwtWindow) {
+                Rectangle dims = this.context.getStageDimensions();
+                ((ISwtWindow)this).applyWindowDims(dims);
+            } else {
                 wi = this.parent.getActor().getWidth();
                 hh = this.parent.getActor().getHeight();
                 newW = bnds.width > 0 ? bnds.width : wi + bnds.width;
@@ -68,9 +71,6 @@ public abstract class ASwtWidget_950_Calculating<ACTOR extends Actor> extends AS
                     newY = -bnds.y - newH;
                 }
                 this.actor.setBounds(newX, newY, newW, newH);
-            } else {
-                Rectangle dims = this.context.getStageDimensions();
-                this.actor.setBounds(0, 0, dims.width, dims.height);
             }
         }
         this.calcPositionsOfChildren();

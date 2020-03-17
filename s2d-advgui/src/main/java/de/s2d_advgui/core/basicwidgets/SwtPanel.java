@@ -51,12 +51,13 @@ public class SwtPanel extends ASwtWidget<WidgetGroup> {
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     protected final WidgetGroup createActor() {
-        return new WidgetGroup() {
+        WidgetGroup back = new WidgetGroup() {
             @Override
             public void draw(Batch batch, float parentAlpha) {
                 _internalDrawWidget(this, batch, parentAlpha, () -> super.draw(batch, parentAlpha));
             }
         };
+        return back;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

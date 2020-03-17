@@ -111,4 +111,7 @@ public interface ISwtWidget<PT extends Actor> extends IRectangleSupport {
     ASwtLayoutData getSwtLayoutData();
 
     // -------------------------------------------------------------------------------------------------------------------------
+    void bringToFront(ISwtWidget<?> someWidget);
+
+    // -------------------------------------------------------------------------------------------------------------------------
 }

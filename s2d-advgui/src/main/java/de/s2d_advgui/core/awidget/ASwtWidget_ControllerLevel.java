@@ -27,9 +27,16 @@ public abstract class ASwtWidget_ControllerLevel<T extends Actor> extends ASwtWi
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public ASwtWidget_ControllerLevel(ISwtWidget<? extends Group> pParent, boolean focusable) {
+    public ASwtWidget_ControllerLevel(ISwtWidget<? extends Group> pParent, boolean focusable, boolean modal) {
         super(pParent, focusable);
-        this.controllerLevel = new ControllerLevelImpl(() -> getContext().isControllerMode());
+        if (!modal && pParent instanceof ASwtWidget_ControllerLevel) {
+            System.err.println("..."); //$NON-NLS-1$
+            this.controllerLevel = ((ASwtWidget_ControllerLevel) pParent).controllerLevel;
+        }
+        else
+        {
+            this.controllerLevel = new ControllerLevelImpl(() -> getContext().isControllerMode());
+        }
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

@@ -34,7 +34,7 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Nonnull
-    protected final Collection<ISwtWidget<?>> children = new ListenerList<>(this::onChildAdded);
+    protected final ListenerList<ISwtWidget<?>> children = new ListenerList<>(this::onChildAdded);
 
     // -------------------------------------------------------------------------------------------------------------------------
     protected boolean visible = true;
@@ -117,6 +117,17 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
+    public final void bringToFront(ISwtWidget<?> someWidget) {
+        if (this.children.bringToFront(someWidget)) {
+            int cnt = 0;
+            for (ISwtWidget<?> a : this.children) {
+                a.getActor().setZIndex(cnt++);
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
     public void setVisible(boolean b) {
         if (this.visible != b) {
             this.visible = b;
@@ -188,7 +199,7 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
 
     // -------------------------------------------------------------------------------------------------------------------------
     abstract boolean recalc();
-    
+
     // -------------------------------------------------------------------------------------------------------------------------
     @Nullable
     @Override
