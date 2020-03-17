@@ -23,9 +23,11 @@ import de.s2d_advgui.demo.DemoResourceManager;
 
 public final class SwtCanvas_Mandelbrot extends SwtCanvas<DemoResourceManager, SwtDrawerManager<DemoResourceManager>> {
     // -------------------------------------------------------------------------------------------------------------------------
-    float useTop = -2f;
-    float useLeft = -2f;
-    double zoom = 0.005d;
+    float useTop = 0.30380f;
+    float useLeft = -1.0019f;
+    double zoom = 3d;
+    boolean autozoom = false;
+    int steps = 32;
 
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtCanvas_Mandelbrot(ISwtWidget<? extends Group> pParent,
@@ -40,7 +42,9 @@ public final class SwtCanvas_Mandelbrot extends SwtCanvas<DemoResourceManager, S
             @Override
             public void onHit(float cur) throws Exception {
                 // zoom = Math.pow(cur, 2);
-                zoom = cur;
+                if (autozoom) {
+                    zoom = cur;
+                }
             }
         });
         aa.setCloseListener(new IAnimationListener_Close() {
@@ -60,9 +64,9 @@ public final class SwtCanvas_Mandelbrot extends SwtCanvas<DemoResourceManager, S
         CameraHolder cameraHolder = this.drawerManager.getCameraHolder();
         OrthographicCamera cam = cameraHolder.getCamera();
         cam.zoom = 1f;
-        cam.rotate(.5f);
-//        cam.up.set(0, 1, 0);
-//        cam.direction.set(0, 0, -1);
+//        cam.rotate(.5f);
+        cam.up.set(0, 1, 0);
+        cam.direction.set(0, 0, -1);
         cam.update();
 
         Batch bb = this.drawerManager.getBatch();
@@ -79,16 +83,20 @@ public final class SwtCanvas_Mandelbrot extends SwtCanvas<DemoResourceManager, S
 //        sca = this.zoom;
 //        sca = 1f / 6000000f;
         double ia = 2 * 1f / sca;
-        if (ia > 200) {
-            ia = 200;
+        if (ia > 256) {
+            ia = 256;
         }
-        double sx = (float) (-1.0019f / sca);
-        double sy = (float) (0.30380f / sca);
+        double sx = (float) (this.useLeft / sca);
+        double sy = (float) (this.useTop / sca);
 
-        int steps = 30 + (int) (this.zoom / 10f); // +(int) (100/sca);
-        if (steps > 256) steps = 256;
-
-        steps = 256;
+//        int steps = 30 + (int) (this.zoom / 10f); // +(int) (100/sca);
+//        if (steps > 256) steps = 256;
+//
+//        steps = 256;
+        if( autozoom )
+        {
+            steps = (int) (this.zoom * 10);
+        }
 
         Color[] useCs = new Color[steps];
         for (int i = 0; i < steps; i++) {
@@ -101,7 +109,7 @@ public final class SwtCanvas_Mandelbrot extends SwtCanvas<DemoResourceManager, S
             try (SwtDrawer_Batch<DemoResourceManager> pBatch = this.drawerManager.startBatchDrawer()) {
                 for (int x = (int) -ia; x < ia; x++) {
                     for (int y = (int) -ia; y < ia; y++) {
-                        int kl = checkC(
+                        int kl = ch.checkC(
                                 (x + sx) * sca,
                                 (y + sy) * sca,
                                 steps - 1);
@@ -120,7 +128,7 @@ public final class SwtCanvas_Mandelbrot extends SwtCanvas<DemoResourceManager, S
                 for (int x = (int) -ia; x < ia; x++) {
                     ay = das;
                     for (int y = (int) -ia; y < ia; y++) {
-                        kl = checkC(ax, ay, steps - 1);
+                        kl = ch.checkC(ax, ay, steps - 1);
                         pBatch.setColor(useCs[kl]);
                         pBatch.draw(rras, x, y, 1f, 1f);
                         ay += l;
@@ -130,29 +138,37 @@ public final class SwtCanvas_Mandelbrot extends SwtCanvas<DemoResourceManager, S
             }
         }
 
-        try (SwtDrawer_Shapes sdr = this.drawerManager.startShapesDrawer()) {
-            sdr.getRenderer().ellipse(-100, -100, 200, 200);
-            sdr.getRenderer().line(0, 0, 0, 100);
-            sdr.getRenderer().line(0, 0, 100, 0);
+        if (TOldCompatibilityCode.FALSE) {
+            try (SwtDrawer_Shapes sdr = this.drawerManager.startShapesDrawer()) {
+                sdr.getRenderer().ellipse(-100, -100, 200, 200);
+                sdr.getRenderer().line(0, 0, 0, 100);
+                sdr.getRenderer().line(0, 0, 100, 0);
+            }
         }
     }
+    
+    CheckHolder ch = new CheckHolder();
 
-    // -------------------------------------------------------------------------------------------------------------------------
-    // C-Werte checken nach Zn+1 = Zn^2 + C, Zo = 0. 30 Iterationen.
-    public int checkC(double pX, double pY, int steps) {
+    static class CheckHolder {
+        // -------------------------------------------------------------------------------------------------------------------------
         double reZ = 0;
         double imZ = 0;
         double reZ_minus1 = 0;
         double imZ_minus1 = 0;
         int i;
-        for (i = 0; i < steps; i++) {
-            imZ = 2 * reZ_minus1 * imZ_minus1 + pY;
-            reZ = reZ_minus1 * reZ_minus1 - imZ_minus1 * imZ_minus1 + pX;
-            if (reZ * reZ + imZ * imZ > 4) return i;
-            reZ_minus1 = reZ;
-            imZ_minus1 = imZ;
+
+        // -------------------------------------------------------------------------------------------------------------------------
+        public int checkC(double pX, double pY, int steps) {
+            reZ = imZ = reZ_minus1 = imZ_minus1 = 0;
+            for (i = 0; i < steps; i++) {
+                imZ = 2 * reZ_minus1 * imZ_minus1 + pY;
+                reZ = reZ_minus1 * reZ_minus1 - imZ_minus1 * imZ_minus1 + pX;
+                if (reZ * reZ + imZ * imZ > 4) return i;
+                reZ_minus1 = reZ;
+                imZ_minus1 = imZ;
+            }
+            return i;
         }
-        return i;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
