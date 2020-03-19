@@ -17,7 +17,7 @@ public final class CameraHolder {
     private final OrthographicCamera camera = new OrthographicCamera();
 
     // -------------------------------------------------------------------------------------------------------------------------
-    private float wantedZoom = 0.02f;
+    public float zoomVelocity = 0f;
 
     // -------------------------------------------------------------------------------------------------------------------------
     private Polygon cullingArea;
@@ -48,23 +48,11 @@ public final class CameraHolder {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public float getWantedZoom() {
-        return this.wantedZoom;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    public void setWantedZoom(float wantedZoom) {
-        this.wantedZoom = wantedZoom;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
     public boolean adjustZoom(int pAmount) {
-        float distance = this.wantedZoom - this.camera.zoom;
-        if (CalcUtils.sign(distance) != CalcUtils.sign(pAmount)) {
-            this.wantedZoom = this.wantedZoom - (distance / 2f);
+        if (CalcUtils.sign(zoomVelocity) != CalcUtils.sign(pAmount)) {
+            this.zoomVelocity /= 2f;
         }
-        float mod = pAmount / (10f / this.wantedZoom);
-        this.wantedZoom = MathUtils.clamp(this.wantedZoom + mod, .01f,10000f);
+        this.zoomVelocity = MathUtils.clamp(this.zoomVelocity + pAmount, -100, 100);
         return true;
     }
 
@@ -75,7 +63,6 @@ public final class CameraHolder {
         Vector3 oxx = unproject(cam, totrans, this.getLastDims().x, this.getLastDims().y, this.getLastDims().width, this.getLastDims().height);
         out.x = oxx.x;
         out.y = oxx.y;
-
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -111,7 +98,7 @@ public final class CameraHolder {
 
     // -------------------------------------------------------------------------------------------------------------------------
     public void setViewport(float x, float y, float width, float height) {
-//        System.err.println("CameraHolder.setViewport(" + x + ", " + y + ", " + width + ", " + height + ");");
+        //        System.err.println("CameraHolder.setViewport(" + x + ", " + y + ", " + width + ", " + height + ");");
         // height+= 500;
         // y+= 400;
         this.getLastDims().set(x, y, width, height);

@@ -1,10 +1,9 @@
 package de.s2d_advgui.core.canvas;
 
-import javax.annotation.Nonnull;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import de.s2d_advgui.core.awidget.IInternalWidgetDrawer;
@@ -15,11 +14,12 @@ import de.s2d_advgui.core.rendering.ISwtDrawerManager;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
 import de.s2d_advgui.core.screens.MasterViewport;
 import de.s2d_advgui.core.screens.SlaveViewport;
-import de.s2d_advgui.core.utils.CalcUtils;
 import de.s2d_advgui.core.stage.ASwtStage;
+import de.s2d_advgui.core.utils.CalcUtils;
 
-public abstract class ICanvasRenderer<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>> implements IInternalWidgetDrawer
-{
+import javax.annotation.Nonnull;
+
+public abstract class ICanvasRenderer<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>> implements IInternalWidgetDrawer {
     // -------------------------------------------------------------------------------------------------------------------------
     @Nonnull
     protected final CameraHolder cameraHolder;
@@ -36,47 +36,43 @@ public abstract class ICanvasRenderer<RM extends AResourceManager, DM extends IS
     protected ISwtWidget<?> canvas;
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public ICanvasRenderer(ASwtStage<?, ?> stage, DM pDrawerManager)
-    {
+    public ICanvasRenderer(ASwtStage<?, ?> stage, DM pDrawerManager) {
         this.stage = stage;
         this.drawerManager = pDrawerManager;
         this.cameraHolder = pDrawerManager.getCameraHolder();
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public final DM getDrawerManager()
-    {
+    public final DM getDrawerManager() {
         return this.drawerManager;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public void coord123(Vector2 in, Vector2 out)
-    {
+    public void coord123(Vector2 in, Vector2 out) {
         this.cameraHolder.unproject(in, out);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    public void drawIt(ISwtDrawerManager<?> pDrawerManager, Vector2 pScreenCoords, Rectangle lDims)
-    {
+    public void drawIt(ISwtDrawerManager<?> pDrawerManager, Vector2 pScreenCoords, Rectangle lDims) {
         Batch pBatch = pDrawerManager.getBatch();
-        try (ISwtBatchSaver saver = this.drawerManager.batchSave())
-        {
+        try (ISwtBatchSaver saver = this.drawerManager.batchSave()) {
             pBatch.end();
             MasterViewport vp = this.stage.getViewport();
             Rectangle rDims = this.stage.getStageDimensions();
             float gs = this.stage.getGuiScale();
             this.cameraHolder.setViewport(pScreenCoords.x, (rDims.height * gs) - (pScreenCoords.y), lDims.width * gs, lDims.height * gs);
-            try (SlaveViewport slaveViewPort = vp.runSlaveViewport(this.cameraHolder))
-            {
+            try (SlaveViewport slaveViewPort = vp.runSlaveViewport(this.cameraHolder)) {
                 OrthographicCamera cam = this.cameraHolder.getCamera();
-                cam.zoom = CalcUtils.approachExponential(cam.zoom, this.cameraHolder.getWantedZoom(), Gdx.graphics.getDeltaTime());
+                float delta = Gdx.graphics.getDeltaTime();
+                float norm = MathUtils.norm(0, 50f, cam.zoom);
+                cam.zoom = MathUtils.clamp(cam.zoom + (cameraHolder.zoomVelocity * delta * norm), .01f, 10000f);
+                cameraHolder.zoomVelocity = CalcUtils.approach(cameraHolder.zoomVelocity, 0, delta * 100);
+                System.out.println(cameraHolder.zoomVelocity);
                 cam.update();
                 this._drawIt(this.cameraHolder.getLastDims());
             }
-        }
-        finally
-        {
+        } finally {
             pBatch.begin();
         }
     }
