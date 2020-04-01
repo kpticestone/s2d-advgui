@@ -107,10 +107,6 @@ public abstract class ASwtApplication_150_ScreenStages<RM extends AResourceManag
         this.stages.add(someStage);
         this.updateSplitScreenArrangements(this.stages.size());
         someStage.onInit();
-        someStage.addDisposeListener(() -> {
-            this.stages.remove(someStage);
-            this.updateSplitScreenArrangements(this.stages.size());
-        });
         return someStage;
     }
 

@@ -8,6 +8,8 @@ import de.s2d_advgui.core.rendering.ISwtDrawerManager;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
 import de.s2d_advgui.core.stage.ASwtStage;
 
+import java.util.Iterator;
+
 public abstract class ASwtApplication_800_Render<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>, STAGE extends ASwtStage<RM, DM>>
         extends ASwtApplication_310_Events<RM, DM, STAGE> {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -16,9 +18,10 @@ public abstract class ASwtApplication_800_Render<RM extends AResourceManager, DM
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
+
     /**
      * Wird nur vom Scene2d-ApplicationListener aufgerufen.
-     * 
+     *
      * @throws Exception
      */
     public final void render() throws Exception {
@@ -46,9 +49,15 @@ public abstract class ASwtApplication_800_Render<RM extends AResourceManager, DM
         } else {
             this.updateSplitScreenArrangements(this.stages.size());
             this.updateScreenSplit();
-            for (STAGE stage : this.stages) {
+            for (Iterator<STAGE> iterator = this.stages.iterator(); iterator.hasNext(); ) {
+                STAGE stage = iterator.next();
                 stage.act(delta);
                 stage.draw();
+                if (stage.isMarkedForDisposal()) {
+                    iterator.remove();
+                    stage.dispose();
+                    updateSplitScreenArrangements(this.stages.size());
+                }
             }
         }
     }
