@@ -21,9 +21,9 @@ public class SwtSlider extends ASwtWidgetSelectable<Slider> {
     @Override
     protected Slider _createActor() {
         SliderStyle style = new SliderStyle();
-        style.background = this.context.getDrawable("ui2/button_layer_1.png");
-        style.knob = this.context.getDrawable("ui/minimap_planet.png");
-        style.knobBefore = this.context.getDrawable("ui/minimap_planet.png");
+        style.background = this.context.getDrawable("icons/128/angel.png");
+        style.knob = this.context.getDrawable("icons/128/cow.png");
+        style.knobBefore = this.context.getDrawable("icons/128/application.png");
         Slider back = new Slider(0, 10, 1, false, style) {
             @Override
             public void draw(Batch batch, float parentAlpha) {
