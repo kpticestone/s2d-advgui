@@ -1,8 +1,6 @@
 package de.s2d_advgui.core.stage;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import de.s2d_advgui.commons.Trigger;
 import de.s2d_advgui.core.application.ISwtApplicationController;
 import de.s2d_advgui.core.rendering.ISwtDrawerManager;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
@@ -10,11 +8,17 @@ import de.s2d_advgui.core.screens.SwtScreen;
 import de.s2d_advgui.core.window.ASwtWindowDescriptor;
 import de.s2d_advgui.core.window.SwtWindow;
 import de.s2d_advgui.core.window.WindowID;
-import de.s2d_advgui.commons.Trigger;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public abstract class ASwtStage<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>> extends ASwtStage_750_Rendering<RM, DM> {
     // -------------------------------------------------------------------------------------------------------------------------
     private Trigger oldHook;
+
+    final Queue<Runnable> execQueue = new LinkedBlockingQueue<>();
 
     // -------------------------------------------------------------------------------------------------------------------------
     public ASwtStage(ISwtApplicationController<RM, DM> pApplicationController) {
@@ -60,8 +64,7 @@ public abstract class ASwtStage<RM extends AResourceManager, DM extends ISwtDraw
     private Map<WindowID, ASwtWindowDescriptor<?, ?>> windowDescriptors = new HashMap<>();
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public void registerWindowDescriptor(ASwtWindowDescriptor<?, ?> desc)
-    {
+    public void registerWindowDescriptor(ASwtWindowDescriptor<?, ?> desc) {
         this.windowDescriptors.put(desc.getID(), desc);
     }
 
@@ -76,5 +79,15 @@ public abstract class ASwtStage<RM extends AResourceManager, DM extends ISwtDraw
         return null;
     }
 
+    public void executeQueuedCommands() {
+        Runnable command;
+        while ((command = execQueue.poll()) != null) {
+            command.run();
+        }
+    }
+
+    public void queueExec(Runnable exec) {
+        execQueue.add(exec);
+    }
     // -------------------------------------------------------------------------------------------------------------------------
 }

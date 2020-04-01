@@ -1,24 +1,19 @@
 package de.s2d_advgui.core.awidget;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import de.s2d_advgui.commons.TNull;
+import de.s2d_advgui.core.stage.ISwtStage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Consumer;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import de.s2d_advgui.core.rendering.ISwtDrawerManager;
-import de.s2d_advgui.core.resourcemanager.AResourceManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-
-import de.s2d_advgui.commons.TNull;
-import de.s2d_advgui.core.stage.ISwtStage;
 
 public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwtWidget<ACTOR> {
     private static final Logger log = LoggerFactory.getLogger(ASwtWidget_000_Ground.class);
@@ -36,7 +31,7 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Nonnull
-    protected final ListenerList<ISwtWidget<?>> children = new ListenerList<>(this::onChildAdded);
+    protected final SwtArrayList<ISwtWidget<?>> children = new SwtArrayList<>();
 
     // -------------------------------------------------------------------------------------------------------------------------
     protected boolean visible = true;
@@ -80,7 +75,10 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
         } else {
             paractor.addActor(this.actor);
         }
-        this.parent.getChildren().add(this);
+
+        (((ASwtWidget_000_Ground<?>) this.parent)).children.add(this);
+        context.onWidgetCreation(this);
+
         this.parent.calcPositions();
     }
 

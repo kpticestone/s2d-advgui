@@ -100,14 +100,6 @@ public interface ISwtWidget<PT extends Actor> extends IRectangleSupport {
     boolean isHovered();
 
     // -------------------------------------------------------------------------------------------------------------------------
-    default void onChildAdded(ISwtWidget<?> a) {
-        ISwtWidget<? extends Group> parent = getParent();
-        if (parent != null) {
-            parent.onChildAdded(a);
-        }
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
     @Nullable
     ASwtLayoutData getSwtLayoutData();
 
