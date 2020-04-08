@@ -16,8 +16,9 @@ public abstract class ASwtStage_010_QuickDraw<RM extends AResourceManager, DM ex
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    public Color getColor_Label() {
-        return Color.CYAN;
+    @Deprecated
+    public final Color getColor_Label() {
+        return this.getResourceManager().getTheme().getLabelColor();
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

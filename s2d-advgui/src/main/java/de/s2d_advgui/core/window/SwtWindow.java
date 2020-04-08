@@ -2,37 +2,34 @@ package de.s2d_advgui.core.window;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputEvent.Type;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.utils.Align;
 
 import de.s2d_advgui.commons.TOldCompatibilityCode;
-import de.s2d_advgui.commons.Trigger;
 import de.s2d_advgui.core.awidget.ASwtWidget_ControllerLevel;
+import de.s2d_advgui.core.awidget.IDragAndDropHandler;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
-import de.s2d_advgui.core.basicwidgets.SwtButton;
 import de.s2d_advgui.core.basicwidgets.SwtLabel;
 import de.s2d_advgui.core.basicwidgets.SwtPanel;
 import de.s2d_advgui.core.input.keys.ASwtInputRegister_Keys;
 import de.s2d_advgui.core.layoutmanager.ASwtLayoutManager;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
+import de.s2d_advgui.core.tabledata.ESwtTableMode;
+import de.s2d_advgui.core.tabledata.SwtLayoutDataCellPosition;
+import de.s2d_advgui.core.tabledata.TableDataManager;
 import de.s2d_advgui.core.utils.RectangleFactory;
 
 public class SwtWindow extends ASwtWidget_ControllerLevel<WidgetGroup> implements ISwtWindow {
     // -------------------------------------------------------------------------------------------------------------------------
     public static void showMessage(ISwtWidget<? extends Group> pParent, String title, String string) {
         SwtWindow window = new SwtWindow(pParent, title, 320, 200);
-        window.addCloseButton("OKAY");
+        window.getButtonPanel().addCloseButton("OKAY");
         SwtLabel lab = new SwtLabel(window);
         lab.setWrap(true);
         lab.setBounds(0, 0, 0, 0);
@@ -41,22 +38,16 @@ public class SwtWindow extends ASwtWidget_ControllerLevel<WidgetGroup> implement
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    private final SwtPanel buttonPanel;
+    private final SwtPanel windowPanel;
 
     // -------------------------------------------------------------------------------------------------------------------------
-    private SwtButton btnClose;
+    private final SwtWindowTopPanel windowPanelTop;
 
     // -------------------------------------------------------------------------------------------------------------------------
-    private SwtPanel windowPanel;
+    private final SwtWindowContentPanel contentPanel;
 
     // -------------------------------------------------------------------------------------------------------------------------
-    private SwtLabel title;
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    private SwtPanel contentPanel;
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    private SwtButton buttonClose;
+    private final SwtWindowBottomPanel buttonPanel;
 
     // -------------------------------------------------------------------------------------------------------------------------
     private final int prefWidth;
@@ -69,8 +60,6 @@ public class SwtWindow extends ASwtWidget_ControllerLevel<WidgetGroup> implement
 
     // -------------------------------------------------------------------------------------------------------------------------
     boolean inDrag = false;
-    float dragX;
-    float dragY;
 
     // -------------------------------------------------------------------------------------------------------------------------
     static ISwtWidget<? extends Group> top(ISwtWidget<? extends Group> someP) {
@@ -91,7 +80,7 @@ public class SwtWindow extends ASwtWidget_ControllerLevel<WidgetGroup> implement
             int prefHeight) {
         super(top(pParent), false, modal);
         this.modal = modal;
-        this.setBounds(0, 0, prefWidth, prefHeight);
+        this.setBounds(-prefWidth, -prefHeight, prefWidth, prefHeight);
         this.setLayoutNegativePositions(false);
         this.prefWidth = prefWidth;
         this.prefHeight = prefHeight;
@@ -106,105 +95,114 @@ public class SwtWindow extends ASwtWidget_ControllerLevel<WidgetGroup> implement
             });
             this.addKeyHandler(akx);
 
-            TextureRegion rx = this.context.getResourceManager().getColorTextureRegion(new Color(0f, .5f, .5f, 0.9f), 1,
-                    1);
+            Color modalWindowOverlayColor = this.getTheme().getWidgetWindowOverlayColor();
+            TextureRegion rx = this.getResourceManager().getColorTextureRegion(modalWindowOverlayColor, 1, 1);
             this.addDrawerBackground(new InternalWidgetDrawerBatch() {
                 @Override
                 protected void _drawIt(SwtDrawer_Batch<?> pBatch, Vector2 pScreenCoords, Rectangle dims) {
                     pBatch.draw(rx, dims.x, dims.y, dims.width, dims.height);
                 }
             });
+        } else {
+            this.addDrawerBackground(new InternalWidgetDrawerBatch() {
+                @Override
+                protected void _drawIt(SwtDrawer_Batch<?> pBatch, Vector2 pScreenCoords, Rectangle pDims) {
+                    if (SwtWindow.this.inDrag) {
+                        pBatch.drawText("jasdjsao: " + getBounds() + "/" + getParent(), pDims, Align.center, .5f, true,
+                                Color.RED);
+                        pBatch.drawBorder("/borders/white-round-5.png", RectangleFactory.explode(pDims, -10));
+                    } else if (TOldCompatibilityCode.FALSE) {
+                        Color col = pBatch.getResourceManager().getTheme().getWidgetPrimaryBorderColor();
+                        pBatch.setColor(col);
+                        pBatch.drawBorder("/borders/white-round-5.png", RectangleFactory.explode(pDims, -10));
+                    }
+                }
+            });
         }
-        this.windowPanel = new SwtPanel(this, false);
 
-        TextureRegion br1 = this.context.getResourceManager().getColorTextureRegion(Color.WHITE, 1, 1);
+        this.windowPanel = new SwtPanel(this);
+
+        this.windowPanelTop = new SwtWindowTopPanel(this.windowPanel, titleLabel, () -> dispose());
+        this.windowPanelTop.setLayoutData(new SwtLayoutDataCellPosition(0, 0));
+        this.windowPanelTop.addDragAndDrop(new IDragAndDropHandler() {
+            @Override
+            public void onDragStart() {
+                SwtWindow.this.inDrag = true;
+                SwtWindow.this.parent.bringToFront(SwtWindow.this);
+            }
+
+            @Override
+            public void onDrag(float newX, float newY) {
+                Rectangle bnds = getBounds();
+                newX = bnds.getX() + newX;
+                newY = bnds.getY() - newY;
+                SwtWindow.this.setPosition(newX, newY);
+            }
+
+            @Override
+            public void onDragStop() {
+                SwtWindow.this.inDrag = false;
+            }
+        });
+
+        this.contentPanel = new SwtWindowContentPanel(this.windowPanel);
+        this.contentPanel.setLayoutData(new SwtLayoutDataCellPosition(0, 1));
+
+        this.buttonPanel = new SwtWindowBottomPanel(this.windowPanel, () -> {
+            SwtWindow.this.calcPositions();
+            this.windowPanelTop.btnClose.setVisible(false);
+        }, () -> dispose());
+        this.buttonPanel.setLayoutData(new SwtLayoutDataCellPosition(0, 2));
+
+        this.setLayoutManager(new ASwtLayoutManager() {
+            private float oldWidth;
+            private float oldHeight;
+
+            @Override
+            public void calculate(ISwtWidget<?> pWidget, float width, float height) {
+                if (this.oldWidth != width && this.oldHeight != height) {
+                    this.oldWidth = width;
+                    this.oldHeight = height;
+                    float useWidth = Math.min(prefWidth, width);
+                    float useHeight = Math.min(prefHeight, height);
+                    float ax = (width - useWidth) / 2f;
+                    float ay = (height - useHeight) / 2f;
+                    for (ISwtWidget<?> a : pWidget.getChildren()) {
+                        a.setBounds(ax, ay, useWidth, useHeight);
+                    }
+                }
+            }
+        });
+
+        TableDataManager tableDataManager = new TableDataManager(this.getResourceManager(),
+                "borders/white-nb-round-5.png", ESwtTableMode.CUSTOM, 1, 3);
+        tableDataManager.setCustomCalc((pWidget, width, height, o1) -> {
+            float butPanHe = this.buttonPanel.isPanelVisible() ? 35 : 0;
+            this.windowPanelTop.setSize(width - o1 * 2, 25);
+            this.contentPanel.setSize(width - o1 * 2, height - 25 - butPanHe - o1 * 4);
+            this.buttonPanel.setSize(width - o1 * 2, butPanHe);
+        });
+        this.windowPanel.setLayoutManager(tableDataManager.getLayoutManager());
+        this.windowPanel.addDrawerBackground(tableDataManager.getBatchDrawer(this.getTheme().getWidgetPrimaryBorderColor()));
+
         TextureRegion cr1 = this.context.getTextureRegion("ui/corner-1.png");
-        Texture bg = this.context.getResourceManager().getTexture("ui/background-1.png");
-        bg.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         this.windowPanel.addDrawerBackground(new InternalWidgetDrawerBatch() {
             @Override
             protected void _drawIt(SwtDrawer_Batch<?> batch, Vector2 pScreenCoords, Rectangle dims) {
-                if (TOldCompatibilityCode.TRUE) {
-                    // batch.setColor(new Color(.04f, .59f, .83f, .9f));
-                    batch.setColor(new Color(.5f, .59f, .83f, .9f));
-                    batch.draw(br1, dims.x + 2, dims.y + 2, dims.width - 4, 40);
-                    batch.draw(br1, dims.x + 2, dims.y + dims.height - 34, dims.width - 4, 32);
-
-                    batch.setColor(new Color(.04f, .59f, .83f, 1f));
-
-                    batch.getBatch().draw(bg, dims.x + 4, dims.y + 4, 0, 0, (int) dims.width - 8,
-                            (int) dims.height - 8);
-
-                    batch.draw(br1, dims.x + 2, dims.y + dims.height - 4, dims.width - 4, 2);
-                    batch.draw(br1, dims.x + 2, dims.y + 40, dims.width - 4, 2);
-                    batch.draw(br1, dims.x + 2, dims.y + 2, dims.width - 4, 2);
-                    batch.draw(br1, dims.x + 2, dims.y + dims.height - 34, dims.width - 4, 2);
-                    batch.draw(br1, dims.x + 2, dims.y + 2, 2, dims.height - 4);
-                    batch.draw(br1, dims.x + dims.width - 4, dims.y + 2, 2, dims.height - 4);
-
-                    batch.setColor(new Color(0f, 1f, 1f, 1f));
-
-                    batch.draw(cr1, dims.x, dims.y + dims.height - 11, 11, 11);
-                    batch.draw(cr1, dims.x + dims.width, dims.y + dims.height - 11, -11, 11);
-                    batch.draw(cr1, dims.x + dims.width, dims.y + 11, -11, -11);
-                    batch.draw(cr1, dims.x, dims.y + 11, 11, -11);
-                }
+                batch.setColor(new Color(0f, 1f, 1f, 1f));
+                batch.draw(cr1, dims.x, dims.y + dims.height - 11, 11, 11);
+                batch.draw(cr1, dims.x + dims.width, dims.y + dims.height - 11, -11, 11);
+                batch.draw(cr1, dims.x + dims.width, dims.y + 11, -11, -11);
+                batch.draw(cr1, dims.x, dims.y + 11, 11, -11);
             }
-
-        });
-        this.addDrawerForeground((pBatchDrawer, pScreenCoords, dims) -> {
-            try (SwtDrawer_Batch<?> batch = pBatchDrawer.startBatchDrawer()) {
-                if (inDrag) {
-                    batch.drawText("jasdjsao: " + getBounds() + "/" + getParent(), dims, Align.center, .5f, true, Color.RED);
-                    batch.drawBorder("/borders/white-round-5.png", RectangleFactory.explode(dims, -10));
-                }
-                else if( TOldCompatibilityCode.FALSE)
-                {
-                    batch.setColor(Color.GRAY);
-                    batch.drawBorder("/borders/white-round-5.png", RectangleFactory.explode(dims, -10));
-                }
-            }
-        });
-        // this.windowPanel.setBounds(200, 200, 400, 400);
-
-        this.title = new SwtLabel(this.windowPanel, titleLabel);
-        this.title.setColor(Color.CYAN);
-        this.title.setBounds(25, 2, -80, 32);
-
-        this.btnClose = new SwtButton(this.windowPanel);
-        this.btnClose.setBounds(-38, 8, 30, 30);
-        this.btnClose.setText("X");
-        this.btnClose.addLeftClickListener(() -> dispose());
-
-        this.buttonPanel = new SwtPanel(this.windowPanel, false);
-        this.buttonPanel.setBounds(0, -42, 0, 35);
-
-        if (this.modal) {
-            this.setLayoutManager(new LayoutManager_SwtWindow(prefWidth, prefHeight));
-        }
-
-        this.buttonPanel.setLayoutManager(new ASwtLayoutManager() {
-            @Override
-            public void calculate(ISwtWidget<?> pWidget, float width, float height) {
-                int ax = 10;
-                int wi = 100;
-                int space = 10;
-                for (ISwtWidget<?> some : pWidget.getChildren()) {
-                    some.setBounds(ax, 5, wi, 30);
-                    ax += wi + space;
-                }
-
-            }
-        });
-        this.contentPanel = new SwtPanel(this.windowPanel, false);
-        this.contentPanel.setBounds(10, 40, -20, -90);
-
-        this.addUpdateHandler((delta) -> {
-            this.btnClose.setVisible(this.buttonClose == null);
-
         });
 
         this.setDelegatedParent(this.contentPanel);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public final SwtWindowBottomPanel getButtonPanel() {
+        return this.buttonPanel;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -214,70 +212,20 @@ public class SwtWindow extends ASwtWidget_ControllerLevel<WidgetGroup> implement
             this.actor.setBounds(0, 0, dims.width, dims.height);
         } else {
             Rectangle myBnds = this.getBounds();
-            this.actor.setBounds(myBnds.x, dims.height - myBnds.y - myBnds.height, myBnds.width, myBnds.height);
-            
-            // this.actor.setBounds(myBnds.x, myBnds.y, myBnds.width, myBnds.height);
+            if (myBnds.x == -this.prefWidth && myBnds.y == -this.prefHeight) {
+                this.setPosition((dims.width - myBnds.width) / 2f, (dims.height - myBnds.height) / 2f);
+            }
+            myBnds = this.getBounds();
+            float tx = myBnds.x;
+            float ty = dims.height - myBnds.y - myBnds.height;
+            if (tx < 0) tx = 0;
+            if (tx > dims.width - myBnds.width) tx = dims.width - myBnds.width;
+            if (ty < 0) ty = 0;
+            if (ty > dims.height - myBnds.height) ty = dims.height - myBnds.height;
+            this.actor.setBounds(tx, ty, myBnds.width, myBnds.height);
         }
     }
 
-    // -------------------------------------------------------------------------------------------------------------------------
-    public SwtButton addSaveButton(String text, Trigger trigger) {
-        SwtButton save = new SwtButton(this.buttonPanel, text != null ? text : "SAVE");
-        save.addLeftClickListener(() -> {
-            if (trigger != null) {
-                trigger.onTrigger();
-            }
-            SwtWindow.this.dispose();
-        });
-        return save;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    public SwtButton addSaveButton(Trigger trigger) {
-        return this.addSaveButton(null, trigger);
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    public SwtButton addSaveButton(String text) {
-        return this.addSaveButton(text, null);
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    public SwtButton addCloseButton(String text, Trigger trigger) {
-        this.buttonClose = new SwtButton(this.buttonPanel, text != null ? text : "CANCEL");
-        this.buttonClose.addLeftClickListener(() -> {
-            if (trigger != null) {
-                trigger.onTrigger();
-            }
-            SwtWindow.this.dispose();
-        });
-        return this.buttonClose;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    public SwtButton addCloseButton() {
-        return this.addCloseButton(null, null);
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    public SwtButton addCloseButton(Trigger trigger) {
-        return this.addCloseButton(null, trigger);
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    public SwtButton addCloseButton(String text) {
-        return this.addCloseButton(text, null);
-    }
-
-    // public SwtButton addButton(String label, Trigger trigger) {
-    // SwtButton back = new SwtButton(this.buttonPanel);
-    // back.setText(label);
-    // back.addLeftClickListener(()->{
-    //
-    // });
-    // return back;
-    // }
-    //
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     protected WidgetGroup createActor() {
@@ -287,44 +235,6 @@ public class SwtWindow extends ASwtWidget_ControllerLevel<WidgetGroup> implement
                 _internalDrawWidget(this, batch, parentAlpha, () -> super.draw(batch, parentAlpha));
             }
         };
-
-        back.addListener(new EventListener() {
-            @Override
-            public boolean handle(Event event) {
-                if (event instanceof InputEvent) {
-                    InputEvent inputEvent = (InputEvent) event;
-                    Type ty = inputEvent.getType();
-                    if (ty == Type.touchDown) {
-                        inDrag = true;
-                        dragX = inputEvent.getStageX();
-                        dragY = inputEvent.getStageY();
-                        SwtWindow.this.parent.bringToFront(SwtWindow.this);
-
-                        return true;
-                    } else if (ty == Type.touchDragged) {
-                        if (inDrag) {
-                            Rectangle bnds = getBounds();
-                            float newX = bnds.getX() + (inputEvent.getStageX() - dragX);
-                            float newY = bnds.getY() - (inputEvent.getStageY() - dragY);
-                            setPosition(newX, newY);
-                            title.setText(newX + "|"+ newY + "-" + bnds.width + "|" + bnds.height);
-                            if (TOldCompatibilityCode.FALSE) {
-                                actor.setPosition(newX, newY);
-                            }
-                            dragX = inputEvent.getStageX();
-                            dragY = inputEvent.getStageY();
-                            return true;
-                        }
-                        return false;
-                    } else if (ty == Type.touchUp) {
-                        inDrag = false;
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
-
         return back;
     }
 

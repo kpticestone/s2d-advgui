@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 
 import de.s2d_advgui.commons.TNull;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
+import de.s2d_advgui.core.resourcemanager.ATheme;
 import de.s2d_advgui.core.stage.ISwtStage;
 
 public abstract class ASwtWidget<ACTOR extends Actor> extends ASwtWidget_970_Rendering<ACTOR> {
@@ -49,9 +50,9 @@ public abstract class ASwtWidget<ACTOR extends Actor> extends ASwtWidget_970_Ren
         TextureRegion trYEL = this.context.getColor_Selected();
         TextureRegion trREG = this.context.getColor_Unselected();
         TextureRegion tr = this.context.getResourceManager().getColorTextureRegion(Color.WHITE, 1, 1);
-        TextureRegion corner2 = this.context.getResourceManager().getTextureRegion("ui/corner-2.png");
-        TextureRegion borderhor = this.context.getResourceManager().getTextureRegion("ui/border-1-hor.png");
-        TextureRegion borderver = this.context.getResourceManager().getTextureRegion("ui/border-1-ver.png");
+        TextureRegion corner2 = this.context.getResourceManager().getTextureRegion(ATheme.UI_CORNER_2_PNG);
+        TextureRegion borderhor = this.context.getResourceManager().getTextureRegion(ATheme.UI_BORDER_1_HOR_PNG);
+        TextureRegion borderver = this.context.getResourceManager().getTextureRegion(ATheme.UI_BORDER_1_VER_PNG);
         TextureRegion trDIS = this.context.getColor_Disabled();
 
         this.addDrawerBackground(new InternalWidgetDrawerBatch() {

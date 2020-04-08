@@ -2,7 +2,11 @@ package de.s2d_advgui.core.awidget;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputEvent.Type;
 
 import de.s2d_advgui.commons.TOldCompatibilityCode;
 import de.s2d_advgui.core.layoutmanager.ASwtLayoutManager;
@@ -100,6 +104,52 @@ public abstract class ASwtWidget_950_Calculating<ACTOR extends Actor> extends AS
     // -------------------------------------------------------------------------------------------------------------------------
     public void setLayoutNegativePositions(boolean b) {
         this.negativePositions = b;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public final void addDragAndDrop(IDragAndDropHandler pDndHandler) {
+        this.actor.addListener(new EventListener() {
+            // -------------------------------------------------------------------------------------------------------------------------
+            boolean inDrag = false;
+            float dragX;
+            float dragY;
+
+            // -------------------------------------------------------------------------------------------------------------------------
+            @Override
+            public boolean handle(Event event) {
+                if (event instanceof InputEvent) {
+                    InputEvent inputEvent = (InputEvent) event;
+                    Type ty = inputEvent.getType();
+                    if (ty == Type.touchDown) {
+                        inDrag = true;
+                        dragX = inputEvent.getStageX();
+                        dragY = inputEvent.getStageY();
+                        pDndHandler.onDragStart();
+                        // SwtWindow.this.parent.bringToFront(SwtWindow.this);
+                        return true;
+                    } else if (ty == Type.touchDragged) {
+                        if (inDrag) {
+                            float lx = inputEvent.getStageX() - dragX;
+                            float ly = inputEvent.getStageY() - dragY;
+                            pDndHandler.onDrag(lx, ly);
+                            // setPosition(newX, newY);
+                            dragX = inputEvent.getStageX();
+                            dragY = inputEvent.getStageY();
+                            return true;
+                        }
+                        return false;
+                    } else if (ty == Type.touchUp) {
+                        inDrag = false;
+                        pDndHandler.onDragStop();
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            // -------------------------------------------------------------------------------------------------------------------------
+        });
+
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

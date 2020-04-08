@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Splitter {
+    // -------------------------------------------------------------------------------------------------------------------------
     public final TextureRegion trTL;
     public final TextureRegion trT;
     public final TextureRegion trCrossTop;
@@ -24,11 +25,15 @@ public class Splitter {
     public final TextureRegion trCrossBotton;
     public final TextureRegion trBR;
 
+    // -------------------------------------------------------------------------------------------------------------------------
     public final int o1;
     public final int o2;
     public final int o3;
+
+    // -------------------------------------------------------------------------------------------------------------------------
     private final Texture tx;
 
+    // -------------------------------------------------------------------------------------------------------------------------
     public Splitter(Texture tx) {
         this.tx = tx;
         this.o1 = tx.getWidth() / 4;
@@ -56,7 +61,10 @@ public class Splitter {
         this.trBR = load(3, 3);
     }
 
+    // -------------------------------------------------------------------------------------------------------------------------
     private TextureRegion load(int i, int j) {
         return new TextureRegion(this.tx, i * this.o1, j * this.o1, this.o1, this.o1);
     }
+
+    // -------------------------------------------------------------------------------------------------------------------------
 }

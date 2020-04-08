@@ -36,6 +36,9 @@ public final class TableDataManager {
     private final ESwtTableMode mode;
 
     // -------------------------------------------------------------------------------------------------------------------------
+    private ISwtCustomCalc customCalc;
+
+    // -------------------------------------------------------------------------------------------------------------------------
     public TableDataManager(AResourceManager pRm, String pTextureResource, ESwtTableMode pMode, int pColumnCount,
             int pRowCount) {
         this.mode = pMode;
@@ -46,6 +49,11 @@ public final class TableDataManager {
         this.splitter = new Splitter(tx);
         this.o1 = this.splitter.o1;
     }
+    
+    // -------------------------------------------------------------------------------------------------------------------------
+    public void setCustomCalc(ISwtCustomCalc customCalc) {
+        this.customCalc = customCalc;
+    }
 
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtTableData getTableData() {
@@ -55,6 +63,7 @@ public final class TableDataManager {
     // -------------------------------------------------------------------------------------------------------------------------
     void _drawTable(SwtDrawer_Batch<?> pBatchDrawer, Rectangle pDims) {
         Batch batch = pBatchDrawer.getBatch();
+//        batch.setColor(new Color(255,0,0,64));
         float curY = pDims.height;
         for (int row = 0; row < this.tableData.rowHeights.length; row++) {
             float rowH = this.tableData.rowHeights[row];
@@ -124,6 +133,10 @@ public final class TableDataManager {
                 }
             }
         }
+        else
+            if(this.mode == ESwtTableMode.CUSTOM) {
+                this.customCalc.calculate(pWidget, width, height, this.o1);
+            }
         for (ISwtWidget<?> a : pWidget.getChildren()) {
             ASwtLayoutData ld = a.getSwtLayoutData();
             if (ld instanceof SwtLayoutDataCellPosition) {

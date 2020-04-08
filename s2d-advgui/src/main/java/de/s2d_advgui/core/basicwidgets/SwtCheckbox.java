@@ -1,7 +1,6 @@
 package de.s2d_advgui.core.basicwidgets;
 
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -16,12 +15,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 
-import de.s2d_advgui.core.SwtColor;
 import de.s2d_advgui.core.awidget.ASwtWidgetSelectable;
 import de.s2d_advgui.core.awidget.BorderDrawer2;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
+import de.s2d_advgui.core.resourcemanager.ATheme;
 
 public class SwtCheckbox extends ASwtWidgetSelectable<CheckBox> {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -31,20 +30,19 @@ public class SwtCheckbox extends ASwtWidgetSelectable<CheckBox> {
     public SwtCheckbox(ISwtWidget<? extends Group> pParent, String text) {
         super(pParent);
         this.setText(text);
-        TextureRegion check = this.context.getTextureRegion("icons/128/snowflake.png");
+        TextureRegion check = this.context.getTextureRegion(ATheme.ICONS_128_SNOWFLAKE_PNG);
         BorderDrawer2 borderDrawer = new BorderDrawer2(this.context);
-        BitmapFont a = this.context.getResourceManager().getFont(.5f, true);
+        BitmapFont a = this.getResourceManager().getFont(.5f, true);
         float lh = a.getLineHeight() - a.getAscent() + a.getDescent();
+        ATheme theme = this.getTheme();
         this.addDrawerForeground(new InternalWidgetDrawerBatch() {
             @Override
             protected void _drawIt(SwtDrawer_Batch<?> pBatch, Vector2 pScreenCoords, Rectangle pDims) {
                 borderDrawer.setGenericColors(SwtCheckbox.this.enabled, isFocused(), SwtCheckbox.this.hovered);
                 borderDrawer.drawIt(pBatch.getBatch(), pDims);
-
-                borderDrawer.setBackgroundColor(SwtCheckbox.this.enabled ? Color.BLACK : Color.DARK_GRAY);
-                borderDrawer.setBorderColor(SwtCheckbox.this.enabled ? SwtColor.BORDER_COLOR_CYAN : Color.GRAY);
+                borderDrawer.setBackgroundColor(SwtCheckbox.this.enabled ? theme.getWidgetPrimaryBackgroundColor() : theme.getWidgetPrimaryBackgroundColorDisabled());
+                borderDrawer.setBorderColor(SwtCheckbox.this.enabled ? theme.getWidgetPrimaryBorderColor() : theme.getWidgetPrimaryBorderColorDisabled());
                 borderDrawer.drawIt(pBatch.getBatch(), pDims.x, pDims.y, pDims.height, pDims.height);
-
                 if (isChecked()) {
                     pBatch.draw(check, pDims.x + 6, pDims.y + 6, 11, 11);
                 }
@@ -74,11 +72,11 @@ public class SwtCheckbox extends ASwtWidgetSelectable<CheckBox> {
         CheckBoxStyle cbs = new CheckBoxStyle();
         cbs.font = this.context.getResourceManager().getFont(.5f, false);
         cbs.checkedOffsetX = 0;
-        cbs.checkboxOff = this.context.getDrawable("icons/128/signaling_disk_green.png");
+        cbs.checkboxOff = this.context.getDrawable(ATheme.ICONS_128_SIGNALING_DISK_GREEN_PNG);
         cbs.checkboxOff.setMinWidth(16);
         cbs.checkboxOff.setMinHeight(16);
         cbs.checkboxOff.setLeftWidth(100);
-        cbs.checkboxOn = this.context.getDrawable("icons/128/signaling_disk_red.png");
+        cbs.checkboxOn = this.context.getDrawable(ATheme.ICONS_128_SIGNALING_DISK_RED_PNG);
         cbs.checkboxOn.setMinHeight(16);
         cbs.checkboxOn.setMinWidth(16);
         // CheckBox back = new CheckBox(null, context.getResourceManager().getSkin())

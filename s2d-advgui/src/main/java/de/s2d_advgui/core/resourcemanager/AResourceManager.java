@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -15,9 +16,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import de.s2d_advgui.commons.TNull;
+
 import de.s2d_advgui.addons.framebuffer.SwtFrameBuffer;
 import de.s2d_advgui.addons.framebuffer.SwtFrameBufferBuilder;
+import de.s2d_advgui.commons.TNull;
 
 public abstract class AResourceManager {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -30,9 +32,7 @@ public abstract class AResourceManager {
 
     // -------------------------------------------------------------------------------------------------------------------------
     protected static FileHandle load(String pInternalPath) {
-
         String internalPath = pInternalPath.startsWith("/") ? pInternalPath.substring(1) : pInternalPath;
-
         FileHandle x = Gdx.files.classpath(internalPath);
         if (x != null) {
             boolean nb = x.exists();
@@ -40,13 +40,11 @@ public abstract class AResourceManager {
                 return x;
             }
         }
-
         x = Gdx.files.local("assets/" + internalPath); //$NON-NLS-1$
         if (x != null && x.exists()) {
             return x;
         }
-
-        throw new RuntimeException("file " + internalPath + " not found!");
+        throw new RuntimeException("file " + internalPath + " not found!"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -61,10 +59,6 @@ public abstract class AResourceManager {
     protected final Map<String, TextureRegion> loadedTextureRegions = new HashMap<>();
 
     // -------------------------------------------------------------------------------------------------------------------------
-    // protected final Map<SpriteType, TextureRegion> resources = new
-    // EnumMap<>(SpriteType.class);
-
-    // -------------------------------------------------------------------------------------------------------------------------
     protected final Map<String, TextureRegion> virtualDirContents = new HashMap<>();
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -73,15 +67,25 @@ public abstract class AResourceManager {
     // -------------------------------------------------------------------------------------------------------------------------
     private Map<String, BitmapFont> scaledFonts = new HashMap<>();
 
-//    // -------------------------------------------------------------------------------------------------------------------------
-//    protected final void reggit(SpriteType pSpriteType, TextureRegion pTextureRegion) {
-//        this.resources.put(pSpriteType, pTextureRegion);
-//        this.virtualDirContents.put(pSpriteType.name(), pTextureRegion);
-//    }
-//
+    // -------------------------------------------------------------------------------------------------------------------------
+    private final ATheme theme;
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    private final Map<String, SwtFrameBuffer> frameBuffers = new HashMap<>();
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public AResourceManager() {
+        this(null);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public AResourceManager(@Nullable ATheme pTheme) {
+        this.theme = pTheme != null ? pTheme : new ATheme();
+    }
+
     // -------------------------------------------------------------------------------------------------------------------------
     public final TextureRegion getColorTextureRegion(@Nonnull Color pColor) {
-        Integer bits = pColor.toIntBits();
+        Integer bits = Integer.valueOf(pColor.toIntBits());
         TextureRegion back = this.colorTextureRegions.get(bits);
         if (back == null) {
             back = new TextureRegion(new Texture(getPixmap(pColor)));
@@ -92,7 +96,7 @@ public abstract class AResourceManager {
 
     // -------------------------------------------------------------------------------------------------------------------------
     public final TextureRegion getColorTextureRegion(@Nonnull Color pColor, int pX, int pY) {
-        Integer bits = pColor.toIntBits();
+        Integer bits = Integer.valueOf(pColor.toIntBits());
         TextureRegion back = new TextureRegion(new Texture(getPixmap(pColor)), pX, pY);
         this.colorTextureRegions.put(bits, back);
         return back;
@@ -146,13 +150,7 @@ public abstract class AResourceManager {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-//  public abstract BitmapFont getFont();
-
-    // -------------------------------------------------------------------------------------------------------------------------
     public abstract Skin getSkin();
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    private final Map<String, SwtFrameBuffer> frameBuffers = new HashMap<>();
 
     // -------------------------------------------------------------------------------------------------------------------------
     public final SwtFrameBuffer getFrameBuffer(String pFrameBufferId, int pWidth, int pHeight) {
@@ -192,6 +190,11 @@ public abstract class AResourceManager {
             back.setColor(Color.WHITE);
             return back;
         }));
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public ATheme getTheme() {
+        return this.theme;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Align;
 import de.s2d_advgui.core.awidget.ASwtWidget;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
+import de.s2d_advgui.core.resourcemanager.ATheme;
 
 public class SwtPanelMovable extends ASwtWidget<WidgetGroup> {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -26,7 +27,7 @@ public class SwtPanelMovable extends ASwtWidget<WidgetGroup> {
     public SwtPanelMovable(ISwtWidget<? extends Group> pParent) {
         super(pParent, false);
         TextureRegion br1 = this.context.getResourceManager().getColorTextureRegion(Color.WHITE, 1, 1);
-        TextureRegion cr1 = this.context.getTextureRegion("ui/corner-1.png");
+        TextureRegion cr1 = this.context.getTextureRegion(ATheme.UI_CORNER_1_PNG);
         this.addDrawerForeground((pBatchDrawer, pScreenCoords, dims) -> {
             try (SwtDrawer_Batch<?> batch = pBatchDrawer.startBatchDrawer()) {
                 if (inDrag) {

@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import de.s2d_advgui.core.awidget.ASwtWidget;
+import de.s2d_advgui.core.resourcemanager.ATheme;
 
 public class SwtTable extends ASwtWidget<Table> {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -27,7 +28,7 @@ public class SwtTable extends ASwtWidget<Table> {
                 _internalDrawWidget(this, batch, parentAlpha, () -> super.draw(batch, parentAlpha));
             }
         };
-        back.setBackground(this.context.getDrawable("ui/slotType_minor.png"));
+        back.setBackground(this.context.getDrawable(ATheme.UI_SLOT_TYPE_MINOR_PNG));
         return back;
     }
 

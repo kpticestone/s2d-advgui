@@ -13,12 +13,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import de.s2d_advgui.commons.Trigger;
+import de.s2d_advgui.core.SwtColor;
 import de.s2d_advgui.core.awidget.ASwtWidget;
 import de.s2d_advgui.core.awidget.BorderDrawer2;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
 import de.s2d_advgui.core.input.GuiUtils;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
+import de.s2d_advgui.core.resourcemanager.ATheme;
 
 public class SwtTextField extends ASwtWidget<TextField> {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -49,17 +51,17 @@ public class SwtTextField extends ASwtWidget<TextField> {
         style.font = fo;
         style.fontColor = Color.WHITE;
         style.font = fo;
-        style.cursor = this.context.getDrawable("ui/pipe1.png");
+        style.cursor = this.context.getDrawable(ATheme.UI_PIPE1_PNG);
         style.messageFont = fo;
         style.messageFontColor = Color.BLUE;
-        style.selection = this.context.getDrawable("ui/pipe1.png");
+        style.selection = this.context.getDrawable(ATheme.UI_PIPE1_PNG);
         style.background = null;
         style.focusedFontColor = Color.WHITE;
         style.disabledFontColor = Color.BROWN;
         style.disabledBackground = null;
         style.focusedBackground = null;
         style.background = new TextureRegionDrawable(
-                this.context.getResourceManager().getColorTextureRegion(new Color(0f, 0f, 0f, 0f), 0, 0));
+                this.context.getResourceManager().getColorTextureRegion(SwtColor.TRANSPARENT, 0, 0));
         style.background.setLeftWidth(10);
         style.background.setRightWidth(10);
         TextField back = new TextField(null, style) {

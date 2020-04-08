@@ -35,7 +35,7 @@ public class SwtTree<PR> extends ASwtWidget<WidgetGroup> {
     private final SwtTreeContentProvider<PR> provider;
 
     // -------------------------------------------------------------------------------------------------------------------------
-    private final Set<PR> rootItems = new LinkedHashSet<PR>();
+    private final Set<PR> rootItems = new LinkedHashSet<>();
 
     // -------------------------------------------------------------------------------------------------------------------------
     private Tree tree;
@@ -75,8 +75,6 @@ public class SwtTree<PR> extends ASwtWidget<WidgetGroup> {
             public void draw(Batch batch, float parentAlpha) {
                 _internalDrawWidget(this, batch, parentAlpha, () -> super.draw(batch, parentAlpha));
             }
-
-            ;
         };
         table.add(new ScrollPane(tree, skin)).expand().fill();
         return table;
@@ -146,16 +144,13 @@ public class SwtTree<PR> extends ASwtWidget<WidgetGroup> {
             removeItem.accept(jja);
         }
         for (PR na : addList) {
-//          WidgetGroup grp = new WidgetGroup();
             LabelStyle style = new LabelStyle();
             style.font = this.context.getResourceManager().getFont(.5f, true);
             Label lab = new Label(this.provider.getLabel(na), style);
             lab.setAlignment(Align.center);
             lab.setHeight(16);
-            //grp.addActor(lab);
             String resourceId = this.provider.getIcon(na);
             Node node = new Node<>(lab) {
-
             };
             if (resourceId != null) {
                 Drawable drx = this.context.getDrawable(resourceId);

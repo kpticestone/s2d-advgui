@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 public class SwtArrayList<E> extends ArrayList<E> {
     // -------------------------------------------------------------------------------------------------------------------------
+    private static final long serialVersionUID = 1L;
+
+    // -------------------------------------------------------------------------------------------------------------------------
     public boolean bringToEnd(E pEntry) {
         int wason = this.indexOf(pEntry);
         if (wason > 0) {

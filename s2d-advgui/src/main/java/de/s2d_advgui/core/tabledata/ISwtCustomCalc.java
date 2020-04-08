@@ -1,9 +1,11 @@
-package de.s2d_advgui.core.rendering;
+package de.s2d_advgui.core.tabledata;
 
-public interface ISwtBatchSaver extends AutoCloseable {
+import de.s2d_advgui.core.awidget.ISwtWidget;
+
+@FunctionalInterface
+public interface ISwtCustomCalc {
     // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    void close();
+    void calculate(ISwtWidget<?> pWidget, float width, float height, float o1);
 
     // -------------------------------------------------------------------------------------------------------------------------
 }

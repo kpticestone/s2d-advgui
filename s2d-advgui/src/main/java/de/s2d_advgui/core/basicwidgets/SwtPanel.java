@@ -10,16 +10,22 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import de.s2d_advgui.core.awidget.ASwtWidget;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
+import de.s2d_advgui.core.resourcemanager.ATheme;
 
 public class SwtPanel extends ASwtWidget<WidgetGroup> {
+    // -------------------------------------------------------------------------------------------------------------------------
+    public SwtPanel(ISwtWidget<? extends Group> pParent) {
+        super(pParent, false);
+    }
+    
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtPanel(ISwtWidget<? extends Group> pParent, boolean standardBackground) {
         super(pParent, false);
         if (standardBackground) {
             this.setClip(false);
             TextureRegion br1 = this.context.getResourceManager().getColorTextureRegion(Color.WHITE, 1, 1);
-            TextureRegion cr1 = this.context.getTextureRegion("ui/corner-1.png");
-            Texture bg = this.context.getResourceManager().getTexture("ui/background-1.png");
+            TextureRegion cr1 = this.context.getTextureRegion(ATheme.UI_CORNER_1_PNG);
+            Texture bg = this.context.getResourceManager().getTexture(ATheme.UI_BACKGROUND_1_PNG);
             bg.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
             this.addDrawerBackground((pBatchDrawer, pScreenCoords, dims) -> {

@@ -9,10 +9,11 @@ import javax.annotation.Nonnull;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.utils.Align;
+
+import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.basicwidgets.SwtButton;
 import de.s2d_advgui.core.basicwidgets.SwtLabel;
 import de.s2d_advgui.core.basicwidgets.SwtPanel;
-import de.s2d_advgui.core.awidget.ISwtWidget;
 
 public class SwtTabFolder extends SwtPanel {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -81,7 +82,7 @@ public class SwtTabFolder extends SwtPanel {
     // -------------------------------------------------------------------------------------------------------------------------
     void setTabMapping(String pId, ISwtTab as) {
         int idx = this.tabNames.indexOf(pId);
-        if (idx != -1) throw new RuntimeException("tab with id '" + pId + "' already exists");
+        if (idx != -1) throw new RuntimeException("tab with id '" + pId + "' already exists"); //$NON-NLS-1$ //$NON-NLS-2$
         this.tabNames.add(pId);
         as.setVisible(false);
         this.tabs.put(pId, as);

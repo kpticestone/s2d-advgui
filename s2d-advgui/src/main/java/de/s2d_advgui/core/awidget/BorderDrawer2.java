@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
-import de.s2d_advgui.core.SwtColor;
+import de.s2d_advgui.core.resourcemanager.ATheme;
 import de.s2d_advgui.core.stage.ISwtStage;
 
 public class BorderDrawer2 {
@@ -16,11 +16,13 @@ public class BorderDrawer2 {
     private TextureRegion borderhor;
     private TextureRegion borderver;
 
-    private Color borderColor = SwtColor.BORDER_COLOR_CYAN;
-    private Color backgroundColor = SwtColor.BORDER_COLOR_CYAN_DARK;
+    private Color borderColor; // = SwtColor.BORDER_COLOR_CYAN;
+    private Color backgroundColor; // = SwtColor.BORDER_COLOR_CYAN_DARK;
 
     // -------------------------------------------------------------------------------------------------------------------------
     public BorderDrawer2(ISwtStage<?, ?> context) {
+        this.borderColor = context.getResourceManager().getTheme().getWidgetPrimaryBorderColor();
+        this.backgroundColor = context.getResourceManager().getTheme().getWidgetPrimaryBackgroundColor();
         this.context = context;
         this.tr = this.context.getResourceManager().getColorTextureRegion(Color.WHITE, 1, 1);
         this.corner2 = this.context.getResourceManager().getTextureRegion("ui/button-corner-2019-08-11.png");
@@ -66,12 +68,15 @@ public class BorderDrawer2 {
 
     // -------------------------------------------------------------------------------------------------------------------------
     public void setGenericColors(boolean enabled, boolean focused, boolean hovered) {
+        ATheme theme = this.context.getResourceManager().getTheme();
         if (!enabled) {
-            this.setBackgroundColor(Color.DARK_GRAY);
-            this.setBorderColor(Color.GRAY);
+            this.setBackgroundColor(theme.getWidgetPrimaryBackgroundColorDisabled());
+            this.setBorderColor(theme.getWidgetPrimaryBorderColorDisabled());
         } else {
-            this.setBackgroundColor((focused ? SwtColor.FOCUS : SwtColor.BORDER_COLOR_CYAN_HALF));
-            this.setBorderColor(hovered ? new Color(1f, 0f, 0f, 1f) : SwtColor.BORDER_COLOR_CYAN);
+            this.setBackgroundColor((focused ? theme.getWidgetPrimaryBackgroundColorFocused()
+                    : theme.getWidgetPrimaryBackgroundColor()));
+            this.setBorderColor(
+                    hovered ? theme.getWidgetPrimaryBorderColorHovered() : theme.getWidgetPrimaryBorderColor());
         }
     }
 

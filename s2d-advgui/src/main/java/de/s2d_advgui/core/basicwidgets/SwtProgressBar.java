@@ -18,7 +18,7 @@ public class SwtProgressBar extends ASwtWidget<ProgressBar> {
     public SwtProgressBar(ASwtWidget<? extends Group> pParent) {
         super(pParent, false);
         this.makeDrawBorderSupport();
-        TextureRegion t1 = context.getResourceManager().getColorTextureRegion(Color.GREEN);
+        TextureRegion t1 = this.getResourceManager().getColorTextureRegion(Color.GREEN);
         int space = 8;
         int space2 = space * 2;
         this.addDrawerClipableMiddle(new InternalWidgetDrawerBatch() {

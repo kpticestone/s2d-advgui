@@ -4,6 +4,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import de.s2d_advgui.commons.TNull;
+import de.s2d_advgui.core.resourcemanager.AResourceManager;
+import de.s2d_advgui.core.resourcemanager.ATheme;
 import de.s2d_advgui.core.stage.ISwtStage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,6 +82,20 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
         context.onWidgetCreation(this);
 
         this.parent.calcPositions();
+    }
+    
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public final AResourceManager getResourceManager()
+    {
+        return this.context.getResourceManager();
+    }
+    
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public final ATheme getTheme()
+    {
+        return this.context.getResourceManager().getTheme();
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
