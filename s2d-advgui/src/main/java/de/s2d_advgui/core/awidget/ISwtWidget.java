@@ -2,6 +2,7 @@ package de.s2d_advgui.core.awidget;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -112,6 +113,19 @@ public interface ISwtWidget<PT extends Actor> extends IRectangleSupport {
 
     // -------------------------------------------------------------------------------------------------------------------------
     ATheme getTheme();
+    
+    // -------------------------------------------------------------------------------------------------------------------------
+    void setData(String key, Object data);
+    
+    // -------------------------------------------------------------------------------------------------------------------------
+    Object getData(String key);
+    
+    // -------------------------------------------------------------------------------------------------------------------------
+    <T> T computeDataIfNotExists(String key, Supplier<T> any);
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Nullable
+    <T extends ISwtWidget<?>> T getNextParent(Class<T> pClz);
 
     // -------------------------------------------------------------------------------------------------------------------------
 }

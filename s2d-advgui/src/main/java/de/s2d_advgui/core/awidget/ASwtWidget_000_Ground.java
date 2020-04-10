@@ -1,21 +1,27 @@
 package de.s2d_advgui.core.awidget;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+
 import de.s2d_advgui.commons.TNull;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
 import de.s2d_advgui.core.resourcemanager.ATheme;
 import de.s2d_advgui.core.stage.ISwtStage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.function.Consumer;
 
 public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwtWidget<ACTOR> {
     private static final Logger log = LoggerFactory.getLogger(ASwtWidget_000_Ground.class);
@@ -48,6 +54,10 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
     // -------------------------------------------------------------------------------------------------------------------------
     @Nullable
     private ISwtWidget<? extends Group> delegatedParent;
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Nullable
+    private Map<String, Object> data = null;
 
     // -------------------------------------------------------------------------------------------------------------------------
     static ISwtWidget<? extends Group> resolveDelegatedParent(@Nonnull ISwtWidget<? extends Group> pOrgParent) {
@@ -83,18 +93,16 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
 
         this.parent.calcPositions();
     }
-    
+
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    public final AResourceManager getResourceManager()
-    {
+    public final AResourceManager getResourceManager() {
         return this.context.getResourceManager();
     }
-    
+
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    public final ATheme getTheme()
-    {
+    public final ATheme getTheme() {
         return this.context.getResourceManager().getTheme();
     }
 
@@ -221,6 +229,52 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
     @Override
     public final ISwtWidget<? extends Group> getParent() {
         return this.parent;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public final void setData(String key, Object data) {
+        Map<String, Object> d = this.data;
+        if (d == null) {
+            d = this.data = new HashMap<>();
+        }
+        d.put(key, data);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public final Object getData(String key) {
+        Map<String, Object> d = this.data;
+        if (d == null) return null;
+        return d.get(key);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public final <T> T computeDataIfNotExists(String key, Supplier<T> any) {
+        Map<String, Object> d = this.data;
+        if (d == null) {
+            d = this.data = new HashMap<>();
+        }
+        Object back = d.get(key);
+        if (back == null) {
+            back = any.get();
+            d.put(key, back);
+        }
+        return (T) back;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Nullable
+    @Override
+    public final <T extends ISwtWidget<?>> T getNextParent(Class<T> pClz) {
+        if (pClz.isAssignableFrom(this.getClass())) {
+            return pClz.cast(this);
+        }
+        if (this.parent != null) {
+            return this.parent.getNextParent(pClz);
+        }
+        return null;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

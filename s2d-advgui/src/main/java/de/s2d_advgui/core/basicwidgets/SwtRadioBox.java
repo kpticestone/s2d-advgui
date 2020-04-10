@@ -1,147 +1,155 @@
-//package de.s2d_advgui.core.basicwidgets;
-//
-//import com.badlogic.gdx.Input.Keys;
-//import com.badlogic.gdx.graphics.Color;
-//import com.badlogic.gdx.graphics.g2d.Batch;
-//import com.badlogic.gdx.graphics.g2d.BitmapFont;
-//import com.badlogic.gdx.graphics.g2d.TextureRegion;
-//import com.badlogic.gdx.math.Rectangle;
-//import com.badlogic.gdx.math.Vector2;
-//import com.badlogic.gdx.scenes.scene2d.Event;
-//import com.badlogic.gdx.scenes.scene2d.EventListener;
-//import com.badlogic.gdx.scenes.scene2d.Group;
-//import com.badlogic.gdx.scenes.scene2d.InputEvent;
-//import com.badlogic.gdx.scenes.scene2d.InputEvent.Type;
-//import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
-//import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
-//import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
-//
-//import de.s2d_advgui.core.SwtColor;
-//import de.s2d_advgui.core.awidget.ASwtWidgetSelectable;
-//import de.s2d_advgui.core.awidget.BorderDrawer2;
-//import de.s2d_advgui.core.awidget.ISwtWidget;
-//import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
-//import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
-//
-//public class SwtRadioBox extends ASwtWidgetSelectable<CheckBox> {
-//    // -------------------------------------------------------------------------------------------------------------------------
-//    String myText;
-//
-//    // -------------------------------------------------------------------------------------------------------------------------
-//    public SwtRadioBox(ISwtWidget<? extends Group> pParent, String text) {
-//        super(pParent);
-//        this.setText(text);
-//        TextureRegion check = context.getTextureRegion("icons/128/snowflake.png");
-//        BorderDrawer2 borderDrawer = new BorderDrawer2(this.context);
-//        BitmapFont a = context.getResourceManager().getFont(.5f, true);
-//        float lh = a.getLineHeight() - a.getAscent() + a.getDescent();
-//        this.addDrawerForeground(new InternalWidgetDrawerBatch() {
-//            @Override
-//            protected void _drawIt(SwtDrawer_Batch<?> pBatch, Vector2 pScreenCoords, Rectangle pDims) {
-//                borderDrawer.setGenericColors(enabled, isFocused(), hovered);
-//                borderDrawer.drawIt(pBatch.getBatch(), pDims);
-//
-//                borderDrawer.setBackgroundColor(enabled ? Color.BLACK : Color.DARK_GRAY);
-//                borderDrawer.setBorderColor(enabled ? SwtColor.BORDER_COLOR_CYAN : Color.GRAY);
-//                borderDrawer.drawIt(pBatch.getBatch(), pDims.x, pDims.y, pDims.height, pDims.height);
-//
-//                if (isChecked()) {
-//                    pBatch.draw(check, pDims.x + 6, pDims.y + 6, 11, 11);
-//                }
-//
-//                a.draw(pBatch.getBatch(), SwtRadioBox.this.myText + " (" + isChecked() + ")",
-//                        pDims.x + (pDims.height * 1.25f), pDims.y + (pDims.height) - (pDims.height - lh) / 2f);
-//            }
-//
-//        });
-//        this.addEnabledStateListener((b) -> this.actor.setDisabled(!b));
-//    }
-//
-//    // -------------------------------------------------------------------------------------------------------------------------
-//    @Override
-//    protected CheckBox _createActor() {
-//        // Skin style = new ButtonStyle();
-//        // style.down = new
-//        // TextureRegionDrawable(context.resourceManager.getColorTextureRegion(Color.GREEN));
-//        // style.over = new
-//        // TextureRegionDrawable(context.resourceManager.getColorTextureRegion(new
-//        // Color(.9f,.9f,1,1)));
-//        // style.up = new
-//        // TextureRegionDrawable(context.resourceManager.getColorTextureRegion(Color.BLUE));
-//        // this.makeDrawBorderSupport();
-//        CheckBoxStyle aa = context.getResourceManager().getSkin().get(CheckBoxStyle.class);
-//        System.err.println("aa:" + aa);
-//        CheckBoxStyle cbs = new CheckBoxStyle();
-//        cbs.font = context.getResourceManager().getFont(.5f, false);
-//        cbs.checkedOffsetX = 0;
-//        cbs.checkboxOff = context.getDrawable("icons/128/signaling_disk_green.png");
-//        cbs.checkboxOff.setMinWidth(16);
-//        cbs.checkboxOff.setMinHeight(16);
-//        cbs.checkboxOff.setLeftWidth(100);
-//        cbs.checkboxOn = context.getDrawable("icons/128/signaling_disk_red.png");
-//        cbs.checkboxOn.setMinHeight(16);
-//        cbs.checkboxOn.setMinWidth(16);
-//        // CheckBox back = new CheckBox(null, context.getResourceManager().getSkin())
-//        CheckBox back = new CheckBox(null, cbs) {
-//            @Override
-//            public void draw(Batch batch, float parentAlpha) {
-//                _internalDrawWidget(this, batch, parentAlpha, () -> {
-//                    // super.draw(batch, parentAlpha);
-//                });
-//            }
-//        };
-//        back.getLabel().setFontScale(.75f);
-//        back.left();
-//        back.addListener(new EventListener() {
-//            @Override
-//            public boolean handle(Event event) {
-//                if (event instanceof ChangeEvent) {
-//                    onInternalChanged();
-//                    return false;
-//                }
-//                if (event instanceof InputEvent) {
-//                    if (((InputEvent) event).getType() == Type.keyTyped) {
-//                        if (((InputEvent) event).getKeyCode() == Keys.ENTER
-//                                || ((InputEvent) event).getKeyCode() == Keys.SPACE) {
-//                            toggle();
-//                            return true;
-//                        }
-//                    }
-//                }
-//                return false;
-//            }
-//
-//        });
-//        return back;
-//    }
-//
-//    // -------------------------------------------------------------------------------------------------------------------------
-//    private void onInternalChanged() {
-//        callListeners(0);
-//        this.focus();
-//    }
-//
-//    // -------------------------------------------------------------------------------------------------------------------------
-//    public void toggle() {
-//        this.actor.setChecked(!this.actor.isChecked());
-//        this.focus();
-//    }
-//
-//    // -------------------------------------------------------------------------------------------------------------------------
-//    public boolean isChecked() {
-//        return this.actor.isChecked();
-//    }
-//
-//    // -------------------------------------------------------------------------------------------------------------------------
-//    public void setText(String text) {
-//        this.myText = text;
-//        this.actor.setText(text);
-//    }
-//
-//    // -------------------------------------------------------------------------------------------------------------------------
-//    public void setChecked(boolean pChecked) {
-//        this.actor.setChecked(pChecked);
-//    }
-//
-//    // -------------------------------------------------------------------------------------------------------------------------
-//}
+package de.s2d_advgui.core.basicwidgets;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.annotation.Nullable;
+
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.InputEvent.Type;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.FocusListener.FocusEvent;
+import com.badlogic.gdx.utils.Align;
+
+import de.s2d_advgui.core.awidget.ASwtWidgetSelectable;
+import de.s2d_advgui.core.awidget.ISwtForm;
+import de.s2d_advgui.core.awidget.ISwtWidget;
+import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
+import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
+import de.s2d_advgui.core.resourcemanager.ATheme;
+
+public class SwtRadioBox extends ASwtWidgetSelectable<ActorRadioBox> {
+    // -------------------------------------------------------------------------------------------------------------------------
+    private static final String PARENT_RADIO_BOXES = "parent-radio-boxes"; //$NON-NLS-1$
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    private String myText;
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    private RadioGroup radioGroup;
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    static class RadioGroup {
+        Set<SwtRadioBox> boxes = new HashSet<>();
+
+        public boolean register(SwtRadioBox swtRadioBox) {
+            this.boxes.add(swtRadioBox);
+            return this.boxes.size() == 1;
+        }
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public SwtRadioBox(ISwtWidget<? extends Group> pParent) {
+        this(pParent, null);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public SwtRadioBox(ISwtWidget<? extends Group> pParent, @Nullable String pRadioGroup) {
+        super(pParent);
+
+        ISwtForm<?> form = this.getNextParent(ISwtForm.class);
+        this.radioGroup = form.computeDataIfNotExists(
+                pRadioGroup == null ? PARENT_RADIO_BOXES : PARENT_RADIO_BOXES + pRadioGroup, () -> new RadioGroup());
+        if (this.radioGroup.register(this)) {
+            this.setChecked();
+        }
+
+        TextureRegion check = this.context.getTextureRegion("ui/radio-checked.png"); //$NON-NLS-1$
+        TextureRegion uncheck = this.context.getTextureRegion("ui/radio-unchecked.png"); //$NON-NLS-1$
+        ATheme theme = this.getTheme();
+        this.addDrawerForeground(new InternalWidgetDrawerBatch() {
+            @Override
+            protected void _drawIt(SwtDrawer_Batch<?> pBatch, Vector2 pScreenCoords, Rectangle pDims) {
+                pBatch.setColor(theme.getWidgetPrimaryBorderColor());
+                if (isChecked()) {
+                    pBatch.draw(check, pDims.x, pDims.y + (pDims.height - 16) / 2f, 16, 16);
+                } else {
+                    pBatch.draw(uncheck, pDims.x, pDims.y + (pDims.height - 16) / 2f, 16, 16);
+                }
+                Rectangle pDims2 = new Rectangle(pDims.x + 16 + 5, pDims.y, pDims.width - 16 - 5, pDims.height);
+                pBatch.drawText(SwtRadioBox.this.myText, pDims2, Align.left, .5f, true, theme.getLabelColor());
+            }
+        });
+        this.addEnabledStateListener((b) -> this.actor.setDisabled(!b));
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    protected ActorRadioBox _createActor() {
+        ActorRadioBox back = new ActorRadioBox() {
+            @Override
+            public void draw(Batch batch, float parentAlpha) {
+                _internalDrawWidget(this, batch, parentAlpha, () -> {
+                });
+            }
+        };
+        back.addListener(new EventListener() {
+            @Override
+            public boolean handle(Event event) {
+                if (event instanceof ChangeEvent) {
+                    onInternalChanged();
+                    return true;
+                }
+                if (event instanceof InputEvent) {
+                    if (((InputEvent) event).getType() == Type.keyTyped) {
+                        if (((InputEvent) event).getKeyCode() == Keys.ENTER
+                                || ((InputEvent) event).getKeyCode() == Keys.SPACE) {
+                            setChecked();
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
+        });
+        return back;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    private void onInternalChanged() {
+        if (this.actor.isChecked()) {
+            callListeners(0);
+            for (SwtRadioBox a : this.radioGroup.boxes) {
+                if (a != this) {
+                    a.actor.setChecked(false, false);
+                }
+            }
+            this.focus();
+        }
+    }
+
+    
+    // -------------------------------------------------------------------------------------------------------------------------
+    public boolean isChecked() {
+        return this.actor.isChecked();
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public void setText(String text) {
+        this.myText = text;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public void setChecked() {
+        this.actor.setChecked();
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+}
