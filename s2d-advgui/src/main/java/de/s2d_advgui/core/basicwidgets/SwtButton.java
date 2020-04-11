@@ -44,11 +44,11 @@ public class SwtButton extends ASwtWidgetSelectable<Button> {
             @Override
             protected void _drawIt(SwtDrawer_Batch<?> batch, Vector2 pScreenCoords, Rectangle dims) {
                 if (isEnabled()) {
-                    batch.setColor(getTheme().getWidgetPrimaryBorderColor());
+                    batch.setColor(getTheme().getWidgetPrimaryBackgroundColor());
                 } else {
-                    batch.setColor(getTheme().getWidgetPrimaryBorderColorDisabled());
+                    batch.setColor(getTheme().getWidgetPrimaryBackgroundColorDisabled());
                 }
-                batch.draw(wh, RectangleFactory.explode(dims, 5));
+                batch.draw(wh, RectangleFactory.explode(dims, 2));
             }
         });
         this.addDrawerForeground(new InternalWidgetDrawerBatch() {
