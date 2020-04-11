@@ -144,6 +144,7 @@ public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM exten
     public void setCurrentControllerLevel(IControllerLevel pControllerLevel) {
         this.controllerStack.push(pControllerLevel);
         this.currentControllerLevel = pControllerLevel;
+        setKeyboardFocus(null);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
