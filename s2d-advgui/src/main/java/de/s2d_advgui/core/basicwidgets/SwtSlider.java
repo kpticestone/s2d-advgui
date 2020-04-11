@@ -20,6 +20,12 @@ public class SwtSlider extends ASwtWidgetSelectable<Slider> {
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
+    protected void applyDisabledOnActor(boolean b) {
+        this.actor.setDisabled(b);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
     protected Slider _createActor() {
         SliderStyle style = new SliderStyle();
         style.background = this.context.getDrawable(ATheme.ICONS_128_ANGEL_PNG);

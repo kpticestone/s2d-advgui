@@ -16,7 +16,7 @@ public abstract class ASwtWidget_300_Traverse<ACTOR extends Actor> extends ASwtW
     protected final boolean focusable;
 
     // -------------------------------------------------------------------------------------------------------------------------
-    protected boolean hovered = false;
+    private boolean hovered = false;
 
     // -------------------------------------------------------------------------------------------------------------------------
     public ASwtWidget_300_Traverse(ISwtStage<?, ?> pContext) {
@@ -38,17 +38,19 @@ public abstract class ASwtWidget_300_Traverse<ACTOR extends Actor> extends ASwtW
             this.actor.addListener(new EventListener() {
                 @Override
                 public boolean handle(Event event) {
-                    if (event instanceof InputEvent) {
-                        InputEvent ii = (InputEvent) event;
-                        switch (ii.getType()) {
-                        case enter:
-                            ASwtWidget_300_Traverse.this.hovered = true;
-                            return true;
-                        case exit:
-                            ASwtWidget_300_Traverse.this.hovered = false;
-                            return true;
-                        default:
-                            break;
+                    if (isEnabled()) {
+                        if (event instanceof InputEvent) {
+                            InputEvent ii = (InputEvent) event;
+                            switch (ii.getType()) {
+                            case enter:
+                                ASwtWidget_300_Traverse.this.hovered = true;
+                                return true;
+                            case exit:
+                                ASwtWidget_300_Traverse.this.hovered = false;
+                                return true;
+                            default:
+                                break;
+                            }
                         }
                     }
                     return false;
@@ -57,8 +59,10 @@ public abstract class ASwtWidget_300_Traverse<ACTOR extends Actor> extends ASwtW
             this.actor.addListener(new InputListener() {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                    if (button == 0) {
-                        focus();
+                    if (isEnabled()) {
+                        if (button == 0) {
+                            focus();
+                        }
                     }
                     return false;
                 }

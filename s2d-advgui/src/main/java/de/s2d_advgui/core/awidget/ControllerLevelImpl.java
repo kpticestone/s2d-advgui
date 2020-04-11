@@ -55,6 +55,13 @@ public class ControllerLevelImpl implements IControllerLevel {
     private final IIsControllerMode isCtrl;
 
     // -------------------------------------------------------------------------------------------------------------------------
+    @Nullable
+    private ISwtWidget<?> focusedWidget = null;
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    private final List<ISwtWidget<?>> orderedList = new ArrayList<>();
+
+    // -------------------------------------------------------------------------------------------------------------------------
     public ControllerLevelImpl(@Nonnull IIsControllerMode pIsCtrl) {
         this.isCtrl = pIsCtrl;
     }
@@ -66,7 +73,7 @@ public class ControllerLevelImpl implements IControllerLevel {
             for (int keyCode : s.getKeyCodes(this.isCtrl.isControllerMode())) {
                 if (keyCode < 256) {
                     if (this.workers[keyCode] != null) throw new RuntimeException(
-                            "keycode '" + keyCode + "' of handler " + pInputKeyHandler + " already used"); //$NON-NLS-1$ //$NON-NLS-2$
+                            "keycode '" + keyCode + "' of handler " + pInputKeyHandler + " already used"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                     this.workers[keyCode] = worker;
                 } else {
                     if (this.higherWorkers.containsKey(keyCode)) throw new RuntimeException(
@@ -167,8 +174,6 @@ public class ControllerLevelImpl implements IControllerLevel {
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final boolean _onEvent_ControllerPovMoved(Controller controller, int povCode, PovDirection value) {
-        System.err.println("SwtScreen._onEvent_ControllerPovMoved(" + povCode + ", " + value + ");");
-
         if (this.lastPovValue != PovDirection.center) {
             ISwtActionRunner_Keys lastWorker = this.povWorkers.get(this.lastPovValue);
             if (lastWorker != null) {
@@ -186,14 +191,14 @@ public class ControllerLevelImpl implements IControllerLevel {
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final boolean _onEvent_ControllerXSliderMoved(Controller controller, int sliderCode, boolean value) {
-        System.err.println("SwtScreen._onEvent_ControllerXSliderMoved(" + sliderCode + ", " + value + ");");
+        System.err.println("SwtScreen._onEvent_ControllerXSliderMoved(" + sliderCode + ", " + value + ");"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         return false;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final boolean _onEvent_ControllerYSliderMoved(Controller controller, int sliderCode, boolean value) {
-        System.err.println("SwtScreen._onEvent_ControllerYSliderMoved(" + sliderCode + ", " + value + ");");
+        System.err.println("SwtScreen._onEvent_ControllerYSliderMoved(" + sliderCode + ", " + value + ");"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         return false;
     }
 
@@ -202,7 +207,7 @@ public class ControllerLevelImpl implements IControllerLevel {
     public final boolean _onEvent_ControllerAccelerometerMoved(Controller controller, int accelerometerCode,
             Vector3 value) {
         System.err
-                .println("SwtScreen._onEvent_ControllerAccelerometerMoved(" + accelerometerCode + ", " + value + ");");
+                .println("SwtScreen._onEvent_ControllerAccelerometerMoved(" + accelerometerCode + ", " + value + ");"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         return false;
     }
 
@@ -210,7 +215,7 @@ public class ControllerLevelImpl implements IControllerLevel {
     @Override
     public final boolean _onEvent_TouchDown(int screenX, int screenY, int pointer, int button) {
         System.err.println(
-                "SwtScreen._onEvent_TouchDown(" + screenX + ", " + screenY + ", " + pointer + ", " + button + ");");
+                "SwtScreen._onEvent_TouchDown(" + screenX + ", " + screenY + ", " + pointer + ", " + button + ");"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
         return false;
     }
 
@@ -218,7 +223,7 @@ public class ControllerLevelImpl implements IControllerLevel {
     @Override
     public final boolean _onEvent_TouchUp(int screenX, int screenY, int pointer, int button) {
         System.err.println(
-                "SwtScreen._onEvent_TouchUp(" + screenX + ", " + screenY + ", " + pointer + ", " + button + ");");
+                "SwtScreen._onEvent_TouchUp(" + screenX + ", " + screenY + ", " + pointer + ", " + button + ");"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
         return false;
     }
 
@@ -229,6 +234,41 @@ public class ControllerLevelImpl implements IControllerLevel {
             if (a.onScroll(amount)) return true;
         }
         return false;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public List<ISwtWidget<?>> getOrderedList() {
+        return this.orderedList;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public final boolean traverseTabNext() {
+        int idx = this.orderedList.indexOf(this.focusedWidget);
+        int nidx = idx + 1 < this.orderedList.size() ? idx + 1 : 0;
+        ISwtWidget<?> jd = this.focusedWidget = this.orderedList.get(nidx);
+        jd.focus();
+        return true;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public final boolean traverseTabPrev() {
+        int idx = this.orderedList.indexOf(this.focusedWidget);
+        ISwtWidget<?> jd = this.focusedWidget = this.orderedList
+                .get(idx - 1 >= 0 ? idx - 1 : this.orderedList.size() - 1);
+        jd.focus();
+        return true;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public void reacCurrentWidget() {
+        ISwtWidget<?> fw = this.focusedWidget;
+        if (fw != null) {
+            fw.focus();
+        }
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

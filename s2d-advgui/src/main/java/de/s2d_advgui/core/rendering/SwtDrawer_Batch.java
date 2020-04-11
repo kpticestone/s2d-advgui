@@ -11,7 +11,9 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Scaling;
 
 import de.s2d_advgui.commons.TNull;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
@@ -160,6 +162,12 @@ public final class SwtDrawer_Batch<RM extends AResourceManager> extends ASwtDraw
     // -------------------------------------------------------------------------------------------------------------------------
     public void draw(TextureRegion ppo, Rectangle rr) {
         this.draw(ppo, rr.x, rr.y, rr.width, rr.height);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public void draw(TextureRegion ppo, Rectangle rr, Scaling pScaling) {
+        Vector2 v2 = pScaling.apply(ppo.getRegionWidth(), ppo.getRegionHeight(), rr.width, rr.height);
+        this.draw(ppo, rr.x + (rr.width - v2.x) / 2f, rr.y + (rr.height - v2.y) / 2f, v2.x, v2.y);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

@@ -47,7 +47,7 @@ public class BorderDrawer2 {
 
     // -------------------------------------------------------------------------------------------------------------------------
     public void drawIt(Batch batch, float x, float y, float width, float height) {
-        int si = 7;
+        int si = 0;
 
         batch.setColor(this.backgroundColor);
         batch.draw(this.tr, x + 2, y + 2, width - 4, height - 4);

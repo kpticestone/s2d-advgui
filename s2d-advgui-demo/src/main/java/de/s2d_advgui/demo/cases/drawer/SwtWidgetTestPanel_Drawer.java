@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Align;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
+import de.s2d_advgui.core.resourcemanager.ATheme;
 import de.s2d_advgui.demo.cases.ASwtWidgetTestPanel;
 
 public class SwtWidgetTestPanel_Drawer extends ASwtWidgetTestPanel {
@@ -20,7 +21,7 @@ public class SwtWidgetTestPanel_Drawer extends ASwtWidgetTestPanel {
             protected void _drawIt(SwtDrawer_Batch<?> pBatch, Vector2 pScreenCoords, Rectangle xDims) {
                 pBatch.setColor(new Color(0x00aaff99));
                 Rectangle pDims = new Rectangle(xDims.x + 10, xDims.y + 10, xDims.width - 20, xDims.height - 20);
-                pBatch.drawBorder("borders/white-round-5.png", pDims);
+                pBatch.drawBorder(ATheme.BORDERS_WHITE_ROUND_5_PNG, pDims);
 
                 pBatch.drawText("TL1\nTL2", pDims, Align.topLeft, .5f, true, Color.CYAN);
                 pBatch.drawText("T1\nT2", pDims, Align.top, .5f, true, Color.CYAN);

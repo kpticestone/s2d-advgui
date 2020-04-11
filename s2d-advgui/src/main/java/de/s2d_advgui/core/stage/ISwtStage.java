@@ -1,10 +1,13 @@
 package de.s2d_advgui.core.stage;
 
+import javax.annotation.Nullable;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+
 import de.s2d_advgui.commons.Trigger;
 import de.s2d_advgui.core.application.ISwtApplicationController;
 import de.s2d_advgui.core.awidget.ISwtWidget;
@@ -96,6 +99,10 @@ public interface ISwtStage<RM extends AResourceManager, DM extends ISwtDrawerMan
 
     // -------------------------------------------------------------------------------------------------------------------------
     void onWidgetCreation(ISwtWidget<?> widget);
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Nullable
+    ISwtWidget<?> getRegisteredActorMapping(Actor actor);
 
     // -------------------------------------------------------------------------------------------------------------------------
 }

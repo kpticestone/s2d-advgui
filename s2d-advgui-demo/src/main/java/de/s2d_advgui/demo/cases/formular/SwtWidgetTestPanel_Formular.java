@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Align;
 import de.s2d_advgui.core.awidget.ISwtForm;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.basicwidgets.SwtCheckbox;
+import de.s2d_advgui.core.basicwidgets.SwtComboBox;
 import de.s2d_advgui.core.basicwidgets.SwtLabel;
 import de.s2d_advgui.core.basicwidgets.SwtPanel;
 import de.s2d_advgui.core.basicwidgets.SwtRadioBox;
@@ -129,6 +130,13 @@ public class SwtWidgetTestPanel_Formular extends ASwtWidgetTestPanel {
         }
 
         // -------------------------------------------------------------------------------------------------------------------------
+        public <T> SwtComboBox<T> addComboBox(String label) {
+            SwtFormRow row = this.addRow(label);
+            SwtComboBox<T> back = new SwtComboBox<>(row);
+            return back;
+        }
+
+        // -------------------------------------------------------------------------------------------------------------------------
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -138,13 +146,21 @@ public class SwtWidgetTestPanel_Formular extends ASwtWidgetTestPanel {
         SwtForm form = new SwtForm(this, 150, 300);
         form.addTextField("text field a (maxiiiiiiii  loonger longer)");
         form.addTextField("text field b (short)");
-        form.addTextField("text field c (longer)");
+        SwtTextField tt = form.addTextField("text field c (longer)");
+        tt.setDisabled();
+        tt.setText("disabled; not enabled!");
+        SwtComboBox<String> box1 = form.addComboBox("box1");
+        SwtComboBox<String> box2 = form.addComboBox("box2");
+        box2.setValues("A1", "A2", "A3");
+        SwtComboBox<String> box3 = form.addComboBox("box3");
+        box3.setValues("A1", "A2", "A3");
+        box3.setDisabled();
         form.addCheckBox("litte checkbox a");
         form.addRadioBox("A", "litte radiobox a");
         form.addRadioBox("A", "litte radiobox b");
-        form.addRadioBox("A", "litte radiobox c");
+        form.addRadioBox("A", "litte radiobox c").setDisabled();
         form.addCheckBox("litte checkbox b");
-        form.addCheckBox("litte checkbox c");
+        form.addCheckBox("litte checkbox c").setDisabled();
         form.addRadioBox("B", "radiobox 1");
         form.addRadioBox("B", "radiobox 2");
         form.addRadioBox("B", "radiobox 3");

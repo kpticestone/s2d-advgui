@@ -18,9 +18,23 @@ public final class RectangleFactory {
      * @return
      */
     @Nonnull
-    public final static Rectangle explode(@Nonnull Rectangle pDims, int pPix) {
-        int dup = pPix * 2;
+    public final static Rectangle explode(@Nonnull Rectangle pDims, float pPix) {
+        float dup = pPix * 2;
         return new Rectangle(pDims.x + pPix, pDims.y + pPix, pDims.width - dup, pDims.height - dup);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    /**
+     * 
+     * @param pDims
+     * @param pPix
+     * @return
+     */
+    @Nonnull
+    public final static Rectangle explode(@Nonnull Rectangle pDims, float pPixW, float pPixH) {
+        float dupW = pPixW * 2;
+        float dupH = pPixH * 2;
+        return new Rectangle(pDims.x + pPixW, pDims.y + pPixH, pDims.width - dupW, pDims.height - dupH);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

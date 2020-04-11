@@ -91,7 +91,6 @@ public abstract class SwtScreen<RM extends AResourceManager, DM extends ISwtDraw
     // -------------------------------------------------------------------------------------------------------------------------
     public final SwtWindow createWindow(ASwtWindowDescriptor desc) {
         SwtWindow window = desc.createWindow(this.stage);
-        this.addSubWidget(window);
         return window;
     }
 

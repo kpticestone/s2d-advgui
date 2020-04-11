@@ -1,5 +1,8 @@
 package de.s2d_advgui.core.stage;
 
+import java.util.Stack;
+
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.badlogic.gdx.Gdx;
@@ -11,14 +14,16 @@ import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.controllers.mappings.Xbox;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+
 import de.s2d_advgui.core.application.ISwtApplicationController;
+import de.s2d_advgui.core.awidget.IControllerLevel;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.input.ISwtWidgetSelectable;
 import de.s2d_advgui.core.rendering.ISwtDrawerManager;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
-import de.s2d_advgui.core.screens.SwtScreen;
 
-public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>> extends ASwtStage_300_Traverse<RM, DM> {
+public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>>
+        extends ASwtStage_300_Traverse<RM, DM> implements IControllerLevelTarget {
     // -------------------------------------------------------------------------------------------------------------------------
     private final ControllerListener controllerListener = new ControllerListener() {
         // -------------------------------------------------------------------------------------------------------------------------
@@ -36,20 +41,22 @@ public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM exten
         // -------------------------------------------------------------------------------------------------------------------------
         @Override
         public boolean buttonDown(Controller pController, int pButtonCode) {
-            System.out.println(pButtonCode);
+            IControllerLevel cu = ASwtStage_600_Events.this.currentControllerLevel;
+            if (cu == null) return false;
             if (pButtonCode == Xbox.R_BUMPER) {
-                return ASwtStage_600_Events.this.traverseTabNext();
+                return cu.traverseTabNext();
             }
             if (pButtonCode == Xbox.L_BUMPER) {
-                return ASwtStage_600_Events.this.traverseTabPrev();
+                return cu.traverseTabPrev();
             }
-            SwtScreen<RM, DM> cu = ASwtStage_600_Events.this.currentScreen;
-            return cu != null && cu.getControllerLevel()._onEvent_ControllerButtonDown(pButtonCode);
+            return cu._onEvent_ControllerButtonDown(pButtonCode);
         }
 
         // -------------------------------------------------------------------------------------------------------------------------
         @Override
         public boolean buttonUp(Controller pController, int pButtonCode) {
+            IControllerLevel cu = ASwtStage_600_Events.this.currentControllerLevel;
+            if (cu == null) return false;
             Actor actor = getKeyboardFocus();
             ISwtWidget<?> swt = ASwtStage_600_Events.this.actorMappings.get(actor);
             if (swt instanceof ISwtWidgetSelectable) {
@@ -58,43 +65,47 @@ public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM exten
                     return true;
                 }
             }
-            SwtScreen<RM, DM> cu = ASwtStage_600_Events.this.currentScreen;
-            return cu != null && cu.getControllerLevel()._onEvent_ControllerButtonUp(pButtonCode);
+            return cu._onEvent_ControllerButtonUp(pButtonCode);
         }
 
         // -------------------------------------------------------------------------------------------------------------------------
         @Override
         public boolean axisMoved(Controller pController, int pAxisCode, float pValue) {
-            SwtScreen<RM, DM> cu = ASwtStage_600_Events.this.currentScreen;
-            return cu != null && cu.getControllerLevel()._onEvent_ControllerAxisMoved(pController, pAxisCode, pValue);
+            IControllerLevel cu = ASwtStage_600_Events.this.currentControllerLevel;
+            if (cu == null) return false;
+            return cu._onEvent_ControllerAxisMoved(pController, pAxisCode, pValue);
         }
 
         // -------------------------------------------------------------------------------------------------------------------------
         @Override
         public boolean povMoved(Controller pController, int pPovCode, PovDirection pValue) {
-            SwtScreen<RM, DM> cu = ASwtStage_600_Events.this.currentScreen;
-            return cu != null && cu.getControllerLevel()._onEvent_ControllerPovMoved(pController, pPovCode, pValue);
+            IControllerLevel cu = ASwtStage_600_Events.this.currentControllerLevel;
+            if (cu == null) return false;
+            return cu._onEvent_ControllerPovMoved(pController, pPovCode, pValue);
         }
 
         // -------------------------------------------------------------------------------------------------------------------------
         @Override
         public boolean xSliderMoved(Controller pController, int pSliderCode, boolean pValue) {
-            SwtScreen<RM, DM> cu = ASwtStage_600_Events.this.currentScreen;
-            return cu != null && cu.getControllerLevel()._onEvent_ControllerXSliderMoved(pController, pSliderCode, pValue);
+            IControllerLevel cu = ASwtStage_600_Events.this.currentControllerLevel;
+            if (cu == null) return false;
+            return cu._onEvent_ControllerXSliderMoved(pController, pSliderCode, pValue);
         }
 
         // -------------------------------------------------------------------------------------------------------------------------
         @Override
         public boolean ySliderMoved(Controller pController, int pSliderCode, boolean pValue) {
-            SwtScreen<RM, DM> cu = ASwtStage_600_Events.this.currentScreen;
-            return cu != null && cu.getControllerLevel()._onEvent_ControllerYSliderMoved(pController, pSliderCode, pValue);
+            IControllerLevel cu = ASwtStage_600_Events.this.currentControllerLevel;
+            if (cu == null) return false;
+            return cu._onEvent_ControllerYSliderMoved(pController, pSliderCode, pValue);
         }
 
         // -------------------------------------------------------------------------------------------------------------------------
         @Override
         public boolean accelerometerMoved(Controller pController, int pAccelerometerCode, Vector3 pValue) {
-            SwtScreen<RM, DM> cu = ASwtStage_600_Events.this.currentScreen;
-            return cu != null && cu.getControllerLevel()._onEvent_ControllerAccelerometerMoved(pController, pAccelerometerCode, pValue);
+            IControllerLevel cu = ASwtStage_600_Events.this.currentControllerLevel;
+            if (cu == null) return false;
+            return cu._onEvent_ControllerAccelerometerMoved(pController, pAccelerometerCode, pValue);
         }
 
         // -------------------------------------------------------------------------------------------------------------------------
@@ -103,6 +114,14 @@ public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM exten
     // -------------------------------------------------------------------------------------------------------------------------
     @Nullable
     Controller controller;
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Nonnull
+    private final Stack<IControllerLevel> controllerStack = new Stack<>();
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Nullable
+    IControllerLevel currentControllerLevel = null;
 
     // -------------------------------------------------------------------------------------------------------------------------
     public ASwtStage_600_Events(ISwtApplicationController<RM, DM> pApplicationController) {
@@ -116,19 +135,40 @@ public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM exten
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
+    public final IControllerLevel getControllerLevel() {
+        return this.currentControllerLevel;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public void setCurrentControllerLevel(IControllerLevel pControllerLevel) {
+        this.controllerStack.push(pControllerLevel);
+        this.currentControllerLevel = pControllerLevel;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public void removeCurrentControllerLevel() {
+        this.controllerStack.pop();
+        this.currentControllerLevel = this.controllerStack.peek();
+        this.currentControllerLevel.reacCurrentWidget();
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final boolean keyDown(int keyCode) {
+        IControllerLevel cu = this.currentControllerLevel;
+        if (cu == null) return false;
         if (keyCode == Keys.TAB) {
             if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
-                return this.traverseTabPrev();
+                return cu.traverseTabPrev();
             }
-            return this.traverseTabNext();
+            return cu.traverseTabNext();
         }
         boolean back = super.keyDown(keyCode);
         if (!back) {
-            SwtScreen<RM, DM> cu = this.currentScreen;
-            if (cu != null && cu.getControllerLevel().keyDown(keyCode)) return true;
+            if (cu.keyDown(keyCode)) return true;
         }
         return back;
     }
@@ -136,10 +176,11 @@ public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM exten
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final boolean keyUp(int keyCode) {
+        IControllerLevel cu = this.currentControllerLevel;
+        if (cu == null) return false;
         boolean back = super.keyUp(keyCode);
         if (!back) {
-            SwtScreen<RM, DM> cu = this.currentScreen;
-            if (cu != null && cu.getControllerLevel().keyUp(keyCode)) return true;
+            if (cu.keyUp(keyCode)) return true;
         }
         return back;
     }
@@ -147,11 +188,13 @@ public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM exten
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final boolean keyTyped(char character) {
-        if ('\t' == character) return false; // Die Standard-Implementierung vom Scene2D-Tab-System wird hier übersprungen
+        IControllerLevel cu = this.currentControllerLevel;
+        if (cu == null) return false;
+        if ('\t' == character) return false; // Die Standard-Implementierung vom Scene2D-Tab-System wird hier
+                                             // übersprungen
         boolean back = super.keyTyped(character);
         if (!back) {
-            SwtScreen<RM, DM> cu = this.currentScreen;
-            if (cu != null && cu.getControllerLevel().keyTyped(character)) return true;
+            if (cu.keyTyped(character)) return true;
         }
         return back;
     }
@@ -159,10 +202,11 @@ public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM exten
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        IControllerLevel cu = this.currentControllerLevel;
+        if (cu == null) return false;
         boolean back = super.touchDown(screenX, screenY, pointer, button);
         if (!back) {
-            SwtScreen<RM, DM> cu = this.currentScreen;
-            if (cu != null && cu.getControllerLevel()._onEvent_TouchDown(screenX, screenY, pointer, button)) return true;
+            if (cu._onEvent_TouchDown(screenX, screenY, pointer, button)) return true;
         }
         return back;
     }
@@ -170,10 +214,11 @@ public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM exten
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        IControllerLevel cu = this.currentControllerLevel;
+        if (cu == null) return false;
         boolean back = super.touchUp(screenX, screenY, pointer, button);
         if (!back) {
-            SwtScreen<RM, DM> cu = this.currentScreen;
-            if (cu != null && cu.getControllerLevel()._onEvent_TouchUp(screenX, screenY, pointer, button)) return true;
+            if (cu._onEvent_TouchUp(screenX, screenY, pointer, button)) return true;
         }
         return back;
     }
@@ -209,10 +254,11 @@ public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM exten
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final boolean scrolled(int amount) {
+        IControllerLevel cu = this.currentControllerLevel;
+        if (cu == null) return false;
         boolean back = super.scrolled(amount);
         if (!back) {
-            SwtScreen<RM, DM> cu = this.currentScreen;
-            if (cu != null && cu.getControllerLevel()._onEvent_MouseScrolled(amount)) return true;
+            if (cu._onEvent_MouseScrolled(amount)) return true;
         }
         return back;
     }

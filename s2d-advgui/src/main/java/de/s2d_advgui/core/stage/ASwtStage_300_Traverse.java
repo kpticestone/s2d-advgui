@@ -13,24 +13,27 @@ import de.s2d_advgui.core.resourcemanager.AResourceManager;
 
 public abstract class ASwtStage_300_Traverse<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>> extends ASwtStage_200_Widgets<RM, DM> {
     // -------------------------------------------------------------------------------------------------------------------------
+    @Deprecated
     private final List<ISwtWidget<?>> orderedList = new ArrayList<>();
 
     // -------------------------------------------------------------------------------------------------------------------------
     public ASwtStage_300_Traverse(ISwtApplicationController<RM, DM> pApplicationController) {
         super(pApplicationController);
         this.addUpdateHandler(delta -> {
-            calculateTabOrderList();
+            _calculateTabOrderList();
         });
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    private final void calculateTabOrderList() {
+    @Deprecated
+    private final void _calculateTabOrderList() {
         this.orderedList.clear();
         this.currentScreen.calculateTabOrderList(this.orderedList);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public final boolean traverseTabNext() {
+    @Deprecated
+    public final boolean _traverseTabNext() {
         Actor actor = this.getKeyboardFocus();
         ISwtWidget<?> widget = this.actorMappings.get(actor);
         int idx = this.orderedList.indexOf(widget);
@@ -41,7 +44,8 @@ public abstract class ASwtStage_300_Traverse<RM extends AResourceManager, DM ext
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public final boolean traverseTabPrev() {
+    @Deprecated
+    public final boolean _traverseTabPrev() {
         Actor actor = this.getKeyboardFocus();
         ISwtWidget<?> widget = this.actorMappings.get(actor);
         int idx = this.orderedList.indexOf(widget);
@@ -59,6 +63,7 @@ public abstract class ASwtStage_300_Traverse<RM extends AResourceManager, DM ext
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public boolean setKeyboardFocus(@Nullable Actor actor) {
+        System.err.println("SwtStage.setKeyboardFocus(" + actor + ");");
         return super.setKeyboardFocus(actor);
     }
 

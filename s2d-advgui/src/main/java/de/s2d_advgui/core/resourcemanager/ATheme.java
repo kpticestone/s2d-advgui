@@ -9,6 +9,8 @@ import de.s2d_advgui.core.SwtColor;
 public class ATheme {
     // -------------------------------------------------------------------------------------------------------------------------
     private Color widgetPrimaryBackgroundColor = new Color(1f, .75f, .5f, 1f);
+    public static final String BORDERS_WHITE_NB_ROUND_5_PNG = "borders/white-nb-round-5.png";
+    public static final String BORDERS_FOCUS_ROUND_5_PNG = "borders/focus-round-5.png";
     public static final String UI_CORNER_2_PNG = "ui/corner-2.png";
     public static final String UI_BORDER_1_HOR_PNG = "ui/border-1-hor.png";
     public static final String UI_BORDER_1_VER_PNG = "ui/border-1-ver.png";
@@ -70,7 +72,7 @@ public class ATheme {
 
     // -------------------------------------------------------------------------------------------------------------------------
     public Color getLabelColor() {
-        return Color.CYAN;
+        return this.getWidgetPrimaryBorderColor();
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -81,6 +83,11 @@ public class ATheme {
     // -------------------------------------------------------------------------------------------------------------------------
     public String getLoadingScreenSplashScreen2() {
         return null; // "icons/128/remotecontrol2.png";
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public Color getLabelColorDisabled() {
+        return Color.GRAY;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

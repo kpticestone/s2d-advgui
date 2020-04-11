@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import de.s2d_advgui.commons.Trigger;
 import de.s2d_advgui.core.input.ISwtWidgetSelectable;
 
-public abstract class ASwtWidgetSelectable<ACTOR extends Actor> extends ASwtWidget<ACTOR>
+public abstract class ASwtWidgetSelectable<ACTOR extends Actor> extends ASwtWidgetDisableable<ACTOR>
         implements ISwtWidgetSelectable {
     // -------------------------------------------------------------------------------------------------------------------------
     private final Set<Consumer<Integer>> listeners = new LinkedHashSet<>();

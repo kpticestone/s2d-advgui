@@ -6,17 +6,18 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+
 import de.s2d_advgui.core.application.ISwtApplicationController;
 import de.s2d_advgui.core.awidget.IMyWidgetUpdateHandler;
 import de.s2d_advgui.core.rendering.ISwtDrawerManager;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
 import de.s2d_advgui.core.screens.MasterViewport;
 import de.s2d_advgui.core.screens.SwtScreen;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public abstract class ASwtStage_000_Ground<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>> extends Stage implements ISwtStage<RM, DM> {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -127,6 +128,7 @@ public abstract class ASwtStage_000_Ground<RM extends AResourceManager, DM exten
     // -------------------------------------------------------------------------------------------------------------------------
     public void onSetCurrentScreen(SwtScreen<RM, DM> theScreen) {
         this.currentScreen = theScreen;
+        ((IControllerLevelTarget)this).setCurrentControllerLevel(theScreen.getControllerLevel());
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

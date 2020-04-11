@@ -28,7 +28,6 @@ public class SwtLabel extends ASwtWidget<Label> {
     protected Label createActor() {
         LabelStyle style = new LabelStyle();
         style.font = this.context.getResourceManager().getFont(1f, true);
-        // style.fontColor = this.context.getColor_Label();
         Label back = new Label(null, style) {
             @Override
             public void draw(Batch batch, float parentAlpha) {

@@ -1,6 +1,6 @@
 package de.s2d_advgui.core.awidget;
 
-import java.util.Stack;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 
@@ -9,13 +9,10 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 
 import de.s2d_advgui.core.input.axis.ASwtInputRegister_Axis;
 import de.s2d_advgui.core.input.keys.ASwtInputRegister_Keys;
+import de.s2d_advgui.core.stage.IControllerLevelTarget;
 import de.s2d_advgui.core.stage.ISwtStage;
 
 public abstract class ASwtWidget_ControllerLevel<T extends Actor> extends ASwtWidget<T> {
-    // -------------------------------------------------------------------------------------------------------------------------
-    @Nonnull
-    private final Stack<ASwtWidget_ControllerLevel<?>> subWidgets = new Stack<>();
-
     // -------------------------------------------------------------------------------------------------------------------------
     @Nonnull
     private final ControllerLevelImpl controllerLevel;
@@ -24,37 +21,35 @@ public abstract class ASwtWidget_ControllerLevel<T extends Actor> extends ASwtWi
     public ASwtWidget_ControllerLevel(ISwtStage<?, ?> pContext) {
         super(pContext);
         this.controllerLevel = new ControllerLevelImpl(() -> getContext().isControllerMode());
+        this.myInit();
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     public ASwtWidget_ControllerLevel(ISwtWidget<? extends Group> pParent, boolean focusable, boolean modal) {
         super(pParent, focusable);
         if (!modal && pParent instanceof ASwtWidget_ControllerLevel) {
-            System.err.println("..."); //$NON-NLS-1$
-            this.controllerLevel = ((ASwtWidget_ControllerLevel) pParent).controllerLevel;
-        }
-        else
-        {
+            this.controllerLevel = ((ASwtWidget_ControllerLevel<?>) pParent).controllerLevel;
+        } else {
             this.controllerLevel = new ControllerLevelImpl(() -> getContext().isControllerMode());
+            this.myInit();
         }
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public final void addSubWidget(ASwtWidget_ControllerLevel<?> pSub) {
-        this.subWidgets.push(pSub);
+    private void myInit() {
+        this.addUpdateHandler(delta -> {
+            List<ISwtWidget<?>> ol = this.controllerLevel.getOrderedList();
+            ol.clear();
+            this.calculateTabOrderList(ol);
+        });
+        ((IControllerLevelTarget) this.context).setCurrentControllerLevel(this.controllerLevel);
+        this.addDisposeListener(() -> {
+            ((IControllerLevelTarget) this.context).removeCurrentControllerLevel();
+        });
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     public final IControllerLevel getControllerLevel() {
-        if (!this.subWidgets.isEmpty()) {
-            ASwtWidget_ControllerLevel<?> lv = this.subWidgets.peek();
-            if (lv.actor.getStage() == null) {
-                // The widget is no longer part of the stage
-                this.subWidgets.pop();
-                return getControllerLevel();
-            }
-            return lv.getControllerLevel();
-        }
         return this.controllerLevel;
     }
 

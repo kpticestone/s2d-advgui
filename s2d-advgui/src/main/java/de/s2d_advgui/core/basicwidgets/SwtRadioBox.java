@@ -10,21 +10,12 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.InputEvent.Type;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
-import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
-import com.badlogic.gdx.scenes.scene2d.utils.FocusListener.FocusEvent;
 import com.badlogic.gdx.utils.Align;
 
 import de.s2d_advgui.core.awidget.ASwtWidgetSelectable;
@@ -76,7 +67,11 @@ public class SwtRadioBox extends ASwtWidgetSelectable<ActorRadioBox> {
         this.addDrawerForeground(new InternalWidgetDrawerBatch() {
             @Override
             protected void _drawIt(SwtDrawer_Batch<?> pBatch, Vector2 pScreenCoords, Rectangle pDims) {
-                pBatch.setColor(theme.getWidgetPrimaryBorderColor());
+                if (isEnabled()) {
+                    pBatch.setColor(theme.getWidgetPrimaryBorderColor());
+                } else {
+                    pBatch.setColor(theme.getWidgetPrimaryBorderColorDisabled());
+                }
                 if (isChecked()) {
                     pBatch.draw(check, pDims.x, pDims.y + (pDims.height - 16) / 2f, 16, 16);
                 } else {
@@ -86,7 +81,12 @@ public class SwtRadioBox extends ASwtWidgetSelectable<ActorRadioBox> {
                 pBatch.drawText(SwtRadioBox.this.myText, pDims2, Align.left, .5f, true, theme.getLabelColor());
             }
         });
-        this.addEnabledStateListener((b) -> this.actor.setDisabled(!b));
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    protected void applyDisabledOnActor(boolean b) {
+        this.actor.setDisabled(b);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -135,7 +135,6 @@ public class SwtRadioBox extends ASwtWidgetSelectable<ActorRadioBox> {
         }
     }
 
-    
     // -------------------------------------------------------------------------------------------------------------------------
     public boolean isChecked() {
         return this.actor.isChecked();

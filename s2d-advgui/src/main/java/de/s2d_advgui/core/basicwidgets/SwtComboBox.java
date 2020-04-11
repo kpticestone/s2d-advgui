@@ -5,6 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -19,30 +20,36 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 
 import de.s2d_advgui.core.SwtColor;
-import de.s2d_advgui.core.awidget.ASwtWidget;
-import de.s2d_advgui.core.awidget.BorderDrawer2;
+import de.s2d_advgui.core.awidget.ASwtWidgetDisableable;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
+import de.s2d_advgui.core.resourcemanager.ATheme;
 
-public class SwtComboBox<T> extends ASwtWidget<SelectBox<T>> {
+public class SwtComboBox<T> extends ASwtWidgetDisableable<SelectBox<T>> {
     // -------------------------------------------------------------------------------------------------------------------------
     private final Set<Consumer<T>> selectListener = new LinkedHashSet<>();
 
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtComboBox(ISwtWidget<? extends Group> pParent) {
         super(pParent, true);
-        BorderDrawer2 bodr = new BorderDrawer2(this.context);
-        this.addDrawerBackground(new InternalWidgetDrawerBatch() {
+        this.addDrawerForeground(new InternalWidgetDrawerBatch() {
             @Override
             protected void _drawIt(SwtDrawer_Batch<?> pBatch, Vector2 pScreenCoords, Rectangle pDims) {
-                bodr.setGenericColors(SwtComboBox.this.enabled, isFocused(), SwtComboBox.this.hovered);
-                bodr.drawIt(pBatch.getBatch(), pDims);
-                bodr.drawIt(pBatch.getBatch(), pDims.x + pDims.width - pDims.height, pDims.y, pDims.height,
-                        pDims.height);
+                if (isEnabled()) {
+                    pBatch.setColor(getTheme().getWidgetPrimaryBorderColor());
+                } else {
+                    pBatch.setColor(getTheme().getWidgetPrimaryBorderColorDisabled());
+                }
+                pBatch.drawBorder(ATheme.BORDERS_WHITE_NB_ROUND_5_PNG, pDims);
             }
-
         });
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    protected void applyDisabledOnActor(boolean b) {
+        this.actor.setDisabled(b);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -56,6 +63,13 @@ public class SwtComboBox<T> extends ASwtWidget<SelectBox<T>> {
         style.background.setLeftWidth(10);
         style.background.setRightWidth(10);
         style.font = fo;
+        style.disabledFontColor = getTheme().getLabelColorDisabled();
+        style.backgroundDisabled = new TextureRegionDrawable(
+                getResourceManager().getColorTextureRegion(Color.BLACK));
+        style.backgroundDisabled.setLeftWidth(10);
+        style.backgroundDisabled.setRightWidth(10);
+        style.backgroundOpen = style.background;
+        style.backgroundOver = style.background;
         style.listStyle.font = fo;
         SelectBox<T> back = new SelectBox<>(style) {
             @Override

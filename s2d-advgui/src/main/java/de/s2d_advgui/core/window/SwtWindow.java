@@ -20,6 +20,7 @@ import de.s2d_advgui.core.basicwidgets.SwtPanel;
 import de.s2d_advgui.core.input.keys.ASwtInputRegister_Keys;
 import de.s2d_advgui.core.layoutmanager.ASwtLayoutManager;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
+import de.s2d_advgui.core.resourcemanager.ATheme;
 import de.s2d_advgui.core.tabledata.ESwtTableMode;
 import de.s2d_advgui.core.tabledata.SwtLayoutDataCellPosition;
 import de.s2d_advgui.core.tabledata.TableDataManager;
@@ -175,7 +176,7 @@ public class SwtWindow extends ASwtWidget_ControllerLevel<WidgetGroup> implement
         });
 
         TableDataManager tableDataManager = new TableDataManager(this.getResourceManager(),
-                "borders/white-nb-round-5.png", ESwtTableMode.CUSTOM, 1, 3);
+                ATheme.BORDERS_WHITE_NB_ROUND_5_PNG, ESwtTableMode.CUSTOM, 1, 3);
         tableDataManager.setCustomCalc((pWidget, width, height, o1) -> {
             float butPanHe = this.buttonPanel.isPanelVisible() ? 35 : 0;
             this.windowPanelTop.setSize(width - o1 * 2, 25);

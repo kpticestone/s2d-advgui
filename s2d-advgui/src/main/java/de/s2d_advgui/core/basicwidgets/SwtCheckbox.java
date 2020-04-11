@@ -42,7 +42,11 @@ public class SwtCheckbox extends ASwtWidgetSelectable<CheckBox> {
         this.addDrawerForeground(new InternalWidgetDrawerBatch() {
             @Override
             protected void _drawIt(SwtDrawer_Batch<?> pBatch, Vector2 pScreenCoords, Rectangle pDims) {
-                pBatch.setColor(theme.getWidgetPrimaryBorderColor());
+                if (isEnabled()) {
+                    pBatch.setColor(theme.getWidgetPrimaryBorderColor());
+                } else {
+                    pBatch.setColor(theme.getWidgetPrimaryBorderColorDisabled());
+                }
                 if (isChecked()) {
                     pBatch.draw(check, pDims.x, pDims.y + (pDims.height - 16) / 2f, 16, 16);
                 } else {
@@ -53,7 +57,12 @@ public class SwtCheckbox extends ASwtWidgetSelectable<CheckBox> {
             }
 
         });
-        this.addEnabledStateListener((b) -> this.actor.setDisabled(!b));
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    protected void applyDisabledOnActor(boolean b) {
+        this.actor.setDisabled(b);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

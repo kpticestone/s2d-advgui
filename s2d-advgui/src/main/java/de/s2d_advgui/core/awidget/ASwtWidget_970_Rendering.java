@@ -15,7 +15,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 
-import de.s2d_advgui.commons.TOldCompatibilityCode;
 import de.s2d_advgui.commons.Trigger;
 import de.s2d_advgui.core.rendering.ISwtDrawerManager;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
@@ -67,14 +66,6 @@ public abstract class ASwtWidget_970_Rendering<ACTOR extends Actor> extends ASwt
     static Color COL_BLUE_050 = new Color(AX, AX, .5f, .8f);
     static Color COL_BLUE_025 = new Color(AX, AX, .25f, .9f);
     static Color COL_BLUE_000 = new Color(AX, AX, 0f, 1f);
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    // private final List<IInternalWidgetDrawer> drawerBackground = new
-    // ArrayList<>();
-    // private final List<IInternalWidgetDrawer> drawerForeground = new
-    // ArrayList<>();
-    // private final List<IInternalWidgetDrawer> drawerClipableMiddle = new
-    // ArrayList<>();
 
     // -------------------------------------------------------------------------------------------------------------------------
     private final Map<WidetLayer, Set<DrawableHolder>> drawer = new HashMap<>();
@@ -191,22 +182,8 @@ public abstract class ASwtWidget_970_Rendering<ACTOR extends Actor> extends ASwt
                 // pOrg.onTrigger();
             }
         }
-
         this.loopDrawer(WidetLayer.MIDDLE, base, batch, this.v2, this.drawingRect);
-        this.loopDrawer(WidetLayer.FOREGROUND, base, batch, v2, drawingRect);
-
-        if (TOldCompatibilityCode.FALSE) if (this.isFocusable() && this.context.getKeyboardFocus() == this.actor) {
-            batch.setColor(Color.RED);
-            TextureRegion br1 = this.context.getResourceManager().getColorTextureRegion(Color.WHITE, 1, 1);
-            batch.draw(br1, this.drawingRect.x, this.drawingRect.y - 2, this.drawingRect.width, 2);
-            batch.draw(br1, this.drawingRect.x, this.drawingRect.y + this.drawingRect.height, this.drawingRect.width,
-                    2);
-
-            batch.draw(br1, this.drawingRect.x - 2, this.drawingRect.y, 2, this.drawingRect.height);
-            batch.draw(br1, this.drawingRect.x + this.drawingRect.width, this.drawingRect.y, 2,
-                    this.drawingRect.height);
-            batch.setColor(Color.WHITE);
-        }
+        this.loopDrawer(WidetLayer.FOREGROUND, base, batch, v2, this.drawingRect);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
