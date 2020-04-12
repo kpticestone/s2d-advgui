@@ -23,7 +23,7 @@ import de.s2d_advgui.core.rendering.ISwtDrawerManager;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
 
 public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>>
-        extends ASwtStage_300_Traverse<RM, DM> implements IControllerLevelTarget {
+        extends ASwtStage_200_Widgets<RM, DM> implements IControllerLevelTarget {
     // -------------------------------------------------------------------------------------------------------------------------
     private final ControllerListener controllerListener = new ControllerListener() {
         // -------------------------------------------------------------------------------------------------------------------------
@@ -152,7 +152,7 @@ public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM exten
     public void removeCurrentControllerLevel() {
         this.controllerStack.pop();
         this.currentControllerLevel = this.controllerStack.peek();
-        this.currentControllerLevel.reacCurrentWidget();
+        this.currentControllerLevel.doFocusCurrentWidget();
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -262,6 +262,26 @@ public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM exten
             if (cu._onEvent_MouseScrolled(amount)) return true;
         }
         return back;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public boolean setKeyboardFocus(Actor actor) {
+        IControllerLevel cu = this.currentControllerLevel;
+        if (cu == null) return false;
+
+        ISwtWidget<?> widget = this.actorMappings.get(actor);
+        if (widget == null) return false;
+
+        cu.setFocusedWidget(widget);
+
+        return super.setKeyboardFocus(actor);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public Actor getKeyboardFocus() {
+        return super.getKeyboardFocus();
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

@@ -29,12 +29,13 @@ public final class SwtPagebook extends SwtPanel {
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtPagebookItem addItem(String name) {
         SwtPagebookItem back = new SwtPagebookItem(this);
+        back.setVisible(this.getChildren().isEmpty());
         this.bookitems.put(name, back);
         return back;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public void selectItem(String name) {
+    public void setSelectedItem(String name) {
         SwtPagebookItem sel = this.bookitems.get(name);
         for (SwtPagebookItem item : this.bookitems.values()) {
             item.setVisible(item == sel);

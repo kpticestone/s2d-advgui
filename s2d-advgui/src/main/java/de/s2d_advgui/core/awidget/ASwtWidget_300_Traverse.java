@@ -73,11 +73,13 @@ public abstract class ASwtWidget_300_Traverse<ACTOR extends Actor> extends ASwtW
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public void calculateTabOrderList(List<ISwtWidget<?>> orderedList) {
-        if (this.isFocusable()) {
-            orderedList.add(this);
-        }
-        for (ISwtWidget<?> child : this.children) {
-            child.calculateTabOrderList(orderedList);
+        if (this.isVisible()) {
+            if (this.isFocusable()) {
+                orderedList.add(this);
+            }
+            for (ISwtWidget<?> child : this.children) {
+                child.calculateTabOrderList(orderedList);
+            }
         }
     }
 

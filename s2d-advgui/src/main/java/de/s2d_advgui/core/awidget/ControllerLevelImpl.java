@@ -264,11 +264,23 @@ public class ControllerLevelImpl implements IControllerLevel {
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    public void reacCurrentWidget() {
+    public void doFocusCurrentWidget() {
         ISwtWidget<?> fw = this.focusedWidget;
         if (fw != null) {
             fw.focus();
         }
+    }
+    
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public ISwtWidget<?> getFocusedWidget() {
+        return this.focusedWidget;
+    }
+    
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public void setFocusedWidget(@Nullable ISwtWidget<?> focusedWidget) {
+        this.focusedWidget = focusedWidget;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

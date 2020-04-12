@@ -23,7 +23,7 @@ public class SwtWidgetTestPanel_Pagebook extends ASwtWidgetTestPanel {
             for (int j = 0; j < 5; j++) {
                 SwtTextField txt = new SwtTextField(item);
                 txt.setText("text " + j + " on pbitem " + i);
-                txt.setBounds(10, ay, 150, 25);
+                txt.setBounds(10+i*10, ay+i*10, 150, 25);
                 ay += 25;
             }
         }
@@ -35,7 +35,7 @@ public class SwtWidgetTestPanel_Pagebook extends ASwtWidgetTestPanel {
             btn.setText("" + i);
             final int useI = i;
             btn.addLeftClickListener(() -> {
-                pagebook.selectItem("bla-" + useI);
+                pagebook.setSelectedItem("bla-" + useI);
             });
         }
     }
