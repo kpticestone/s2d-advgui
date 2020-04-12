@@ -3,23 +3,50 @@ package de.s2d_advgui.core.basicwidgets;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 
+import de.s2d_advgui.commons.TOldCompatibilityCode;
 import de.s2d_advgui.core.awidget.ASwtWidget;
 import de.s2d_advgui.core.awidget.ASwtWidgetSelectable;
+import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
+import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
+import de.s2d_advgui.core.resourcemanager.AResourceManager;
 import de.s2d_advgui.core.resourcemanager.ATheme;
 
 public class SwtSlider extends ASwtWidgetSelectable<Slider> {
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtSlider(ASwtWidget<? extends Group> pParent) {
         super(pParent);
+        this.addDrawerBackground(new InternalWidgetDrawerBatch() {
+            @Override
+            protected void _drawIt(SwtDrawer_Batch<?> pBatch, Vector2 pScreenCoords, Rectangle pDims) {
+                AResourceManager rm = pBatch.getResourceManager();
+                ATheme theme = rm.getTheme();
+                TextureRegion white = rm.getColorTextureRegion(Color.WHITE);
+                pBatch.setColor(isEnabled() ? theme.getWidgetPrimaryBorderColor()
+                        : theme.getWidgetPrimaryBorderColorDisabled());
+                pBatch.drawBorder(ATheme.BORDERS_WHITE_ROUND_5_PNG, pDims);
+                // pBatch.drawBorder(ATheme.BORDERS_WHITE_ROUND_5_PNG, new Rectangle(pDims.x, pDims.y+4, pDims.width, pDims.height-8));
+
+                pBatch.drawBorder(ATheme.BORDERS_WHITE_ROUND_5_PNG, new Rectangle(pDims.x, pDims.y, 15, pDims.height));
+                pBatch.drawBorder(ATheme.BORDERS_WHITE_ROUND_5_PNG,
+                        new Rectangle(pDims.x + pDims.width-15, pDims.y, 15, pDims.height));
+
+                float allWi = actor.getMaxValue() - actor.getMinValue();
+                Rectangle r1 = new Rectangle(pDims.x + 12.5f, pDims.y + 6,
+                        (pDims.width - 25) / allWi * actor.getValue(), pDims.height - 12);
+                pBatch.draw(white, r1);
+
+            }
+        });
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -36,10 +63,12 @@ public class SwtSlider extends ASwtWidgetSelectable<Slider> {
         style.background = new BaseDrawable() {
             @Override
             public void draw(Batch batch, float x, float y, float width, float height) {
-                batch.setColor(Color.WHITE);
+                style.background.setMinHeight(SwtSlider.this.getActor().getHeight());
+                batch.setColor(Color.BLACK);
                 batch.draw(rh, x, y, SwtSlider.this.getActor().getWidth(), SwtSlider.this.getActor().getHeight());
             }
         };
+//        style.background.setMinHeight(getActor().getHeight());
 //        style.background = this.context.getDrawable(ATheme.ICONS_128_ANGEL_PNG);
 //        style.background.setMinHeight(25);
 //        style.background.setMinWidth(100);
@@ -51,7 +80,12 @@ public class SwtSlider extends ASwtWidgetSelectable<Slider> {
         Slider back = new Slider(0, 10, 1, false, style) {
             @Override
             public void draw(Batch batch, float parentAlpha) {
-                _internalDrawWidget(this, batch, parentAlpha, () -> super.draw(batch, parentAlpha));
+                // if( TOldCompatibilityCode.FALSE)
+                _internalDrawWidget(this, batch, parentAlpha,
+                        () -> {
+                            if (TOldCompatibilityCode.FALSE)
+                                super.draw(batch, parentAlpha);
+                        });
             }
         };
         back.addListener(new EventListener() {

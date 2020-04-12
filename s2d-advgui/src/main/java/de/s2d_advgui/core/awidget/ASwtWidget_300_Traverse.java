@@ -38,19 +38,20 @@ public abstract class ASwtWidget_300_Traverse<ACTOR extends Actor> extends ASwtW
             this.actor.addListener(new EventListener() {
                 @Override
                 public boolean handle(Event event) {
-                    if (isEnabled()) {
-                        if (event instanceof InputEvent) {
-                            InputEvent ii = (InputEvent) event;
-                            switch (ii.getType()) {
-                            case enter:
+                    if (event instanceof InputEvent) {
+                        InputEvent ii = (InputEvent) event;
+                        switch (ii.getType()) {
+                        case enter:
+                            if (isEnabled()) {
                                 ASwtWidget_300_Traverse.this.hovered = true;
                                 return true;
-                            case exit:
-                                ASwtWidget_300_Traverse.this.hovered = false;
-                                return true;
-                            default:
-                                break;
                             }
+                            return false;
+                        case exit:
+                            ASwtWidget_300_Traverse.this.hovered = false;
+                            return true;
+                        default:
+                            break;
                         }
                     }
                     return false;

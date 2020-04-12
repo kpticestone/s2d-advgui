@@ -8,9 +8,9 @@ public final class SwtLayoutManager_Row extends ASwtLayoutManager {
     // -------------------------------------------------------------------------------------------------------------------------
     int starty = 0;
     int ah = 24;
-    int space = 5;
+    int space = 0;
     Consumer<Integer> consumer;
-    int padding = 10;
+    int padding = 0;
 
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtLayoutManager_Row() {

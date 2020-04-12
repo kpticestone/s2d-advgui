@@ -11,6 +11,7 @@ import de.s2d_advgui.core.basicwidgets.SwtComboBox;
 import de.s2d_advgui.core.basicwidgets.SwtLabel;
 import de.s2d_advgui.core.basicwidgets.SwtPanel;
 import de.s2d_advgui.core.basicwidgets.SwtRadioBox;
+import de.s2d_advgui.core.basicwidgets.SwtSlider;
 import de.s2d_advgui.core.basicwidgets.SwtTextField;
 import de.s2d_advgui.core.layoutmanager.ASwtLayoutManager;
 import de.s2d_advgui.demo.cases.ASwtWidgetTestPanel;
@@ -137,6 +138,13 @@ public class SwtWidgetTestPanel_Formular extends ASwtWidgetTestPanel {
         }
 
         // -------------------------------------------------------------------------------------------------------------------------
+        public SwtSlider addSlider(String label) {
+            SwtFormRow row = this.addRow(label);
+            SwtSlider back = new SwtSlider(row);
+            return back;
+        }
+
+        // -------------------------------------------------------------------------------------------------------------------------
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -164,7 +172,16 @@ public class SwtWidgetTestPanel_Formular extends ASwtWidgetTestPanel {
         form.addRadioBox("B", "radiobox 1");
         form.addRadioBox("B", "radiobox 2");
         form.addRadioBox("B", "radiobox 3");
-        
+        SwtSlider sliderRed = form.addSlider("red");
+        sliderRed.setRange(0, 255);
+        sliderRed.setValue(128);
+        SwtSlider sliderGreen = form.addSlider("green");
+        sliderGreen.setRange(0, 255);
+        sliderGreen.setValue(128);
+        SwtSlider sliderBlue = form.addSlider("blue");
+        sliderBlue.setDisabled();
+        sliderBlue.setRange(0, 255);
+        sliderBlue.setValue(128);
 
     }
 
