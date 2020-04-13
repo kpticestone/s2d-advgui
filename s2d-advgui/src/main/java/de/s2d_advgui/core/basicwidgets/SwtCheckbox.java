@@ -104,31 +104,6 @@ public class SwtCheckbox extends ASwtWidgetSelectable<CheckBox> {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    protected CheckBox __createActor() {
-        CheckBoxStyle cbs = new CheckBoxStyle();
-        cbs.font = this.context.getResourceManager().getFont(.5f, false);
-        cbs.checkedOffsetX = 0;
-        cbs.checkboxOff = this.context.getDrawable(ATheme.ICONS_128_SIGNALING_DISK_GREEN_PNG);
-        cbs.checkboxOff.setMinWidth(16);
-        cbs.checkboxOff.setMinHeight(16);
-        cbs.checkboxOff.setLeftWidth(100);
-        cbs.checkboxOn = this.context.getDrawable(ATheme.ICONS_128_SIGNALING_DISK_RED_PNG);
-        cbs.checkboxOn.setMinHeight(16);
-        cbs.checkboxOn.setMinWidth(16);
-        CheckBox back = new CheckBox(null, cbs) {
-            @Override
-            public void draw(Batch batch, float parentAlpha) {
-                _internalDrawWidget(batch, parentAlpha, () -> {
-                });
-            }
-        };
-        back.getLabel().setFontScale(.75f);
-        back.left();
-        return back;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
     private void onInternalChanged() {
         callListeners(0);
         this.focus();

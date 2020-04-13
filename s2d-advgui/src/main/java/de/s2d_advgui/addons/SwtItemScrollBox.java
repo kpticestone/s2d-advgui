@@ -25,11 +25,11 @@ public class SwtItemScrollBox extends ASwtWidget<ScrollPane> {
                 AResourceManager rm = pRend.getResourceManager();
                 ScrollPaneStyle style = new ScrollPaneStyle();
                 style.background = null; // context.getDrawable("ui2/back_red.png");
-//                style.corner = rm.getDrawable("ui2/back_red.png");
-//                style.hScroll = rm.getDrawable("ui2/back_red.png");
-//                style.hScrollKnob = rm.getDrawable("ui/icon.png");
-//                style.vScroll = rm.getDrawable("ui2/back_red.png");
-//                style.vScrollKnob = rm.getDrawable("ui2/back_red.png");
+                style.corner = rm.getDrawable("ui2/back_red.png");
+                style.hScroll = rm.getDrawable("ui2/back_red.png");
+                style.hScrollKnob = rm.getDrawable("ui/icon.png");
+                style.vScroll = rm.getDrawable("ui2/back_red.png");
+                style.vScrollKnob = rm.getDrawable("ui2/back_red.png");
                 ScrollPane scp = new ScrollPane(null, style) //
                 // ScrollPane scp = new ScrollPane(null, context.resourceManager.skin) //
                 // ScrollPane scp = new ScrollPane(null) //
@@ -57,37 +57,6 @@ public class SwtItemScrollBox extends ASwtWidget<ScrollPane> {
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtItemScrollBox2 getContent() {
         return this.content;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    protected ScrollPane __createActor() {
-        ScrollPaneStyle style = new ScrollPaneStyle();
-        style.background = null; // context.getDrawable("ui2/back_red.png");
-        style.corner = this.context.getDrawable("ui2/back_red.png");
-        style.hScroll = this.context.getDrawable("ui2/back_red.png");
-        style.hScrollKnob = this.context.getDrawable("ui/icon.png");
-        style.vScroll = this.context.getDrawable("ui2/back_red.png");
-        style.vScrollKnob = this.context.getDrawable("ui2/back_red.png");
-        ScrollPane scp = new ScrollPane(null, style) //
-        // ScrollPane scp = new ScrollPane(null, context.resourceManager.skin) //
-        // ScrollPane scp = new ScrollPane(null) //
-        {
-            @Override
-            public void draw(Batch batch, float parentAlpha) {
-                _internalDrawWidget(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
-            }
-
-            @Override
-            public void addActor(Actor actor) {
-                this.setActor(actor);
-            }
-        };
-        scp.setFadeScrollBars(true);
-        scp.setScrollbarsVisible(true);
-        scp.setForceScroll(false, true);
-        scp.setFlickScroll(false);
-        return scp;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

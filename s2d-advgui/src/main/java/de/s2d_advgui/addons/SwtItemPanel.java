@@ -90,18 +90,6 @@ public class SwtItemPanel extends ASwtWidgetSelectable<WidgetGroup> {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    protected WidgetGroup __createActor() {
-        WidgetGroup back = new WidgetGroup() {
-            @Override
-            public void draw(Batch batch, float parentAlpha) {
-                _internalDrawWidget(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
-            }
-        };
-        return back;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
     public void setText(String pText) {
         this.txt.setText(pText);
     }

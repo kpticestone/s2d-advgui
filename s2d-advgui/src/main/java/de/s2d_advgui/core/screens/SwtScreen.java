@@ -4,6 +4,7 @@ import javax.annotation.Nonnull;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Group;
+
 import de.s2d_advgui.core.application.ISwtApplicationController;
 import de.s2d_advgui.core.awidget.ASwtWidget_ControllerLevel;
 import de.s2d_advgui.core.rendering.ISwtDrawerManager;
@@ -12,7 +13,8 @@ import de.s2d_advgui.core.stage.ASwtStage;
 import de.s2d_advgui.core.window.ASwtWindowDescriptor;
 import de.s2d_advgui.core.window.SwtWindow;
 
-public abstract class SwtScreen<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>> extends ASwtWidget_ControllerLevel<Group> implements Screen {
+public abstract class SwtScreen<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>>
+        extends ASwtWidget_ControllerLevel<Group> implements Screen {
     // -------------------------------------------------------------------------------------------------------------------------
     @Nonnull
     protected final ASwtStage<RM, DM> stage;
@@ -38,12 +40,6 @@ public abstract class SwtScreen<RM extends AResourceManager, DM extends ISwtDraw
     @Nonnull
     public final ASwtStage<RM, DM> getStage() {
         return this.stage;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    protected final Group __createActor() {
-        return this.stage.getRoot();
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

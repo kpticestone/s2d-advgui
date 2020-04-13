@@ -25,12 +25,6 @@ public abstract class ASwtWidget_900_LayoutManager<ACTOR extends Actor> extends 
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    @Deprecated
-    public ASwtWidget_900_LayoutManager(ISwtWidget<? extends Group> pParent, boolean focusable) {
-        super(pParent, focusable);
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
     public ASwtWidget_900_LayoutManager(@Nonnull SwtWidgetBuilder<ACTOR> pBuilder) {
         super(pBuilder);
     }

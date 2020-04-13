@@ -3,7 +3,6 @@ package de.s2d_advgui.core.awidget;
 import javax.annotation.Nonnull;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 
 import de.s2d_advgui.core.stage.ISwtStage;
@@ -16,23 +15,6 @@ public abstract class ASwtWidget_300_Traverse<ACTOR extends Actor> extends ASwtW
     public ASwtWidget_300_Traverse(ISwtStage<?, ?> pContext) {
         super(pContext);
         this.focusable = false;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    @Deprecated
-    public ASwtWidget_300_Traverse(ISwtWidget<? extends Group> pParent, boolean focusable) {
-        super(pParent);
-        this.focusable = focusable;
-        if (focusable) {
-            this.registerEventHandler(InputEvent.Type.touchDown, (event) -> {
-                if (isEnabled()) {
-                    if (event.getButton() == 0) {
-                        focus();
-                    }
-                }
-                return false;
-            });
-        }
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

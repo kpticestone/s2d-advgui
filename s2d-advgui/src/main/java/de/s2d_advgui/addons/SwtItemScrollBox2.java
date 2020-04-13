@@ -27,16 +27,4 @@ public class SwtItemScrollBox2 extends ASwtWidget<WidgetGroup> {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    protected WidgetGroup __createActor() {
-        WidgetGroup hrh = new WidgetGroup() {
-            @Override
-            public void draw(Batch batch, float parentAlpha) {
-                _internalDrawWidget(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
-            }
-        };
-        return hrh;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
 }

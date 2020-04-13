@@ -4,6 +4,8 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import javax.annotation.Nonnull;
+
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 
@@ -15,18 +17,8 @@ public abstract class ASwtWidgetSelectable<ACTOR extends Actor> extends ASwtWidg
     // -------------------------------------------------------------------------------------------------------------------------
     private final Set<Consumer<Integer>> listeners = new LinkedHashSet<>();
 
-//    // -------------------------------------------------------------------------------------------------------------------------
-//    public ASwtWidgetSelectable(ISwtWidget<? extends Group> pParent) {
-//        super(pParent, true);
-//        this.registerEventHandler(InputEvent.Type.touchDown, (event) -> {
-//            System.err.println("ASwtWidgetSelectable.touchDown()");
-//            callListeners(event.getButton());
-//            return true;
-//        });
-//    }
-//    
     // -------------------------------------------------------------------------------------------------------------------------
-    public ASwtWidgetSelectable(SwtWidgetBuilder<ACTOR> pBuilder) {
+    public ASwtWidgetSelectable(@Nonnull SwtWidgetBuilder<ACTOR> pBuilder) {
         super(pBuilder);
         this.registerEventHandler(InputEvent.Type.touchDown, (event) -> {
             System.err.println("ASwtWidgetSelectable.touchDown()");

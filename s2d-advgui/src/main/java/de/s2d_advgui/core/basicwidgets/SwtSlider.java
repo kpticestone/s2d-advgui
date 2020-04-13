@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 
 import de.s2d_advgui.commons.TOldCompatibilityCode;
 import de.s2d_advgui.core.awidget.ASwtWidget;
@@ -86,43 +85,6 @@ public class SwtSlider extends ASwtWidgetSelectable<Slider> {
     @Override
     protected void applyDisabledOnActor(boolean b) {
         this.actor.setDisabled(b);
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    protected Slider __createActor() {
-        TextureRegion rh = this.getResourceManager().getColorTextureRegion(Color.YELLOW);
-        SliderStyle style = new SliderStyle();
-        style.background = new BaseDrawable() {
-            @Override
-            public void draw(Batch batch, float x, float y, float width, float height) {
-                style.background.setMinHeight(SwtSlider.this.getActor().getHeight());
-                batch.setColor(Color.BLACK);
-                batch.draw(rh, x, y, SwtSlider.this.getActor().getWidth(), SwtSlider.this.getActor().getHeight());
-            }
-        };
-//        style.background.setMinHeight(getActor().getHeight());
-//        style.background = this.context.getDrawable(ATheme.ICONS_128_ANGEL_PNG);
-        style.background.setMinHeight(25);
-        style.background.setMinWidth(100);
-        style.knob = this.context.getDrawable(ATheme.ICONS_128_COW_PNG);
-        style.knob.setMinHeight(25);
-        style.knob.setMinWidth(25);
-        style.knobBefore = this.context.getDrawable(ATheme.ICONS_128_APPLICATION_PNG);
-        style.knobBefore.setMinHeight(25);
-        Slider back = new Slider(0, 10, 1, false, style) {
-            @Override
-            public void draw(Batch batch, float parentAlpha) {
-                // if( TOldCompatibilityCode.FALSE)
-                _internalDrawWidget(batch, parentAlpha,
-                        () -> {
-                            if (TOldCompatibilityCode.FALSE)
-                                super.draw(batch, parentAlpha);
-                        });
-            }
-        };
-        back.setTouchable(Touchable.enabled);
-        return back;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

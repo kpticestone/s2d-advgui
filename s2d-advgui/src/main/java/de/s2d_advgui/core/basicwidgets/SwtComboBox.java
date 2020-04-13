@@ -90,35 +90,6 @@ public class SwtComboBox<T> extends ASwtWidgetDisableable<SelectBox<T>> {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    protected SelectBox<T> __createActor() {
-        BitmapFont fo = this.context.getResourceManager().getFont(.5f, true);
-        Skin najs = this.context.getResourceManager().getSkin();
-        SelectBoxStyle style = najs.get(SelectBoxStyle.class);
-        style.background = new TextureRegionDrawable(
-                this.context.getResourceManager().getColorTextureRegion(SwtColor.TRANSPARENT));
-        style.background.setLeftWidth(10);
-        style.background.setRightWidth(10);
-        style.font = fo;
-        style.disabledFontColor = getTheme().getLabelColorDisabled();
-        style.backgroundDisabled = new TextureRegionDrawable(
-                getResourceManager().getColorTextureRegion(Color.BLACK));
-        style.backgroundDisabled.setLeftWidth(10);
-        style.backgroundDisabled.setRightWidth(10);
-        style.backgroundOpen = style.background;
-        style.backgroundOver = style.background;
-        style.listStyle.font = fo;
-        SelectBox<T> back = new SelectBox<>(style) {
-            @Override
-            public void draw(com.badlogic.gdx.graphics.g2d.Batch batch, float parentAlpha) {
-                _internalDrawWidget(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
-            }
-        };
-        back.setTouchable(Touchable.enabled);
-        return back;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
     public final void addSelectionListener(Consumer<T> pListener) {
         this.selectListener.add(pListener);
     }

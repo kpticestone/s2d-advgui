@@ -15,7 +15,6 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Group;
 
 import de.s2d_advgui.commons.Trigger;
 import de.s2d_advgui.core.rendering.ISwtDrawerManager;
@@ -38,12 +37,6 @@ public abstract class ASwtWidget_970_Rendering<ACTOR extends Actor> extends ASwt
     // -------------------------------------------------------------------------------------------------------------------------
     public ASwtWidget_970_Rendering(ISwtStage<?, ?> pContext) {
         super(pContext);
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    @Deprecated
-    public ASwtWidget_970_Rendering(ISwtWidget<? extends Group> pParent, boolean pFocusable) {
-        super(pParent, pFocusable);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

@@ -55,26 +55,6 @@ public class SwtTree<PR> extends ASwtWidget<ActorTree<PR>> {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    protected ActorTree<PR> __createActor() {
-//        Skin skin = this.context.getResourceManager().getSkin();
-//        this.tree = new Tree(skin) {
-//            @Override
-//            public void draw(Batch batch, float parentAlpha) {
-//                _internalDrawWidget(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
-//            }
-//        };
-//        Table table = new Table(skin) {
-//            public void draw(Batch batch, float parentAlpha) {
-//                _internalDrawWidget(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
-//            }
-//        };
-//        table.add(new ScrollPane(tree, skin)).expand().fill();
-//        return table;
-        return null;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
     public void setInput(PR... pRootItems) {
         this.rootItems.clear();
         for (PR a : pRootItems) {

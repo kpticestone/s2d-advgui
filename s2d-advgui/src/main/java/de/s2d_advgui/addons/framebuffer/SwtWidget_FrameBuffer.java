@@ -52,15 +52,4 @@ public class SwtWidget_FrameBuffer extends ASwtWidget<WidgetGroup> {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    protected WidgetGroup __createActor() {
-        return new WidgetGroup() {
-            @Override
-            public void draw(Batch batch, float parentAlpha) {
-                _internalDrawWidget(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
-            }
-        };
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
 }

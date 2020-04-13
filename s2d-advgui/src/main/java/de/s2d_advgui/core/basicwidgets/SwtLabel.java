@@ -41,21 +41,6 @@ public class SwtLabel extends ASwtWidget<Label> {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    protected Label __createActor() {
-        LabelStyle style = new LabelStyle();
-        style.font = this.context.getResourceManager().getFont(1f, true);
-        Label back = new Label(null, style) {
-            @Override
-            public void draw(Batch batch, float parentAlpha) {
-                _internalDrawWidget(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
-            }
-        };
-        back.setWrap(false);
-        return back;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
     public void setWrap(boolean wrap) {
         this.actor.setWrap(wrap);
     }

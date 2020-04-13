@@ -23,12 +23,6 @@ public abstract class ASwtWidget_050_Disposing<ACTOR extends Actor> extends ASwt
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    @Deprecated
-    public ASwtWidget_050_Disposing(ISwtWidget<? extends Group> pParent) {
-        super(pParent);
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
     public ASwtWidget_050_Disposing(@Nonnull SwtWidgetBuilder<ACTOR> pBuilder) {
         super(pBuilder);
     }

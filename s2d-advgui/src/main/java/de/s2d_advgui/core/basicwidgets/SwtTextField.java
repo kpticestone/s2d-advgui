@@ -98,36 +98,6 @@ public class SwtTextField extends ASwtWidgetDisableable<TextField> {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    protected TextField __createActor() {
-        TextFieldStyle style = new TextFieldStyle();
-        BitmapFont fo = this.context.getResourceManager().getFont(.5f, true);
-        style.font = fo;
-        style.fontColor = Color.WHITE;
-        style.font = fo;
-        style.cursor = this.context.getDrawable(ATheme.UI_PIPE1_PNG);
-        style.messageFont = fo;
-        style.messageFontColor = Color.BLUE;
-        style.selection = this.context.getDrawable(ATheme.UI_PIPE1_PNG);
-        style.background = null;
-        style.focusedFontColor = Color.WHITE;
-        style.disabledFontColor = getTheme().getLabelColorDisabled();
-        style.disabledBackground = null;
-        style.focusedBackground = null;
-        style.background = new TextureRegionDrawable(
-                this.context.getResourceManager().getColorTextureRegion(SwtColor.TRANSPARENT, 0, 0));
-        style.background.setLeftWidth(10);
-        style.background.setRightWidth(10);
-        TextField back = new TextField(null, style) {
-            @Override
-            public void draw(Batch batch, float parentAlpha) {
-                _internalDrawWidget(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
-            }
-        };
-        return back;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
     public void setText(String string) {
         this.actor.setText(string);
     }

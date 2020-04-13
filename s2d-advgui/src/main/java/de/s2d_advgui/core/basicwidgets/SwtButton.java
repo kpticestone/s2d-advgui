@@ -113,21 +113,6 @@ public class SwtButton extends ASwtWidgetSelectable<Button> {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    protected final Button __createActor() {
-        ButtonStyle style = new ButtonStyle();
-        Button back = new Button(style) {
-            @Override
-            public void draw(Batch batch, float parentAlpha) {
-                _internalDrawWidget(batch, parentAlpha, () -> {
-                    // super.draw(batch, parentAlpha);
-                });
-            }
-        };
-        return back;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
     public void setText(String string) {
         this.myText = string;
     }

@@ -42,17 +42,6 @@ public class SwtImage extends ASwtWidget<Image> {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    protected Image __createActor() {
-        return new Image() {
-            @Override
-            public void draw(Batch batch, float parentAlpha) {
-                _internalDrawWidget(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
-            }
-        };
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
     public void setImage(String pResourceId) {
         if (!Objects.equals(pResourceId, this.img)) {
             this.img = pResourceId;

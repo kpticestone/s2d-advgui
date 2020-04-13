@@ -55,33 +55,6 @@ public class SwtScrollPanel extends ASwtWidget<ScrollPane> {
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    protected ScrollPane __createActor() {
-        ScrollPaneStyle style = new ScrollPaneStyle();
-        style.background = null; // context.getDrawable("ui2/back_red.png");
-        style.corner = context.getDrawable("ui2/back_red.png");
-        style.hScroll = context.getDrawable("ui2/back_red.png");
-        style.hScrollKnob = context.getDrawable("ui/icon.png");
-        style.vScroll = context.getDrawable("ui2/back_red.png");
-        style.vScrollKnob = context.getDrawable("ui2/back_red.png");
-        ScrollPane scp = new ScrollPane(null, style) {
-            @Override
-            public void draw(Batch batch, float parentAlpha) {
-                _internalDrawWidget(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
-            }
-
-            @Override
-            public void addActor(Actor actor) {
-                Actor was = this.getActor();
-                if (was != null) throw new UnsupportedOperationException("actor already set");
-                this.setActor(actor);
-            }
-        };
-
-        return scp;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    @Override
     public boolean getIgnoreOnCalcPos() {
         return true;
     }

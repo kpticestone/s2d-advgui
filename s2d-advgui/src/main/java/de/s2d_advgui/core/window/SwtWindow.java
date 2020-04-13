@@ -82,7 +82,7 @@ public class SwtWindow extends ASwtWidget_ControllerLevel<WidgetGroup> implement
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtWindow(ISwtWidget<? extends Group> pParent, String titleLabel, boolean modal, int prefWidth,
             int prefHeight) {
-        super(new SwtWidgetBuilder<>(pParent, false, new IActorCreator<WidgetGroup>() {
+        super(new SwtWidgetBuilder<>(top(pParent), false, new IActorCreator<WidgetGroup>() {
             @Override
             public WidgetGroup createActor(IRend123 pRend) {
                 WidgetGroup back = new WidgetGroup() {
@@ -240,18 +240,6 @@ public class SwtWindow extends ASwtWidget_ControllerLevel<WidgetGroup> implement
             if (ty > dims.height - myBnds.height) ty = dims.height - myBnds.height;
             this.actor.setBounds(tx, ty, myBnds.width, myBnds.height);
         }
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    protected WidgetGroup __createActor() {
-        WidgetGroup back = new WidgetGroup() {
-            @Override
-            public void draw(Batch batch, float parentAlpha) {
-                _internalDrawWidget(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
-            }
-        };
-        return back;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

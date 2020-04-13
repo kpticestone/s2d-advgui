@@ -35,17 +35,4 @@ public class SwtTable extends ASwtWidget<Table> {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    protected Table __createActor() {
-        Table back = new Table() {
-            @Override
-            public void draw(Batch batch, float parentAlpha) {
-                _internalDrawWidget(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
-            }
-        };
-        back.setBackground(this.context.getDrawable(ATheme.UI_SLOT_TYPE_MINOR_PNG));
-        return back;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
 }

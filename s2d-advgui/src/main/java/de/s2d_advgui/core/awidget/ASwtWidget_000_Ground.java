@@ -95,53 +95,6 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    @Deprecated
-    public ASwtWidget_000_Ground(@Nonnull ISwtWidget<? extends Group> pOrgParent) {
-        this.parent = resolveDelegatedParent(pOrgParent);
-        this.context = TNull.checkNull(this.parent.getContext());
-        this.actor = this.__createActor();
-        this.actor.addListener(new EventListener() {
-            @Override
-            public boolean handle(Event event) {
-                // if (!isEnabled()) return false;
-                if (event instanceof ChangeEvent) {
-                    Set<ISwtChangeEventCaller> ec = ASwtWidget_000_Ground.this.eventChangeEventCallers;
-                    if (ec != null) {
-                        for (ISwtChangeEventCaller a : ec) {
-                            // System.err.println("handle change '" + event + "' on '" + a + "'");
-                            a.call((ChangeEvent) event);
-                        }
-                    }
-                } else if (event instanceof InputEvent) {
-                    Type ti = ((InputEvent) event).getType();
-                    Set<ISwtInputEventCaller> li = ASwtWidget_000_Ground.this.eventMappings.get(ti);
-                    if (li != null) {
-                        for (ISwtInputEventCaller c : li) {
-                            if (c.call((InputEvent) event)) {
-                                // System.err.println("handle input '" + event + "' on '" + c + "'");
-                                return true;
-                            }
-                        }
-                    }
-                }
-                return false;
-            }
-        });
-        this.context.registerMapping(this.actor, this);
-        Group paractor = this.parent.getActor();
-        if (this.getIgnoreOnCalcPos() && paractor instanceof Table) {
-            ((Table) paractor).add(this.actor).row();
-        } else {
-            paractor.addActor(this.actor);
-        }
-
-        (((ASwtWidget_000_Ground<?>) this.parent)).children.add(this);
-        this.context.onWidgetCreation(this);
-
-        this.parent.calcPositions();
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
     public ASwtWidget_000_Ground(@Nonnull SwtWidgetBuilder<ACTOR> pBuilder) {
         this.parent = resolveDelegatedParent(pBuilder.parent);
         this.context = TNull.checkNull(this.parent.getContext());
@@ -253,10 +206,6 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
     public final ACTOR getActor() {
         return this.actor;
     }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    @Deprecated
-    protected abstract ACTOR __createActor();
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override

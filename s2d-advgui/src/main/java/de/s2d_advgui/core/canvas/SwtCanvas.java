@@ -147,18 +147,6 @@ public abstract class SwtCanvas<RM extends AResourceManager, DM extends ISwtDraw
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    protected WidgetGroup __createActor() {
-        WidgetGroup back = new WidgetGroup() {
-            @Override
-            public void draw(Batch batch, float parentAlpha) {
-                _internalDrawWidget(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
-            }
-        };
-        return back;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
     public void coord123(Vector2 in, Vector2 out) {
         this.drawerManager.getCameraHolder().unproject(in, out);
     }

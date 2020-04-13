@@ -4,7 +4,6 @@ import javax.annotation.Nonnull;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Group;
 
 import de.s2d_advgui.commons.TOldCompatibilityCode;
 import de.s2d_advgui.core.dnd.DragAndDropHelper;
@@ -27,12 +26,6 @@ public abstract class ASwtWidget_950_Calculating<ACTOR extends Actor> extends AS
     // -------------------------------------------------------------------------------------------------------------------------
     public ASwtWidget_950_Calculating(ISwtStage<?, ?> pContext) {
         super(pContext);
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    @Deprecated
-    public ASwtWidget_950_Calculating(ISwtWidget<? extends Group> pParent, boolean focusable) {
-        super(pParent, focusable);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

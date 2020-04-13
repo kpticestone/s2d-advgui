@@ -114,19 +114,6 @@ public class SwtRadioBox extends ASwtWidgetSelectable<ActorRadioBox> {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    protected ActorRadioBox __createActor() {
-        ActorRadioBox back = new ActorRadioBox() {
-            @Override
-            public void draw(Batch batch, float parentAlpha) {
-                _internalDrawWidget(batch, parentAlpha, () -> {
-                });
-            }
-        };
-        return back;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
     private void onInternalChanged() {
         if (this.actor.isChecked()) {
             callListeners(0);

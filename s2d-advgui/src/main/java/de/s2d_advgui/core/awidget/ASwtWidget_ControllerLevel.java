@@ -21,20 +21,8 @@ public abstract class ASwtWidget_ControllerLevel<T extends Actor> extends ASwtWi
         this.myInit();
     }
 
-//    // -------------------------------------------------------------------------------------------------------------------------
-//    @Deprecated
-//    public ASwtWidget_ControllerLevel(ISwtWidget<? extends Group> pParent, boolean focusable, boolean modal) {
-//        super(pParent, focusable);
-//        if (!modal && pParent instanceof ASwtWidget_ControllerLevel) {
-//            this.controllerLevel = ((ASwtWidget_ControllerLevel<?>) pParent).controllerLevel;
-//        } else {
-//            this.controllerLevel = new ControllerLevelImpl(this, () -> getContext().isControllerMode());
-//            this.myInit();
-//        }
-//    }
-
     // -------------------------------------------------------------------------------------------------------------------------
-    public ASwtWidget_ControllerLevel(SwtWidgetBuilder<T> pBuilder, boolean modal) {
+    public ASwtWidget_ControllerLevel(@Nonnull SwtWidgetBuilder<T> pBuilder, boolean modal) {
         super(pBuilder);
         if (!modal && pBuilder.parent instanceof ASwtWidget_ControllerLevel) {
             this.controllerLevel = ((ASwtWidget_ControllerLevel<?>) pBuilder.parent).controllerLevel;

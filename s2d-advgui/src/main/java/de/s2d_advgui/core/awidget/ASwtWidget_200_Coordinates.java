@@ -4,7 +4,6 @@ import javax.annotation.Nonnull;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Group;
 
 import de.s2d_advgui.core.stage.ISwtStage;
 
@@ -17,12 +16,6 @@ public abstract class ASwtWidget_200_Coordinates<ACTOR extends Actor> extends AS
         super(pContext);
     }
 
-    // -------------------------------------------------------------------------------------------------------------------------
-    @Deprecated
-    public ASwtWidget_200_Coordinates(ISwtWidget<? extends Group> pParent) {
-        super(pParent);
-    }
-    
     // -------------------------------------------------------------------------------------------------------------------------
     public ASwtWidget_200_Coordinates(@Nonnull SwtWidgetBuilder<ACTOR> pBuilder) {
         super(pBuilder);

@@ -63,16 +63,4 @@ public class SwtPanelMovable extends ASwtWidget<WidgetGroup> {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    protected final WidgetGroup __createActor() {
-        WidgetGroup back = new WidgetGroup() {
-            @Override
-            public void draw(Batch batch, float parentAlpha) {
-                _internalDrawWidget(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
-            }
-        };
-        return back;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
 }
