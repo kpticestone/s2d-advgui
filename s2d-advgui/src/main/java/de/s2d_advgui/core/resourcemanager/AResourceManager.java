@@ -204,6 +204,5 @@ public abstract class AResourceManager {
         TextureRegion tr = this.getTextureRegion(jj);
         return new TextureRegionDrawable(tr);
     }
-
     // -------------------------------------------------------------------------------------------------------------------------
 }
