@@ -5,9 +5,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
-import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 
 import de.s2d_advgui.commons.Trigger;
@@ -18,9 +15,24 @@ public abstract class ASwtWidgetSelectable<ACTOR extends Actor> extends ASwtWidg
     // -------------------------------------------------------------------------------------------------------------------------
     private final Set<Consumer<Integer>> listeners = new LinkedHashSet<>();
 
+//    // -------------------------------------------------------------------------------------------------------------------------
+//    public ASwtWidgetSelectable(ISwtWidget<? extends Group> pParent) {
+//        super(pParent, true);
+//        this.registerEventHandler(InputEvent.Type.touchDown, (event) -> {
+//            System.err.println("ASwtWidgetSelectable.touchDown()");
+//            callListeners(event.getButton());
+//            return true;
+//        });
+//    }
+//    
     // -------------------------------------------------------------------------------------------------------------------------
-    public ASwtWidgetSelectable(ISwtWidget<? extends Group> pParent) {
-        super(pParent, true);
+    public ASwtWidgetSelectable(SwtWidgetBuilder<ACTOR> pBuilder) {
+        super(pBuilder);
+        this.registerEventHandler(InputEvent.Type.touchDown, (event) -> {
+            System.err.println("ASwtWidgetSelectable.touchDown()");
+            callListeners(event.getButton());
+            return true;
+        });
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -51,32 +63,6 @@ public abstract class ASwtWidgetSelectable<ACTOR extends Actor> extends ASwtWidg
             }
         }
     }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    protected final ACTOR createActor() {
-        ACTOR back = this._createActor();
-        back.addListener(new EventListener() {
-            @Override
-            public boolean handle(Event event) {
-                if (event instanceof InputEvent) {
-                    InputEvent ii = (InputEvent) event;
-                    switch (ii.getType()) {
-                    case touchDown:
-                        callListeners(ii.getButton());
-                        return true;
-                    default:
-                        break;
-                    }
-                }
-                return false;
-            }
-        });
-        return back;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    protected abstract ACTOR _createActor();
 
     // -------------------------------------------------------------------------------------------------------------------------
 }

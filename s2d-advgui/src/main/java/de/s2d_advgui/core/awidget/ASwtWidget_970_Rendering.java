@@ -5,6 +5,8 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -21,52 +23,6 @@ import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
 import de.s2d_advgui.core.stage.ISwtStage;
 
 public abstract class ASwtWidget_970_Rendering<ACTOR extends Actor> extends ASwtWidget_950_Calculating<ACTOR> {
-    // -------------------------------------------------------------------------------------------------------------------------
-    public static enum WidetLayer {
-        BACKGROUND, MIDDLE, FOREGROUND,
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    static class DrawableHolder {
-        boolean clip;
-        IInternalWidgetDrawer drawer;
-
-        public DrawableHolder(boolean clip, IInternalWidgetDrawer drawer) {
-            this.clip = clip;
-            this.drawer = drawer;
-        }
-
-        public void drawIt(Actor base, ISwtDrawerManager<?> batchdr, Vector2 v2, Rectangle drawingRect) {
-            if (this.clip) {
-                if (base.clipBegin()) {
-                    try {
-                        this.drawer.drawIt(batchdr, v2, drawingRect);
-                        batchdr.getBatch().flush();
-                    } finally {
-                        base.clipEnd();
-                    }
-                }
-//                else
-//                {
-//                    System.err.println("cant clip 2 @ "+ base);
-//                }
-            } else {
-                this.drawer.drawIt(batchdr, v2, drawingRect);
-            }
-        }
-
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    static float AX = .0f;
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    static Color COL_BLUE_100 = new Color(AX, AX, 1f, 1f);
-    static Color COL_BLUE_075 = new Color(AX, AX, .75f, .9f);
-    static Color COL_BLUE_050 = new Color(AX, AX, .5f, .8f);
-    static Color COL_BLUE_025 = new Color(AX, AX, .25f, .9f);
-    static Color COL_BLUE_000 = new Color(AX, AX, 0f, 1f);
-
     // -------------------------------------------------------------------------------------------------------------------------
     private final Map<WidetLayer, Set<DrawableHolder>> drawer = new HashMap<>();
 
@@ -85,18 +41,24 @@ public abstract class ASwtWidget_970_Rendering<ACTOR extends Actor> extends ASwt
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public ASwtWidget_970_Rendering(ISwtWidget<? extends Group> pParent, boolean focusable) {
-        super(pParent, focusable);
+    @Deprecated
+    public ASwtWidget_970_Rendering(ISwtWidget<? extends Group> pParent, boolean pFocusable) {
+        super(pParent, pFocusable);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public final void addDrawer(WidetLayer layer, boolean clip, IInternalWidgetDrawer drawer) {
-        Set<DrawableHolder> kk = this.drawer.get(layer);
+    public ASwtWidget_970_Rendering(@Nonnull SwtWidgetBuilder<ACTOR> pBuilder) {
+        super(pBuilder);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public final void addDrawer(WidetLayer pLayer, boolean pClip, IInternalWidgetDrawer pDrawer) {
+        Set<DrawableHolder> kk = this.drawer.get(pLayer);
         if (kk == null) {
             kk = new LinkedHashSet<>();
-            this.drawer.put(layer, kk);
+            this.drawer.put(pLayer, kk);
         }
-        kk.add(new DrawableHolder(clip, drawer));
+        kk.add(new DrawableHolder(pClip, pDrawer));
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -152,9 +114,11 @@ public abstract class ASwtWidget_970_Rendering<ACTOR extends Actor> extends ASwt
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    protected final void _internalDrawWidget(Actor base, Batch batch, float parentAlpha, Trigger pOrg) {
+    @Override
+    protected final void _internalDrawWidget(Batch batch, float parentAlpha, Trigger pOrg) {
         if (!this.isVisible()) return;
 
+        ACTOR base = this.actor;
         this.v2.set(0, 0);
         this.v2 = base.localToScreenCoordinates(this.v2);
         Rectangle stagedims = this.context.getStageDimensions();

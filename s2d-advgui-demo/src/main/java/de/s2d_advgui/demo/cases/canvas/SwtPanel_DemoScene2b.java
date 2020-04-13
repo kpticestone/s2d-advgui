@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Align;
 
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
-import de.s2d_advgui.core.awidget.ASwtWidget_970_Rendering.WidetLayer;
+import de.s2d_advgui.core.awidget.WidetLayer;
 import de.s2d_advgui.core.basicwidgets.SwtButton;
 import de.s2d_advgui.core.basicwidgets.SwtPanel;
 import de.s2d_advgui.core.camera.CameraHolder;

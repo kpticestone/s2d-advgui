@@ -12,18 +12,20 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 
 import de.s2d_advgui.core.awidget.ASwtWidget;
+import de.s2d_advgui.core.awidget.ISwtInputEventCaller;
 import de.s2d_advgui.core.awidget.ISwtWidget;
+import de.s2d_advgui.core.awidget.SwtWidgetBuilder;
+import de.s2d_advgui.core.awidget.acc.IActorCreator;
 import de.s2d_advgui.core.camera.CameraHolder;
 import de.s2d_advgui.core.input.ISwtMouseMoveListener;
 import de.s2d_advgui.core.input.ISwtScrollListener;
 import de.s2d_advgui.core.input.keys.ASwtInputRegister_Keys;
+import de.s2d_advgui.core.rendering.IRend123;
 import de.s2d_advgui.core.rendering.ISwtBatchSaver;
 import de.s2d_advgui.core.rendering.ISwtDrawerManager;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
@@ -51,7 +53,67 @@ public abstract class SwtCanvas<RM extends AResourceManager, DM extends ISwtDraw
 
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtCanvas(@Nonnull ISwtWidget<? extends Group> pParent, @Nonnull DM pDrawerManager) {
-        super(pParent, true);
+        super(new SwtWidgetBuilder<>(pParent, true, new IActorCreator<WidgetGroup>() {
+            @Override
+            public WidgetGroup createActor(IRend123 pRend) {
+                WidgetGroup back = new WidgetGroup() {
+                    @Override
+                    public void draw(Batch batch, float parentAlpha) {
+                        pRend.doRender(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
+                    }
+                };
+                return back;
+            }
+        }));
+        this.registerEventHandler(InputEvent.Type.exit, (event) -> {
+            this.context.setScrollFocus(null);
+            this.context.setKeyboardFocus(null);
+            return true;
+        });
+        ISwtInputEventCaller l1 = (event) -> {
+            this.context.setScrollFocus(this.actor);
+            this.context.setKeyboardFocus(this.actor);
+            if (this.mouseMoveHandler != null) {
+                Vector2 rii = decodeCoords(event);
+                for (ISwtMouseMoveListener a : this.mouseMoveHandler) {
+                    if (a.onMouseMove(rii.x, rii.y, 0)) {
+                        return true;
+                    }
+                }
+            }
+            return false; // nachfolgende Events sollen trotzdem noch gelten.
+        };
+        this.registerEventHandler(InputEvent.Type.touchDragged, l1);
+        this.registerEventHandler(InputEvent.Type.mouseMoved, l1);
+        this.registerEventHandler(InputEvent.Type.scrolled, (event) -> {
+            if (this.scrollListener != null) {
+                return this.scrollListener.onScroll(event.getScrollAmount());
+            }
+            return false;
+        });
+        this.registerEventHandler(InputEvent.Type.touchUp, (event) -> {
+            if (this.mouseMoveHandler != null) {
+                Vector2 rii = decodeCoords(event);
+                for (ISwtMouseMoveListener a : this.mouseMoveHandler) {
+                    if (a.onMouseUp(rii.x, rii.y, event.getButton())) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        });
+        this.registerEventHandler(InputEvent.Type.touchDown, (event) -> {
+            if (this.mouseMoveHandler != null) {
+                Vector2 rii = decodeCoords(event);
+                for (ISwtMouseMoveListener a : this.mouseMoveHandler) {
+                    if (a.onMouseDown(rii.x, rii.y, event.getButton())) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        });
+
         this.drawerManager = pDrawerManager;
         this.addDrawerClipableMiddle(this::drawIt);
     }
@@ -86,22 +148,13 @@ public abstract class SwtCanvas<RM extends AResourceManager, DM extends ISwtDraw
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    protected WidgetGroup createActor() {
+    protected WidgetGroup __createActor() {
         WidgetGroup back = new WidgetGroup() {
             @Override
             public void draw(Batch batch, float parentAlpha) {
-                _internalDrawWidget(this, batch, parentAlpha, () -> super.draw(batch, parentAlpha));
+                _internalDrawWidget(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
             }
         };
-        back.addListener(new EventListener() {
-            @Override
-            public boolean handle(Event event) {
-                if (event instanceof InputEvent) {
-                    return handleInput(back, (InputEvent) event);
-                }
-                return false;
-            }
-        });
         return back;
     }
 
@@ -133,57 +186,57 @@ public abstract class SwtCanvas<RM extends AResourceManager, DM extends ISwtDraw
         this.inputHandler = pInputHandler;
     }
 
-    // -------------------------------------------------------------------------------------------------------------------------
-    boolean handleInput(WidgetGroup pWidget, InputEvent pInputEvent) {
-        if (!this.isEnabled()) return false;
-        switch (pInputEvent.getType()) {
-        case exit:
-            this.context.setScrollFocus(null);
-            this.context.setKeyboardFocus(null);
-            return true;
-        case touchDragged:
-        case mouseMoved:
-            this.context.setScrollFocus(pWidget);
-            this.context.setKeyboardFocus(pWidget);
-            if (this.mouseMoveHandler != null) {
-                Vector2 rii = decodeCoords(pInputEvent);
-                for (ISwtMouseMoveListener a : this.mouseMoveHandler) {
-                    if (a.onMouseMove(rii.x, rii.y, 0)) {
-                        return true;
-                    }
-                }
-            }
-            return false; // nachfolgende Events sollen trotzdem noch gelten.
-        case scrolled:
-            if (this.scrollListener != null) {
-                return this.scrollListener.onScroll(pInputEvent.getScrollAmount());
-            }
-            break;
-        case touchUp:
-            if (this.mouseMoveHandler != null) {
-                Vector2 rii = decodeCoords(pInputEvent);
-                for (ISwtMouseMoveListener a : this.mouseMoveHandler) {
-                    if (a.onMouseUp(rii.x, rii.y, pInputEvent.getButton())) {
-                        return true;
-                    }
-                }
-            }
-            break;
-        case touchDown:
-            if (this.mouseMoveHandler != null) {
-                Vector2 rii = decodeCoords(pInputEvent);
-                for (ISwtMouseMoveListener a : this.mouseMoveHandler) {
-                    if (a.onMouseDown(rii.x, rii.y, pInputEvent.getButton())) {
-                        return true;
-                    }
-                }
-            }
-            break;
-        default:
-            break;
-        }
-        return false;
-    }
+//    // -------------------------------------------------------------------------------------------------------------------------
+//    boolean handleInput(InputEvent pInputEvent) {
+//        if (!this.isEnabled()) return false;
+//        switch (pInputEvent.getType()) {
+//        case exit:
+//            this.context.setScrollFocus(null);
+//            this.context.setKeyboardFocus(null);
+//            return true;
+//        case touchDragged:
+//        case mouseMoved:
+//            this.context.setScrollFocus(this.actor);
+//            this.context.setKeyboardFocus(this.actor);
+//            if (this.mouseMoveHandler != null) {
+//                Vector2 rii = decodeCoords(pInputEvent);
+//                for (ISwtMouseMoveListener a : this.mouseMoveHandler) {
+//                    if (a.onMouseMove(rii.x, rii.y, 0)) {
+//                        return true;
+//                    }
+//                }
+//            }
+//            return false; // nachfolgende Events sollen trotzdem noch gelten.
+//        case scrolled:
+//            if (this.scrollListener != null) {
+//                return this.scrollListener.onScroll(pInputEvent.getScrollAmount());
+//            }
+//            break;
+//        case touchUp:
+//            if (this.mouseMoveHandler != null) {
+//                Vector2 rii = decodeCoords(pInputEvent);
+//                for (ISwtMouseMoveListener a : this.mouseMoveHandler) {
+//                    if (a.onMouseUp(rii.x, rii.y, pInputEvent.getButton())) {
+//                        return true;
+//                    }
+//                }
+//            }
+//            break;
+//        case touchDown:
+//            if (this.mouseMoveHandler != null) {
+//                Vector2 rii = decodeCoords(pInputEvent);
+//                for (ISwtMouseMoveListener a : this.mouseMoveHandler) {
+//                    if (a.onMouseDown(rii.x, rii.y, pInputEvent.getButton())) {
+//                        return true;
+//                    }
+//                }
+//            }
+//            break;
+//        default:
+//            break;
+//        }
+//        return false;
+//    }
 
     // -------------------------------------------------------------------------------------------------------------------------
     /**

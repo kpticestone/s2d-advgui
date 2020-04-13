@@ -32,6 +32,7 @@ public abstract class ASwtStage_200_Widgets<RM extends AResourceManager, DM exte
     @Override
     public <XT extends Actor> void registerMapping(XT pActor, ISwtWidget<XT> pWidget) {
         this.actorMappings.put(pActor, pWidget);
+        this.bumbRevision();
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -50,6 +51,13 @@ public abstract class ASwtStage_200_Widgets<RM extends AResourceManager, DM exte
     @Nullable
     public ISwtWidget<?> getRegisteredActorMapping(Actor actor) {
         return this.actorMappings.get(actor);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public void unregisterMapping(Actor actor) {
+        this.actorMappings.remove(actor);
+        this.bumbRevision();
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

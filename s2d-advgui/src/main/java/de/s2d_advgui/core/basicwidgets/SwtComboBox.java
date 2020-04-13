@@ -9,13 +9,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox.SelectBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 
@@ -23,7 +21,11 @@ import de.s2d_advgui.core.SwtColor;
 import de.s2d_advgui.core.awidget.ASwtWidgetDisableable;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
+import de.s2d_advgui.core.awidget.SwtWidgetBuilder;
+import de.s2d_advgui.core.awidget.acc.IActorCreator;
+import de.s2d_advgui.core.rendering.IRend123;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
+import de.s2d_advgui.core.resourcemanager.AResourceManager;
 import de.s2d_advgui.core.resourcemanager.ATheme;
 
 public class SwtComboBox<T> extends ASwtWidgetDisableable<SelectBox<T>> {
@@ -32,7 +34,42 @@ public class SwtComboBox<T> extends ASwtWidgetDisableable<SelectBox<T>> {
 
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtComboBox(ISwtWidget<? extends Group> pParent) {
-        super(pParent, true);
+        super(new SwtWidgetBuilder<>(pParent, true, new IActorCreator<SelectBox<T>>() {
+            @Override
+            public SelectBox<T> createActor(IRend123 pRend) {
+                AResourceManager rm = pRend.getResourceManager();
+                BitmapFont fo = rm.getFont(.5f, true);
+                Skin najs = rm.getSkin();
+                SelectBoxStyle style = najs.get(SelectBoxStyle.class);
+                style.background = new TextureRegionDrawable(
+                        rm.getColorTextureRegion(SwtColor.TRANSPARENT));
+                style.background.setLeftWidth(10);
+                style.background.setRightWidth(10);
+                style.font = fo;
+                style.disabledFontColor = rm.getTheme().getLabelColorDisabled();
+                style.backgroundDisabled = new TextureRegionDrawable(
+                        rm.getColorTextureRegion(Color.BLACK));
+                style.backgroundDisabled.setLeftWidth(10);
+                style.backgroundDisabled.setRightWidth(10);
+                style.backgroundOpen = style.background;
+                style.backgroundOver = style.background;
+                style.listStyle.font = fo;
+                SelectBox<T> back = new SelectBox<>(style) {
+                    @Override
+                    public void draw(com.badlogic.gdx.graphics.g2d.Batch batch, float parentAlpha) {
+                        pRend.doRender(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
+                    }
+                };
+                back.setTouchable(Touchable.enabled);
+                return back;
+            }
+        }));
+        this.registerChangeEventHandler(event -> {
+            T value = SwtComboBox.this.actor.getSelected();
+            for (Consumer<T> a : SwtComboBox.this.selectListener) {
+                a.accept(value);
+            }
+        });
         this.addDrawerForeground(new InternalWidgetDrawerBatch() {
             @Override
             protected void _drawIt(SwtDrawer_Batch<?> pBatch, Vector2 pScreenCoords, Rectangle pDims) {
@@ -54,7 +91,7 @@ public class SwtComboBox<T> extends ASwtWidgetDisableable<SelectBox<T>> {
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    protected SelectBox<T> createActor() {
+    protected SelectBox<T> __createActor() {
         BitmapFont fo = this.context.getResourceManager().getFont(.5f, true);
         Skin najs = this.context.getResourceManager().getSkin();
         SelectBoxStyle style = najs.get(SelectBoxStyle.class);
@@ -74,18 +111,9 @@ public class SwtComboBox<T> extends ASwtWidgetDisableable<SelectBox<T>> {
         SelectBox<T> back = new SelectBox<>(style) {
             @Override
             public void draw(com.badlogic.gdx.graphics.g2d.Batch batch, float parentAlpha) {
-                _internalDrawWidget(this, batch, parentAlpha, () -> super.draw(batch, parentAlpha));
+                _internalDrawWidget(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
             }
         };
-        back.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent pChangeEvent, Actor pActor) {
-                T value = back.getSelected();
-                for (Consumer<T> a : SwtComboBox.this.selectListener) {
-                    a.accept(value);
-                }
-            }
-        });
         back.setTouchable(Touchable.enabled);
         return back;
     }

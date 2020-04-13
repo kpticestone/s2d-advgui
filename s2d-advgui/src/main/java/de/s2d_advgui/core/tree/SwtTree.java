@@ -1,25 +1,5 @@
 package de.s2d_advgui.core.tree;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
-import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Tree;
-import com.badlogic.gdx.scenes.scene2d.ui.Tree.Node;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.Selection;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
-import de.s2d_advgui.core.awidget.ASwtWidget;
-import de.s2d_advgui.core.awidget.ISwtWidget;
-
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -30,7 +10,23 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class SwtTree<PR> extends ASwtWidget<WidgetGroup> {
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Tree;
+import com.badlogic.gdx.scenes.scene2d.ui.Tree.Node;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.Selection;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
+
+import de.s2d_advgui.core.awidget.ASwtWidget;
+import de.s2d_advgui.core.awidget.ISwtWidget;
+import de.s2d_advgui.core.awidget.SwtWidgetBuilder;
+import de.s2d_advgui.core.awidget.acc.IActorCreator;
+import de.s2d_advgui.core.rendering.IRend123;
+
+public class SwtTree<PR> extends ASwtWidget<ActorTree<PR>> {
     // -------------------------------------------------------------------------------------------------------------------------
     private final SwtTreeContentProvider<PR> provider;
 
@@ -38,15 +34,21 @@ public class SwtTree<PR> extends ASwtWidget<WidgetGroup> {
     private final Set<PR> rootItems = new LinkedHashSet<>();
 
     // -------------------------------------------------------------------------------------------------------------------------
-    private Tree tree;
-
-    // -------------------------------------------------------------------------------------------------------------------------
     private final Set<Consumer<Collection<PR>>> selectionListener = new LinkedHashSet<>();
 
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtTree(ISwtWidget<? extends Group> pParent, SwtTreeContentProvider<PR> pProvider) {
-        super(pParent, true);
+        // super(pParent, true);
+        super(new SwtWidgetBuilder<>(pParent, true, new IActorCreator<ActorTree<PR>>() {
+            @Override
+            public ActorTree<PR> createActor(IRend123 pRend) {
+                return new ActorTree<PR>(pRend);
+            }
+        }));
         this.provider = pProvider;
+        this.registerChangeEventHandler(event -> {
+            callSelectionListeners();
+        });
         this.addUpdateHandler((delta) -> {
             doUpdate();
         });
@@ -54,30 +56,22 @@ public class SwtTree<PR> extends ASwtWidget<WidgetGroup> {
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    protected WidgetGroup createActor() {
-        Skin skin = this.context.getResourceManager().getSkin();
-        this.tree = new Tree(skin) {
-            @Override
-            public void draw(Batch batch, float parentAlpha) {
-                _internalDrawWidget(this, batch, parentAlpha, () -> super.draw(batch, parentAlpha));
-            }
-        };
-        this.tree.addListener(new EventListener() {
-            @Override
-            public boolean handle(Event event) {
-                if (event instanceof ChangeEvent) {
-                    callSelectionListeners();
-                }
-                return false;
-            }
-        });
-        Table table = new Table(skin) {
-            public void draw(Batch batch, float parentAlpha) {
-                _internalDrawWidget(this, batch, parentAlpha, () -> super.draw(batch, parentAlpha));
-            }
-        };
-        table.add(new ScrollPane(tree, skin)).expand().fill();
-        return table;
+    protected ActorTree<PR> __createActor() {
+//        Skin skin = this.context.getResourceManager().getSkin();
+//        this.tree = new Tree(skin) {
+//            @Override
+//            public void draw(Batch batch, float parentAlpha) {
+//                _internalDrawWidget(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
+//            }
+//        };
+//        Table table = new Table(skin) {
+//            public void draw(Batch batch, float parentAlpha) {
+//                _internalDrawWidget(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
+//            }
+//        };
+//        table.add(new ScrollPane(tree, skin)).expand().fill();
+//        return table;
+        return null;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -97,7 +91,7 @@ public class SwtTree<PR> extends ASwtWidget<WidgetGroup> {
 
     // -------------------------------------------------------------------------------------------------------------------------
     private void doUpdate() {
-        this.updateTree(this.tree);
+        this.updateTree(this.actor.tree);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -125,7 +119,8 @@ public class SwtTree<PR> extends ASwtWidget<WidgetGroup> {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    private final void updateNN(Supplier<Array<Node>> existingChildren, Collection<PR> tobeChildren, Consumer<Node> removeItem, Consumer<Node> addItem) {
+    private final void updateNN(Supplier<Array<Node>> existingChildren, Collection<PR> tobeChildren,
+            Consumer<Node> removeItem, Consumer<Node> addItem) {
         Map<PR, Node> myExistingItems = new HashMap<>();
         if (existingChildren != null) {
             for (Node xx : existingChildren.get()) {
@@ -174,7 +169,7 @@ public class SwtTree<PR> extends ASwtWidget<WidgetGroup> {
     // -------------------------------------------------------------------------------------------------------------------------
     protected void callSelectionListeners() {
         Set<PR> use = new LinkedHashSet<>();
-        Selection<Node> sels = this.tree.getSelection();
+        Selection<Node> sels = this.actor.tree.getSelection();
         for (Node ns : sels) {
             PR pr = (PR) ns.getValue();
             use.add(pr);

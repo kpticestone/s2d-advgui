@@ -7,10 +7,10 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import de.s2d_advgui.commons.TOldCompatibilityCode;
-import de.s2d_advgui.core.awidget.ASwtLayoutData;
 import de.s2d_advgui.core.awidget.IInternalWidgetDrawer;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
+import de.s2d_advgui.core.layoutmanager.ASwtLayoutData;
 import de.s2d_advgui.core.layoutmanager.ASwtLayoutManager;
 import de.s2d_advgui.core.rendering.Splitter;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;

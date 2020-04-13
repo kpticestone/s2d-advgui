@@ -42,7 +42,7 @@ public abstract class SwtScreen<RM extends AResourceManager, DM extends ISwtDraw
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    protected final Group createActor() {
+    protected final Group __createActor() {
         return this.stage.getRoot();
     }
 

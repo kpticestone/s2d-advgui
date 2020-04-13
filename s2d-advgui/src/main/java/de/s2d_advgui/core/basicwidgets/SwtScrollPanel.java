@@ -7,6 +7,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
 
 import de.s2d_advgui.core.awidget.ASwtWidget;
+import de.s2d_advgui.core.awidget.SwtWidgetBuilder;
+import de.s2d_advgui.core.awidget.acc.IActorCreator;
+import de.s2d_advgui.core.rendering.IRend123;
+import de.s2d_advgui.core.resourcemanager.AResourceManager;
 
 public class SwtScrollPanel extends ASwtWidget<ScrollPane> {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -17,13 +21,41 @@ public class SwtScrollPanel extends ASwtWidget<ScrollPane> {
 
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtScrollPanel(ASwtWidget<? extends Group> pParent) {
-        super(pParent, false);
+        // super(pParent, false);
+        super(new SwtWidgetBuilder<>(pParent, false, new IActorCreator<ScrollPane>() {
+            @Override
+            public ScrollPane createActor(IRend123 pRend) {
+                AResourceManager rm = pRend.getResourceManager();
+                ScrollPaneStyle style = new ScrollPaneStyle();
+                style.background = null; // context.getDrawable("ui2/back_red.png");
+                style.corner = rm.getDrawable("ui2/back_red.png");
+                style.hScroll = rm.getDrawable("ui2/back_red.png");
+                style.hScrollKnob = rm.getDrawable("ui/icon.png");
+                style.vScroll = rm.getDrawable("ui2/back_red.png");
+                style.vScrollKnob = rm.getDrawable("ui2/back_red.png");
+                ScrollPane scp = new ScrollPane(null, style) {
+                    @Override
+                    public void draw(Batch batch, float parentAlpha) {
+                        pRend.doRender(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
+                    }
+
+                    @Override
+                    public void addActor(Actor actor) {
+                        Actor was = this.getActor();
+                        if (was != null) throw new UnsupportedOperationException("actor already set");
+                        this.setActor(actor);
+                    }
+                };
+                return scp;
+            }
+        }));
+        this.scp = this.actor;
         this.table = new SwtTable(this);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    protected ScrollPane createActor() {
+    protected ScrollPane __createActor() {
         ScrollPaneStyle style = new ScrollPaneStyle();
         style.background = null; // context.getDrawable("ui2/back_red.png");
         style.corner = context.getDrawable("ui2/back_red.png");
@@ -31,10 +63,10 @@ public class SwtScrollPanel extends ASwtWidget<ScrollPane> {
         style.hScrollKnob = context.getDrawable("ui/icon.png");
         style.vScroll = context.getDrawable("ui2/back_red.png");
         style.vScrollKnob = context.getDrawable("ui2/back_red.png");
-        scp = new ScrollPane(null, style) {
+        ScrollPane scp = new ScrollPane(null, style) {
             @Override
             public void draw(Batch batch, float parentAlpha) {
-                _internalDrawWidget(this, batch, parentAlpha, () -> super.draw(batch, parentAlpha));
+                _internalDrawWidget(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
             }
 
             @Override

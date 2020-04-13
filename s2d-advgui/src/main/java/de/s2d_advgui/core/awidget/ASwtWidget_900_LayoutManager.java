@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 
+import de.s2d_advgui.core.layoutmanager.ASwtLayoutData;
 import de.s2d_advgui.core.layoutmanager.ASwtLayoutManager;
 import de.s2d_advgui.core.stage.ISwtStage;
 
@@ -16,7 +17,7 @@ public abstract class ASwtWidget_900_LayoutManager<ACTOR extends Actor> extends 
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Nullable
-    private ASwtLayoutData swtLayoutData;
+    private ASwtLayoutData swtLayoutData = null;
 
     // -------------------------------------------------------------------------------------------------------------------------
     public ASwtWidget_900_LayoutManager(ISwtStage<?, ?> pContext) {
@@ -24,8 +25,14 @@ public abstract class ASwtWidget_900_LayoutManager<ACTOR extends Actor> extends 
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
+    @Deprecated
     public ASwtWidget_900_LayoutManager(ISwtWidget<? extends Group> pParent, boolean focusable) {
         super(pParent, focusable);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public ASwtWidget_900_LayoutManager(@Nonnull SwtWidgetBuilder<ACTOR> pBuilder) {
+        super(pBuilder);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

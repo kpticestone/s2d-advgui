@@ -16,6 +16,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import de.s2d_advgui.addons.framebuffer.SwtFrameBuffer;
 import de.s2d_advgui.addons.framebuffer.SwtFrameBufferBuilder;
@@ -195,6 +197,12 @@ public abstract class AResourceManager {
     // -------------------------------------------------------------------------------------------------------------------------
     public ATheme getTheme() {
         return this.theme;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public final Drawable getDrawable(String jj) {
+        TextureRegion tr = this.getTextureRegion(jj);
+        return new TextureRegionDrawable(tr);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

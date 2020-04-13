@@ -1,5 +1,7 @@
 package de.s2d_advgui.core.awidget;
 
+import javax.annotation.Nonnull;
+
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -11,13 +13,19 @@ public abstract class ASwtWidget_200_Coordinates<ACTOR extends Actor> extends AS
     protected final Rectangle bounds = new Rectangle();
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public ASwtWidget_200_Coordinates(ISwtStage<?, ?> pContext) {
+    public ASwtWidget_200_Coordinates(@Nonnull ISwtStage<?, ?> pContext) {
         super(pContext);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public ASwtWidget_200_Coordinates(ISwtWidget<? extends Group> pParent, boolean focusable) {
-        super(pParent, focusable);
+    @Deprecated
+    public ASwtWidget_200_Coordinates(ISwtWidget<? extends Group> pParent) {
+        super(pParent);
+    }
+    
+    // -------------------------------------------------------------------------------------------------------------------------
+    public ASwtWidget_200_Coordinates(@Nonnull SwtWidgetBuilder<ACTOR> pBuilder) {
+        super(pBuilder);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

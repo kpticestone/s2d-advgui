@@ -10,18 +10,17 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputEvent.Type;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Align;
 
 import de.s2d_advgui.core.awidget.ASwtWidgetSelectable;
 import de.s2d_advgui.core.awidget.ISwtForm;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
+import de.s2d_advgui.core.awidget.SwtWidgetBuilder;
+import de.s2d_advgui.core.awidget.acc.IActorCreator;
+import de.s2d_advgui.core.rendering.IRend123;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
 import de.s2d_advgui.core.resourcemanager.ATheme;
 
@@ -52,13 +51,38 @@ public class SwtRadioBox extends ASwtWidgetSelectable<ActorRadioBox> {
 
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtRadioBox(ISwtWidget<? extends Group> pParent, @Nullable String pRadioGroup) {
-        super(pParent);
+        super(new SwtWidgetBuilder<>(pParent, true, new IActorCreator<ActorRadioBox>() {
+            @Override
+            public ActorRadioBox createActor(IRend123 pRend) {
+                ActorRadioBox back = new ActorRadioBox() {
+                    @Override
+                    public void draw(Batch batch, float parentAlpha) {
+                        pRend.doRender(batch, parentAlpha, () -> {
+                        });
+                    }
+                };
+                return back;
+            }
+        }));
+
+        this.registerEventHandler(InputEvent.Type.keyTyped, (event) -> {
+            if (event.getKeyCode() == Keys.ENTER
+                    || event.getKeyCode() == Keys.SPACE) {
+                setChecked();
+                return true;
+            }
+            return false;
+        });
+
+        this.registerChangeEventHandler(event -> {
+            onInternalChanged();
+        });
 
         ISwtForm<?> form = this.getNextParent(ISwtForm.class);
         this.radioGroup = form.computeDataIfNotExists(
                 pRadioGroup == null ? PARENT_RADIO_BOXES : PARENT_RADIO_BOXES + pRadioGroup, () -> new RadioGroup());
         if (this.radioGroup.register(this)) {
-            this.setChecked();
+            this.setChecked(false);
         }
 
         TextureRegion check = this.context.getTextureRegion("ui/radio-checked.png"); //$NON-NLS-1$
@@ -91,34 +115,14 @@ public class SwtRadioBox extends ASwtWidgetSelectable<ActorRadioBox> {
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    protected ActorRadioBox _createActor() {
+    protected ActorRadioBox __createActor() {
         ActorRadioBox back = new ActorRadioBox() {
             @Override
             public void draw(Batch batch, float parentAlpha) {
-                _internalDrawWidget(this, batch, parentAlpha, () -> {
+                _internalDrawWidget(batch, parentAlpha, () -> {
                 });
             }
         };
-        back.addListener(new EventListener() {
-            @Override
-            public boolean handle(Event event) {
-                if (event instanceof ChangeEvent) {
-                    onInternalChanged();
-                    return true;
-                }
-                if (event instanceof InputEvent) {
-                    if (((InputEvent) event).getType() == Type.keyTyped) {
-                        if (((InputEvent) event).getKeyCode() == Keys.ENTER
-                                || ((InputEvent) event).getKeyCode() == Keys.SPACE) {
-                            setChecked();
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            }
-
-        });
         return back;
     }
 
@@ -138,6 +142,11 @@ public class SwtRadioBox extends ASwtWidgetSelectable<ActorRadioBox> {
     // -------------------------------------------------------------------------------------------------------------------------
     public boolean isChecked() {
         return this.actor.isChecked();
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public void setChecked(boolean pj) {
+        this.actor.setChecked(true, pj);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

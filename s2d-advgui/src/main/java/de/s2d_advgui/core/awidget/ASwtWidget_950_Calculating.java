@@ -1,14 +1,15 @@
 package de.s2d_advgui.core.awidget;
 
+import javax.annotation.Nonnull;
+
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputEvent.Type;
 
 import de.s2d_advgui.commons.TOldCompatibilityCode;
+import de.s2d_advgui.core.dnd.DragAndDropHelper;
+import de.s2d_advgui.core.dnd.IDragAndDropHandler;
+import de.s2d_advgui.core.dnd.IDragAndDropHelper;
 import de.s2d_advgui.core.layoutmanager.ASwtLayoutManager;
 import de.s2d_advgui.core.stage.ISwtStage;
 import de.s2d_advgui.core.window.ISwtWindow;
@@ -29,8 +30,14 @@ public abstract class ASwtWidget_950_Calculating<ACTOR extends Actor> extends AS
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
+    @Deprecated
     public ASwtWidget_950_Calculating(ISwtWidget<? extends Group> pParent, boolean focusable) {
         super(pParent, focusable);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public ASwtWidget_950_Calculating(@Nonnull SwtWidgetBuilder<ACTOR> pBuilder) {
+        super(pBuilder);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -62,7 +69,7 @@ public abstract class ASwtWidget_950_Calculating<ACTOR extends Actor> extends AS
         } else {
             if (this instanceof ISwtWindow) {
                 Rectangle dims = this.context.getStageDimensions();
-                ((ISwtWindow)this).applyWindowDims(dims);
+                ((ISwtWindow) this).applyWindowDims(dims);
             } else {
                 wi = this.parent.getActor().getWidth();
                 hh = this.parent.getActor().getHeight();
@@ -107,49 +114,8 @@ public abstract class ASwtWidget_950_Calculating<ACTOR extends Actor> extends AS
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public final void addDragAndDrop(IDragAndDropHandler pDndHandler) {
-        this.actor.addListener(new EventListener() {
-            // -------------------------------------------------------------------------------------------------------------------------
-            boolean inDrag = false;
-            float dragX;
-            float dragY;
-
-            // -------------------------------------------------------------------------------------------------------------------------
-            @Override
-            public boolean handle(Event event) {
-                if (event instanceof InputEvent) {
-                    InputEvent inputEvent = (InputEvent) event;
-                    Type ty = inputEvent.getType();
-                    if (ty == Type.touchDown) {
-                        inDrag = true;
-                        dragX = inputEvent.getStageX();
-                        dragY = inputEvent.getStageY();
-                        pDndHandler.onDragStart();
-                        // SwtWindow.this.parent.bringToFront(SwtWindow.this);
-                        return true;
-                    } else if (ty == Type.touchDragged) {
-                        if (inDrag) {
-                            float lx = inputEvent.getStageX() - dragX;
-                            float ly = inputEvent.getStageY() - dragY;
-                            pDndHandler.onDrag(lx, ly);
-                            // setPosition(newX, newY);
-                            dragX = inputEvent.getStageX();
-                            dragY = inputEvent.getStageY();
-                            return true;
-                        }
-                        return false;
-                    } else if (ty == Type.touchUp) {
-                        inDrag = false;
-                        pDndHandler.onDragStop();
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-            // -------------------------------------------------------------------------------------------------------------------------
-        });
-
+    public final IDragAndDropHelper addDragAndDrop(IDragAndDropHandler pDndHandler) {
+        return DragAndDropHelper.attach(pDndHandler, this);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

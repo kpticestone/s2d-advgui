@@ -14,17 +14,27 @@ import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputEvent.Type;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 
 import de.s2d_advgui.commons.TNull;
+import de.s2d_advgui.commons.Trigger;
+import de.s2d_advgui.core.rendering.IRend123;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
 import de.s2d_advgui.core.resourcemanager.ATheme;
 import de.s2d_advgui.core.stage.ISwtStage;
 
 public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwtWidget<ACTOR> {
+    // -------------------------------------------------------------------------------------------------------------------------
     private static final Logger log = LoggerFactory.getLogger(ASwtWidget_000_Ground.class);
+
     // -------------------------------------------------------------------------------------------------------------------------
     @Nonnull
     protected final ISwtStage<?, ?> context;
@@ -60,6 +70,15 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
     private Map<String, Object> data = null;
 
     // -------------------------------------------------------------------------------------------------------------------------
+    private final Map<InputEvent.Type, Set<ISwtInputEventCaller>> eventMappings = new HashMap<>();
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    private Set<ISwtChangeEventCaller> eventChangeEventCallers;
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    private final Set<Consumer<Boolean>> enabledStateListener = new LinkedHashSet<>();
+
+    // -------------------------------------------------------------------------------------------------------------------------
     static ISwtWidget<? extends Group> resolveDelegatedParent(@Nonnull ISwtWidget<? extends Group> pOrgParent) {
         ISwtWidget<? extends Group> x1 = TNull.checkNull(pOrgParent).getDelegatedParent();
         if (x1 != null) return x1;
@@ -76,10 +95,38 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public ASwtWidget_000_Ground(@Nonnull ISwtWidget<? extends Group> pOrgParent, boolean focusable) {
+    @Deprecated
+    public ASwtWidget_000_Ground(@Nonnull ISwtWidget<? extends Group> pOrgParent) {
         this.parent = resolveDelegatedParent(pOrgParent);
         this.context = TNull.checkNull(this.parent.getContext());
-        this.actor = this.createActor();
+        this.actor = this.__createActor();
+        this.actor.addListener(new EventListener() {
+            @Override
+            public boolean handle(Event event) {
+                // if (!isEnabled()) return false;
+                if (event instanceof ChangeEvent) {
+                    Set<ISwtChangeEventCaller> ec = ASwtWidget_000_Ground.this.eventChangeEventCallers;
+                    if (ec != null) {
+                        for (ISwtChangeEventCaller a : ec) {
+                            // System.err.println("handle change '" + event + "' on '" + a + "'");
+                            a.call((ChangeEvent) event);
+                        }
+                    }
+                } else if (event instanceof InputEvent) {
+                    Type ti = ((InputEvent) event).getType();
+                    Set<ISwtInputEventCaller> li = ASwtWidget_000_Ground.this.eventMappings.get(ti);
+                    if (li != null) {
+                        for (ISwtInputEventCaller c : li) {
+                            if (c.call((InputEvent) event)) {
+                                // System.err.println("handle input '" + event + "' on '" + c + "'");
+                                return true;
+                            }
+                        }
+                    }
+                }
+                return false;
+            }
+        });
         this.context.registerMapping(this.actor, this);
         Group paractor = this.parent.getActor();
         if (this.getIgnoreOnCalcPos() && paractor instanceof Table) {
@@ -89,9 +136,86 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
         }
 
         (((ASwtWidget_000_Ground<?>) this.parent)).children.add(this);
-        context.onWidgetCreation(this);
+        this.context.onWidgetCreation(this);
 
         this.parent.calcPositions();
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public ASwtWidget_000_Ground(@Nonnull SwtWidgetBuilder<ACTOR> pBuilder) {
+        this.parent = resolveDelegatedParent(pBuilder.parent);
+        this.context = TNull.checkNull(this.parent.getContext());
+        this.actor = pBuilder.createActor(new IRend123() {
+            @Override
+            public void doRender(Batch batch, float parentAlpha, Trigger pOrg) {
+                _internalDrawWidget(batch, parentAlpha, pOrg);
+            }
+
+            @Override
+            public AResourceManager getResourceManager() {
+                return pBuilder.parent.getResourceManager();
+            }
+        });
+        this.actor.addListener(new EventListener() {
+            @Override
+            public boolean handle(Event event) {
+                // if (!isEnabled()) return false;
+                if (event instanceof ChangeEvent) {
+                    Set<ISwtChangeEventCaller> ec = ASwtWidget_000_Ground.this.eventChangeEventCallers;
+                    if (ec != null) {
+                        for (ISwtChangeEventCaller a : ec) {
+                            // System.err.println("handle change '" + event + "' on '" + a + "'");
+                            a.call((ChangeEvent) event);
+                        }
+                    }
+                } else if (event instanceof InputEvent) {
+                    Type ti = ((InputEvent) event).getType();
+                    Set<ISwtInputEventCaller> li = ASwtWidget_000_Ground.this.eventMappings.get(ti);
+                    if (li != null) {
+                        for (ISwtInputEventCaller c : li) {
+                            if (c.call((InputEvent) event)) {
+                                // System.err.println("handle input '" + event + "' on '" + c + "'");
+                                return true;
+                            }
+                        }
+                    }
+                }
+                return false;
+            }
+        });
+        this.context.registerMapping(this.actor, this);
+        Group paractor = this.parent.getActor();
+        if (this.getIgnoreOnCalcPos() && paractor instanceof Table) {
+            ((Table) paractor).add(this.actor).row();
+        } else {
+            paractor.addActor(this.actor);
+        }
+
+        (((ASwtWidget_000_Ground<?>) this.parent)).children.add(this);
+        this.context.onWidgetCreation(this);
+
+        this.parent.calcPositions();
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    abstract void _internalDrawWidget(Batch batch, float parentAlpha, Trigger pOrg);
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public final void registerEventHandler(InputEvent.Type pInputEventType, ISwtInputEventCaller pCaller) {
+        Set<ISwtInputEventCaller> as = this.eventMappings.computeIfAbsent(pInputEventType,
+                (s) -> new LinkedHashSet<>());
+        as.add(pCaller);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public final void registerChangeEventHandler(ISwtChangeEventCaller pCaller) {
+        Set<ISwtChangeEventCaller> em = this.eventChangeEventCallers;
+        if (em == null) {
+            em = this.eventChangeEventCallers = new LinkedHashSet<>();
+        }
+        em.add(pCaller);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -107,8 +231,8 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    protected final void setDelegatedParent(ISwtWidget<? extends Group> pa) {
-        this.delegatedParent = pa;
+    protected final void setDelegatedParent(ISwtWidget<? extends Group> pWidget) {
+        this.delegatedParent = pWidget;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -131,7 +255,8 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    protected abstract ACTOR createActor();
+    @Deprecated
+    protected abstract ACTOR __createActor();
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
@@ -154,6 +279,7 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
     @Override
     public void setVisible(boolean b) {
         if (this.visible != b) {
+            this.context.bumbRevision();
             this.visible = b;
             this.actor.setVisible(b);
         }
@@ -168,9 +294,6 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    private final Set<Consumer<Boolean>> enabledStateListener = new LinkedHashSet<>();
-
-    // -------------------------------------------------------------------------------------------------------------------------
     public final void addEnabledStateListener(Consumer<Boolean> pListener) {
         this.enabledStateListener.add(pListener);
     }
@@ -180,6 +303,7 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
     public final boolean setEnabled(boolean b) {
         if (this.enabled != b) {
             this.enabled = b;
+            this.context.bumbRevision();
             for (Consumer<Boolean> a : this.enabledStateListener) {
                 a.accept(b);
             }
@@ -209,14 +333,14 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
             try {
                 a.act(delta);
             } catch (Exception e) {
-                log.error("unable to draw '{}'", a, e);
+                log.error("unable to draw '{}'", a, e); //$NON-NLS-1$
             }
         }
         for (ISwtWidget<?> a : this.children) {
             try {
                 a.act(delta);
             } catch (Exception e) {
-                log.error("unable to draw '{}'", a, e);
+                log.error("unable to draw '{}'", a, e); //$NON-NLS-1$
             }
         }
     }

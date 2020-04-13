@@ -62,7 +62,14 @@ public class ControllerLevelImpl implements IControllerLevel {
     private final List<ISwtWidget<?>> orderedList = new ArrayList<>();
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public ControllerLevelImpl(@Nonnull IIsControllerMode pIsCtrl) {
+    private final ISwtWidget<?> rootWidget;
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    private long lastRev = 0;
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public ControllerLevelImpl(ISwtWidget<?> pWidget, @Nonnull IIsControllerMode pIsCtrl) {
+        this.rootWidget = pWidget;
         this.isCtrl = pIsCtrl;
     }
 
@@ -238,28 +245,41 @@ public class ControllerLevelImpl implements IControllerLevel {
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    public List<ISwtWidget<?>> getOrderedList() {
-        return this.orderedList;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    @Override
     public final boolean traverseTabNext() {
-        int idx = this.orderedList.indexOf(this.focusedWidget);
-        int nidx = idx + 1 < this.orderedList.size() ? idx + 1 : 0;
-        ISwtWidget<?> jd = this.focusedWidget = this.orderedList.get(nidx);
-        jd.focus();
-        return true;
+        int idx = this.orderedList.indexOf(this.focusedWidget) + 1;
+        int sio = this.orderedList.size();
+        for (int i = 0; i < sio; i++) {
+            int useIdx = idx + i;
+            if (useIdx >= sio) useIdx -= sio;
+            ISwtWidget<?> kk = this.orderedList.get(useIdx);
+            if (kk.isEnabled() && kk.isVisible()) {
+                this.focusedWidget = kk;
+                kk.focus();
+                return true;
+            }
+        }
+        return false;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final boolean traverseTabPrev() {
         int idx = this.orderedList.indexOf(this.focusedWidget);
-        ISwtWidget<?> jd = this.focusedWidget = this.orderedList
-                .get(idx - 1 >= 0 ? idx - 1 : this.orderedList.size() - 1);
-        jd.focus();
-        return true;
+        if (idx == -1) idx = 0;
+        else
+            idx -= 1;
+        int sio = this.orderedList.size();
+        for (int i = 0; i < sio; i++) {
+            int useIdx = idx - i;
+            if (useIdx < 0) useIdx += sio;
+            ISwtWidget<?> kk = this.orderedList.get(useIdx);
+            if (kk.isEnabled() && kk.isVisible()) {
+                this.focusedWidget = kk;
+                kk.focus();
+                return true;
+            }
+        }
+        return false;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -270,17 +290,45 @@ public class ControllerLevelImpl implements IControllerLevel {
             fw.focus();
         }
     }
-    
+
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public ISwtWidget<?> getFocusedWidget() {
         return this.focusedWidget;
     }
-    
+
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public void setFocusedWidget(@Nullable ISwtWidget<?> focusedWidget) {
         this.focusedWidget = focusedWidget;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public void doUpdateOrderedList() {
+        long curRev = this.rootWidget.getContext().getRevision();
+        if (this.lastRev != curRev) {
+            // System.err.println("update orderedlist cause rev changed to " + curRev);
+            this.lastRev = curRev;
+            List<ISwtWidget<?>> ol = this.orderedList;
+            ol.clear();
+            this.calculateTabOrderList(this.rootWidget, ol);
+            if (this.focusedWidget != null) {
+                if (!this.focusedWidget.isVisible() || !this.focusedWidget.isEnabled()) {
+                    this.traverseTabNext();
+                }
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    private void calculateTabOrderList(ISwtWidget<?> pParent, List<ISwtWidget<?>> pOrderedList) {
+        if (pParent.isFocusable()) {
+            pOrderedList.add(pParent);
+        }
+        for (ISwtWidget<?> child : pParent.getChildren()) {
+            this.calculateTabOrderList(child, pOrderedList);
+        }
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

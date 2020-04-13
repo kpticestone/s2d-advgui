@@ -11,12 +11,35 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
 
 import de.s2d_advgui.core.awidget.ASwtWidget;
 import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
+import de.s2d_advgui.core.awidget.SwtWidgetBuilder;
+import de.s2d_advgui.core.awidget.acc.IActorCreator;
+import de.s2d_advgui.core.rendering.IRend123;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
 
 public class SwtProgressBar extends ASwtWidget<ProgressBar> {
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtProgressBar(ASwtWidget<? extends Group> pParent) {
-        super(pParent, false);
+        // super(pParent, false);
+        super(new SwtWidgetBuilder<>(pParent, false, new IActorCreator<ProgressBar>() {
+            @Override
+            public ProgressBar createActor(IRend123 pRend) {
+                ProgressBarStyle style = new ProgressBarStyle();
+                // style.knobBefore = new
+                // TextureRegionDrawable(context.resourceManager.getColorTextureRegion(Color.GREEN,
+                // 15, 15));
+                // style.knob = null; // context.getDrawable("ui/icon.png");
+                // style.knobAfter = null; // new
+                // TextureRegionDrawable(context.resourceManager.getColorTextureRegion(Color.BLACK));
+                ProgressBar back = new ProgressBar(0, 100, 1, false, style) {
+                    @Override
+                    public void draw(Batch batch, float parentAlpha) {
+                        pRend.doRender(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
+                    }
+                };
+                back.setValue(25);
+                return back;
+            }
+        }));
         this.makeDrawBorderSupport();
         TextureRegion t1 = this.getResourceManager().getColorTextureRegion(Color.GREEN);
         int space = 8;
@@ -32,7 +55,7 @@ public class SwtProgressBar extends ASwtWidget<ProgressBar> {
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    protected ProgressBar createActor() {
+    protected ProgressBar __createActor() {
         ProgressBarStyle style = new ProgressBarStyle();
         // style.knobBefore = new
         // TextureRegionDrawable(context.resourceManager.getColorTextureRegion(Color.GREEN,
@@ -43,7 +66,7 @@ public class SwtProgressBar extends ASwtWidget<ProgressBar> {
         ProgressBar back = new ProgressBar(0, 100, 1, false, style) {
             @Override
             public void draw(Batch batch, float parentAlpha) {
-                _internalDrawWidget(this, batch, parentAlpha, () -> super.draw(batch, parentAlpha));
+                _internalDrawWidget(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
             }
         };
         back.setValue(25);

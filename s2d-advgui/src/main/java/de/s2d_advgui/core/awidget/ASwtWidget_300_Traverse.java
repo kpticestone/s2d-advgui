@@ -1,22 +1,16 @@
 package de.s2d_advgui.core.awidget;
 
-import java.util.List;
+import javax.annotation.Nonnull;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 
 import de.s2d_advgui.core.stage.ISwtStage;
 
-public abstract class ASwtWidget_300_Traverse<ACTOR extends Actor> extends ASwtWidget_200_Coordinates<ACTOR> {
+public abstract class ASwtWidget_300_Traverse<ACTOR extends Actor> extends ASwtWidget_299_Hover<ACTOR> {
     // -------------------------------------------------------------------------------------------------------------------------
     protected final boolean focusable;
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    private boolean hovered = false;
 
     // -------------------------------------------------------------------------------------------------------------------------
     public ASwtWidget_300_Traverse(ISwtStage<?, ?> pContext) {
@@ -25,68 +19,42 @@ public abstract class ASwtWidget_300_Traverse<ACTOR extends Actor> extends ASwtW
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    public boolean isHovered() {
-        return this.hovered;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
+    @Deprecated
     public ASwtWidget_300_Traverse(ISwtWidget<? extends Group> pParent, boolean focusable) {
-        super(pParent, focusable);
+        super(pParent);
         this.focusable = focusable;
         if (focusable) {
-            this.actor.addListener(new EventListener() {
-                @Override
-                public boolean handle(Event event) {
-                    if (event instanceof InputEvent) {
-                        InputEvent ii = (InputEvent) event;
-                        switch (ii.getType()) {
-                        case enter:
-                            if (isEnabled()) {
-                                ASwtWidget_300_Traverse.this.hovered = true;
-                                return true;
-                            }
-                            return false;
-                        case exit:
-                            ASwtWidget_300_Traverse.this.hovered = false;
-                            return true;
-                        default:
-                            break;
-                        }
+            this.registerEventHandler(InputEvent.Type.touchDown, (event) -> {
+                if (isEnabled()) {
+                    if (event.getButton() == 0) {
+                        focus();
                     }
-                    return false;
                 }
+                return false;
             });
-            this.actor.addListener(new InputListener() {
-                @Override
-                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                    if (isEnabled()) {
-                        if (button == 0) {
-                            focus();
-                        }
+        }
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public ASwtWidget_300_Traverse(@Nonnull SwtWidgetBuilder<ACTOR> pBuilder) {
+        super(pBuilder);
+        this.focusable = pBuilder.focusable;
+        if (this.focusable) {
+            this.registerEventHandler(InputEvent.Type.touchDown, (event) -> {
+                if (isEnabled()) {
+                    if (event.getButton() == 0) {
+                        focus();
                     }
-                    return false;
                 }
+                return false;
             });
         }
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    public void calculateTabOrderList(List<ISwtWidget<?>> orderedList) {
-        if (this.isVisible()) {
-            if (this.isFocusable()) {
-                orderedList.add(this);
-            }
-            for (ISwtWidget<?> child : this.children) {
-                child.calculateTabOrderList(orderedList);
-            }
-        }
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    protected boolean isFocusable() {
-        return this.focusable && this.enabled && this.visible;
+    public boolean isFocusable() {
+        return this.focusable;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

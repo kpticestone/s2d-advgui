@@ -8,11 +8,28 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 
 import de.s2d_advgui.core.awidget.ASwtWidget;
 import de.s2d_advgui.core.awidget.ISwtWidget;
+import de.s2d_advgui.core.awidget.SwtWidgetBuilder;
+import de.s2d_advgui.core.awidget.acc.IActorCreator;
+import de.s2d_advgui.core.rendering.IRend123;
 
 public class SwtLabel extends ASwtWidget<Label> {
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtLabel(ISwtWidget<? extends Group> pParent) {
-        super(pParent, false);
+        super(new SwtWidgetBuilder<>(pParent, false, new IActorCreator<Label>() {
+            @Override
+            public Label createActor(IRend123 pRend) {
+                LabelStyle style = new LabelStyle();
+                style.font = pRend.getResourceManager().getFont(1f, true);
+                Label back = new Label(null, style) {
+                    @Override
+                    public void draw(Batch batch, float parentAlpha) {
+                        pRend.doRender(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
+                    }
+                };
+                back.setWrap(false);
+                return back;
+            }
+        }));
         this.setColor(Color.WHITE);
         this.setFontScale(1f);
     }
@@ -25,13 +42,13 @@ public class SwtLabel extends ASwtWidget<Label> {
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    protected Label createActor() {
+    protected Label __createActor() {
         LabelStyle style = new LabelStyle();
         style.font = this.context.getResourceManager().getFont(1f, true);
         Label back = new Label(null, style) {
             @Override
             public void draw(Batch batch, float parentAlpha) {
-                _internalDrawWidget(this, batch, parentAlpha, () -> super.draw(batch, parentAlpha));
+                _internalDrawWidget(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
             }
         };
         back.setWrap(false);

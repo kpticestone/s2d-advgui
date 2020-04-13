@@ -1,7 +1,6 @@
 package de.s2d_advgui.core.awidget;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
@@ -9,7 +8,9 @@ import javax.annotation.Nullable;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent.Type;
 
+import de.s2d_advgui.core.layoutmanager.ASwtLayoutData;
 import de.s2d_advgui.core.layoutmanager.ASwtLayoutManager;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
 import de.s2d_advgui.core.resourcemanager.ATheme;
@@ -49,7 +50,7 @@ public interface ISwtWidget<PT extends Actor> extends IRectangleSupport {
     boolean setEnabled(boolean pEnabled);
 
     // -------------------------------------------------------------------------------------------------------------------------
-    void calculateTabOrderList(List<ISwtWidget<?>> pOrderedList);
+    // void calculateTabOrderList(List<ISwtWidget<?>> pOrderedList);
 
     // -------------------------------------------------------------------------------------------------------------------------
     void act(float pDelta);
@@ -113,19 +114,28 @@ public interface ISwtWidget<PT extends Actor> extends IRectangleSupport {
 
     // -------------------------------------------------------------------------------------------------------------------------
     ATheme getTheme();
-    
+
     // -------------------------------------------------------------------------------------------------------------------------
     void setData(String key, Object data);
-    
+
     // -------------------------------------------------------------------------------------------------------------------------
     Object getData(String key);
-    
+
     // -------------------------------------------------------------------------------------------------------------------------
     <T> T computeDataIfNotExists(String key, Supplier<T> any);
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Nullable
     <T extends ISwtWidget<?>> T getNextParent(Class<T> pClz);
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    boolean isFocusable();
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    void registerEventHandler(Type type, ISwtInputEventCaller pCaller);
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    void registerChangeEventHandler(ISwtChangeEventCaller pCaller);
 
     // -------------------------------------------------------------------------------------------------------------------------
 }

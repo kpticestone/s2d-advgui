@@ -52,6 +52,9 @@ public abstract class ASwtStage_000_Ground<RM extends AResourceManager, DM exten
 
     // -------------------------------------------------------------------------------------------------------------------------
     private float delta = -1f;
+    
+    // -------------------------------------------------------------------------------------------------------------------------
+    private long rev = 0;
 
     // -------------------------------------------------------------------------------------------------------------------------
     public ASwtStage_000_Ground(@Nonnull ISwtApplicationController<RM, DM> pApplicationController) {
@@ -178,6 +181,19 @@ public abstract class ASwtStage_000_Ground<RM extends AResourceManager, DM exten
     public final float getDelta()
     {
         return this.delta;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public void bumbRevision()
+    {
+        ++this.rev;
+    }
+    
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public long getRevision() {
+        return this.rev;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

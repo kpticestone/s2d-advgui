@@ -1,7 +1,5 @@
 package de.s2d_advgui.core.awidget;
 
-import java.util.List;
-
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.math.Vector3;
@@ -47,9 +45,6 @@ public interface IControllerLevel {
     boolean _onEvent_MouseScrolled(int amount);
 
     // -------------------------------------------------------------------------------------------------------------------------
-    List<ISwtWidget<?>> getOrderedList();
-
-    // -------------------------------------------------------------------------------------------------------------------------
     boolean traverseTabNext();
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -63,6 +58,9 @@ public interface IControllerLevel {
 
     // -------------------------------------------------------------------------------------------------------------------------
     void setFocusedWidget(ISwtWidget<?> focusedWidget);
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    void doUpdateOrderedList();
 
     // -------------------------------------------------------------------------------------------------------------------------
 }

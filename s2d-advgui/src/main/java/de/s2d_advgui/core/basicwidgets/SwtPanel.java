@@ -9,18 +9,32 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 
 import de.s2d_advgui.core.awidget.ASwtWidget;
 import de.s2d_advgui.core.awidget.ISwtWidget;
+import de.s2d_advgui.core.awidget.SwtWidgetBuilder;
+import de.s2d_advgui.core.awidget.acc.IActorCreator;
+import de.s2d_advgui.core.rendering.IRend123;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
 import de.s2d_advgui.core.resourcemanager.ATheme;
 
 public class SwtPanel extends ASwtWidget<WidgetGroup> {
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtPanel(ISwtWidget<? extends Group> pParent) {
-        super(pParent, false);
+        this(pParent, false);
     }
-    
+
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtPanel(ISwtWidget<? extends Group> pParent, boolean standardBackground) {
-        super(pParent, false);
+        super(new SwtWidgetBuilder<>(pParent, false, new IActorCreator<WidgetGroup>() {
+            @Override
+            public WidgetGroup createActor(IRend123 pRend) {
+                WidgetGroup back = new WidgetGroup() {
+                    @Override
+                    public void draw(Batch batch, float parentAlpha) {
+                        pRend.doRender(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
+                    }
+                };
+                return back;
+            }
+        }));
         if (standardBackground) {
             this.setClip(false);
             TextureRegion br1 = this.context.getResourceManager().getColorTextureRegion(Color.WHITE, 1, 1);
@@ -56,11 +70,11 @@ public class SwtPanel extends ASwtWidget<WidgetGroup> {
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    protected final WidgetGroup createActor() {
+    protected final WidgetGroup __createActor() {
         WidgetGroup back = new WidgetGroup() {
             @Override
             public void draw(Batch batch, float parentAlpha) {
-                _internalDrawWidget(this, batch, parentAlpha, () -> super.draw(batch, parentAlpha));
+                _internalDrawWidget(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
             }
         };
         return back;

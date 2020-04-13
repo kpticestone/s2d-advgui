@@ -1,11 +1,8 @@
 package de.s2d_advgui.core.awidget;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Group;
 
 import de.s2d_advgui.core.input.axis.ASwtInputRegister_Axis;
 import de.s2d_advgui.core.input.keys.ASwtInputRegister_Keys;
@@ -20,17 +17,29 @@ public abstract class ASwtWidget_ControllerLevel<T extends Actor> extends ASwtWi
     // -------------------------------------------------------------------------------------------------------------------------
     public ASwtWidget_ControllerLevel(ISwtStage<?, ?> pContext) {
         super(pContext);
-        this.controllerLevel = new ControllerLevelImpl(() -> getContext().isControllerMode());
+        this.controllerLevel = new ControllerLevelImpl(this, () -> getContext().isControllerMode());
         this.myInit();
     }
 
+//    // -------------------------------------------------------------------------------------------------------------------------
+//    @Deprecated
+//    public ASwtWidget_ControllerLevel(ISwtWidget<? extends Group> pParent, boolean focusable, boolean modal) {
+//        super(pParent, focusable);
+//        if (!modal && pParent instanceof ASwtWidget_ControllerLevel) {
+//            this.controllerLevel = ((ASwtWidget_ControllerLevel<?>) pParent).controllerLevel;
+//        } else {
+//            this.controllerLevel = new ControllerLevelImpl(this, () -> getContext().isControllerMode());
+//            this.myInit();
+//        }
+//    }
+
     // -------------------------------------------------------------------------------------------------------------------------
-    public ASwtWidget_ControllerLevel(ISwtWidget<? extends Group> pParent, boolean focusable, boolean modal) {
-        super(pParent, focusable);
-        if (!modal && pParent instanceof ASwtWidget_ControllerLevel) {
-            this.controllerLevel = ((ASwtWidget_ControllerLevel<?>) pParent).controllerLevel;
+    public ASwtWidget_ControllerLevel(SwtWidgetBuilder<T> pBuilder, boolean modal) {
+        super(pBuilder);
+        if (!modal && pBuilder.parent instanceof ASwtWidget_ControllerLevel) {
+            this.controllerLevel = ((ASwtWidget_ControllerLevel<?>) pBuilder.parent).controllerLevel;
         } else {
-            this.controllerLevel = new ControllerLevelImpl(() -> getContext().isControllerMode());
+            this.controllerLevel = new ControllerLevelImpl(this, () -> getContext().isControllerMode());
             this.myInit();
         }
     }
@@ -38,9 +47,7 @@ public abstract class ASwtWidget_ControllerLevel<T extends Actor> extends ASwtWi
     // -------------------------------------------------------------------------------------------------------------------------
     private void myInit() {
         this.addUpdateHandler(delta -> {
-            List<ISwtWidget<?>> ol = this.controllerLevel.getOrderedList();
-            ol.clear();
-            this.calculateTabOrderList(ol);
+            this.controllerLevel.doUpdateOrderedList();
         });
         ((IControllerLevelTarget) this.context).setCurrentControllerLevel(this.controllerLevel);
         this.addDisposeListener(() -> {

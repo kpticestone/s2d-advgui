@@ -10,8 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import de.s2d_advgui.core.awidget.ASwtWidget;
 import de.s2d_advgui.core.awidget.ASwtWidgetSelectable;
 import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
+import de.s2d_advgui.core.awidget.SwtWidgetBuilder;
+import de.s2d_advgui.core.awidget.acc.IActorCreator;
 import de.s2d_advgui.core.basicwidgets.SwtImage;
 import de.s2d_advgui.core.basicwidgets.SwtLabel;
+import de.s2d_advgui.core.rendering.IRend123;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
 
 public class SwtItemPanel extends ASwtWidgetSelectable<WidgetGroup> {
@@ -23,7 +26,18 @@ public class SwtItemPanel extends ASwtWidgetSelectable<WidgetGroup> {
 
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtItemPanel(ASwtWidget<? extends Group> pParent) {
-        super(pParent);
+        super(new SwtWidgetBuilder<>(pParent, true, new IActorCreator<WidgetGroup>() {
+            @Override
+            public WidgetGroup createActor(IRend123 pRend) {
+                WidgetGroup back = new WidgetGroup() {
+                    @Override
+                    public void draw(Batch batch, float parentAlpha) {
+                        pRend.doRender(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
+                    }
+                };
+                return back;
+            }
+        }));
         this.img = new SwtImage(this);
         this.img.setBounds(9 + 3, 2 + 3, 26, 26);
         this.txt = new SwtLabel(this);
@@ -68,7 +82,7 @@ public class SwtItemPanel extends ASwtWidgetSelectable<WidgetGroup> {
             }
         });
     }
-    
+
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     protected void applyDisabledOnActor(boolean b) {
@@ -77,11 +91,11 @@ public class SwtItemPanel extends ASwtWidgetSelectable<WidgetGroup> {
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    protected WidgetGroup _createActor() {
+    protected WidgetGroup __createActor() {
         WidgetGroup back = new WidgetGroup() {
             @Override
             public void draw(Batch batch, float parentAlpha) {
-                _internalDrawWidget(this, batch, parentAlpha, () -> super.draw(batch, parentAlpha));
+                _internalDrawWidget(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
             }
         };
         return back;
