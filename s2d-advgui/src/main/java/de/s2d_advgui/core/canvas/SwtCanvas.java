@@ -20,12 +20,11 @@ import de.s2d_advgui.core.awidget.ASwtWidget;
 import de.s2d_advgui.core.awidget.ISwtInputEventCaller;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.awidget.SwtWidgetBuilder;
-import de.s2d_advgui.core.awidget.acc.IActorCreator;
+import de.s2d_advgui.core.awidget.acc.ActorCreatorWidgetGroup;
 import de.s2d_advgui.core.camera.CameraHolder;
 import de.s2d_advgui.core.input.ISwtMouseMoveListener;
 import de.s2d_advgui.core.input.ISwtScrollListener;
 import de.s2d_advgui.core.input.keys.ASwtInputRegister_Keys;
-import de.s2d_advgui.core.rendering.IRend123;
 import de.s2d_advgui.core.rendering.ISwtBatchSaver;
 import de.s2d_advgui.core.rendering.ISwtDrawerManager;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
@@ -53,18 +52,7 @@ public abstract class SwtCanvas<RM extends AResourceManager, DM extends ISwtDraw
 
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtCanvas(@Nonnull ISwtWidget<? extends Group> pParent, @Nonnull DM pDrawerManager) {
-        super(new SwtWidgetBuilder<>(pParent, true, new IActorCreator<WidgetGroup>() {
-            @Override
-            public WidgetGroup createActor(IRend123 pRend) {
-                WidgetGroup back = new WidgetGroup() {
-                    @Override
-                    public void draw(Batch batch, float parentAlpha) {
-                        pRend.doRender(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
-                    }
-                };
-                return back;
-            }
-        }));
+        super(new SwtWidgetBuilder<>(pParent, true, ActorCreatorWidgetGroup.createInstance(true)));
         this.registerEventHandler(InputEvent.Type.exit, (event) -> {
             this.context.setScrollFocus(null);
             this.context.setKeyboardFocus(null);

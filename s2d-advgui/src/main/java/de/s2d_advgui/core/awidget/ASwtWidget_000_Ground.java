@@ -26,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 
 import de.s2d_advgui.commons.TNull;
 import de.s2d_advgui.commons.Trigger;
+import de.s2d_advgui.core.awidget.acc.IActorCreator;
 import de.s2d_advgui.core.rendering.IRend123;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
 import de.s2d_advgui.core.resourcemanager.ATheme;
@@ -79,6 +80,9 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
     private final Set<Consumer<Boolean>> enabledStateListener = new LinkedHashSet<>();
 
     // -------------------------------------------------------------------------------------------------------------------------
+    final IActorCreator<ACTOR> ac;
+
+    // -------------------------------------------------------------------------------------------------------------------------
     static ISwtWidget<? extends Group> resolveDelegatedParent(@Nonnull ISwtWidget<? extends Group> pOrgParent) {
         ISwtWidget<? extends Group> x1 = TNull.checkNull(pOrgParent).getDelegatedParent();
         if (x1 != null) return x1;
@@ -91,6 +95,7 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
         this.context = TNull.checkNull(pContext);
         this.parent = null;
         this.actor = (ACTOR) pContext.getRoot();
+        this.ac = null;
         pContext.registerMapping(this.actor, this);
     }
 
@@ -98,7 +103,8 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
     public ASwtWidget_000_Ground(@Nonnull SwtWidgetBuilder<ACTOR> pBuilder) {
         this.parent = resolveDelegatedParent(pBuilder.parent);
         this.context = TNull.checkNull(this.parent.getContext());
-        this.actor = pBuilder.createActor(new IRend123() {
+        this.ac = pBuilder.getActorCreator();
+        this.actor = ac.createActor(new IRend123() {
             @Override
             public void doRender(Batch batch, float parentAlpha, Trigger pOrg) {
                 _internalDrawWidget(batch, parentAlpha, pOrg);

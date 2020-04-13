@@ -49,10 +49,6 @@ public abstract class ASwtApplication_150_ScreenStages<RM extends AResourceManag
                 return pDrawerManager;
             }
 
-//          @Override
-//          public SwtWindow activateWindow(String id) {
-//              return actWin(id);
-//          }
         }) {
             @Override
             public void onInit() {

@@ -1,22 +1,16 @@
 package de.s2d_advgui.core.basicwidgets;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
 
-import de.s2d_advgui.commons.TOldCompatibilityCode;
 import de.s2d_advgui.core.awidget.ASwtWidget;
 import de.s2d_advgui.core.awidget.ASwtWidgetSelectable;
 import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
 import de.s2d_advgui.core.awidget.SwtWidgetBuilder;
-import de.s2d_advgui.core.awidget.acc.IActorCreator;
-import de.s2d_advgui.core.rendering.IRend123;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
 import de.s2d_advgui.core.resourcemanager.ATheme;
@@ -24,35 +18,7 @@ import de.s2d_advgui.core.resourcemanager.ATheme;
 public class SwtSlider extends ASwtWidgetSelectable<Slider> {
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtSlider(ASwtWidget<? extends Group> pParent) {
-        super(new SwtWidgetBuilder<>(pParent, true, new IActorCreator<Slider>() {
-            @Override
-            public Slider createActor(IRend123 pRend) {
-                AResourceManager rm = pRend.getResourceManager();
-                TextureRegion rh = rm.getColorTextureRegion(Color.YELLOW);
-                SliderStyle style = new SliderStyle();
-                style.background = rm.getDrawable(ATheme.ICONS_128_ANGEL_PNG);
-                style.background.setMinHeight(25);
-                style.background.setMinWidth(100);
-                style.knob = rm.getDrawable(ATheme.ICONS_128_COW_PNG);
-                style.knob.setMinHeight(25);
-                style.knob.setMinWidth(25);
-                style.knobBefore = rm.getDrawable(ATheme.ICONS_128_APPLICATION_PNG);
-                style.knobBefore.setMinHeight(25);
-                Slider back = new Slider(0, 10, 1, false, style) {
-                    @Override
-                    public void draw(Batch batch, float parentAlpha) {
-                        // if( TOldCompatibilityCode.FALSE)
-                        pRend.doRender(batch, parentAlpha,
-                                () -> {
-                                    if (TOldCompatibilityCode.FALSE)
-                                        super.draw(batch, parentAlpha);
-                                });
-                    }
-                };
-                back.setTouchable(Touchable.enabled);
-                return back;
-            }
-        }));
+        super(new SwtWidgetBuilder<>(pParent, true, new ActorCreatorSlider()));
         this.registerChangeEventHandler(event -> {
             callListeners(0);
         });
@@ -79,12 +45,6 @@ public class SwtSlider extends ASwtWidgetSelectable<Slider> {
 
             }
         });
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    protected void applyDisabledOnActor(boolean b) {
-        this.actor.setDisabled(b);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

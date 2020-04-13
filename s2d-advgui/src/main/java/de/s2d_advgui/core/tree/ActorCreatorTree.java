@@ -1,18 +1,20 @@
-package de.s2d_advgui.core.awidget.acc;
+package de.s2d_advgui.core.tree;
 
-import javax.annotation.Nonnull;
-
-import com.badlogic.gdx.scenes.scene2d.Actor;
-
+import de.s2d_advgui.core.awidget.acc.IActorCreator;
 import de.s2d_advgui.core.rendering.IRend123;
 
-public interface IActorCreator<ACTOR extends Actor> {
+final class ActorCreatorTree<PR> implements IActorCreator<ActorTree<PR>> {
     // -------------------------------------------------------------------------------------------------------------------------
-    @Nonnull
-    ACTOR createActor(@Nonnull IRend123 pRend);
+    @Override
+    public ActorTree<PR> createActor(IRend123 pRend) {
+        return new ActorTree<>(pRend);
+    }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    void setEnabledOnActor(ACTOR pActor, boolean pEnabled);
+    @Override
+    public void setEnabledOnActor(ActorTree<PR> pActor, boolean pEnabled) {
+        // DON
+    }
 
     // -------------------------------------------------------------------------------------------------------------------------
 }

@@ -2,14 +2,12 @@ package de.s2d_advgui.core.basicwidgets;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 
@@ -17,8 +15,6 @@ import de.s2d_advgui.core.awidget.ASwtWidgetSelectable;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
 import de.s2d_advgui.core.awidget.SwtWidgetBuilder;
-import de.s2d_advgui.core.awidget.acc.IActorCreator;
-import de.s2d_advgui.core.rendering.IRend123;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
 import de.s2d_advgui.core.resourcemanager.ATheme;
 import de.s2d_advgui.core.utils.RectangleFactory;
@@ -38,28 +34,16 @@ public class SwtButton extends ASwtWidgetSelectable<Button> {
 
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtButton(ISwtWidget<? extends Group> pParent) {
-        super(new SwtWidgetBuilder<>(pParent, true, new IActorCreator<Button>() {
-            @Override
-            public Button createActor(IRend123 pRend) {
-                ButtonStyle style = new ButtonStyle();
-                Button back = new Button(style) {
-                    @Override
-                    public void draw(Batch batch, float parentAlpha) {
-                        pRend.doRender(batch, parentAlpha, () -> {
-                            // super.draw(batch, parentAlpha);
-                        });
-                    }
-                };
-                return back;
-            }
-        }));
+        super(new SwtWidgetBuilder<>(pParent, true, new ActorCreatorButton()));
 
         this.registerEventHandler(InputEvent.Type.keyTyped, (event) -> {
-            if (event.getKeyCode() == Keys.ENTER
-                    || event.getKeyCode() == Keys.SPACE) {
-                System.err.println("SwtButton.inputEventKeyTyped()");
-                callListeners(0);
-                return true;
+            if (isEnabled()) {
+                if (event.getKeyCode() == Keys.ENTER
+                        || event.getKeyCode() == Keys.SPACE) {
+                    System.err.println("SwtButton.inputEventKeyTyped()");
+                    callListeners(0);
+                    return true;
+                }
             }
             return false;
         });
@@ -104,12 +88,6 @@ public class SwtButton extends ASwtWidgetSelectable<Button> {
             }
 
         });
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    protected void applyDisabledOnActor(boolean b) {
-        this.actor.setDisabled(b);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

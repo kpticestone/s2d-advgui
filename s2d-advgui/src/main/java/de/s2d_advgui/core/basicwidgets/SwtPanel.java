@@ -2,7 +2,6 @@ package de.s2d_advgui.core.basicwidgets;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
@@ -10,8 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import de.s2d_advgui.core.awidget.ASwtWidget;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.awidget.SwtWidgetBuilder;
-import de.s2d_advgui.core.awidget.acc.IActorCreator;
-import de.s2d_advgui.core.rendering.IRend123;
+import de.s2d_advgui.core.awidget.acc.ActorCreatorWidgetGroup;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
 import de.s2d_advgui.core.resourcemanager.ATheme;
 
@@ -23,18 +21,7 @@ public class SwtPanel extends ASwtWidget<WidgetGroup> {
 
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtPanel(ISwtWidget<? extends Group> pParent, boolean standardBackground) {
-        super(new SwtWidgetBuilder<>(pParent, false, new IActorCreator<WidgetGroup>() {
-            @Override
-            public WidgetGroup createActor(IRend123 pRend) {
-                WidgetGroup back = new WidgetGroup() {
-                    @Override
-                    public void draw(Batch batch, float parentAlpha) {
-                        pRend.doRender(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
-                    }
-                };
-                return back;
-            }
-        }));
+        super(new SwtWidgetBuilder<>(pParent, false, ActorCreatorWidgetGroup.createInstance(true)));
         if (standardBackground) {
             this.setClip(false);
             TextureRegion br1 = this.context.getResourceManager().getColorTextureRegion(Color.WHITE, 1, 1);

@@ -2,7 +2,6 @@ package de.s2d_advgui.core.window;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -15,13 +14,12 @@ import de.s2d_advgui.core.awidget.ASwtWidget_ControllerLevel;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
 import de.s2d_advgui.core.awidget.SwtWidgetBuilder;
-import de.s2d_advgui.core.awidget.acc.IActorCreator;
+import de.s2d_advgui.core.awidget.acc.ActorCreatorWidgetGroup;
 import de.s2d_advgui.core.basicwidgets.SwtLabel;
 import de.s2d_advgui.core.basicwidgets.SwtPanel;
 import de.s2d_advgui.core.dnd.IDragAndDropHandler;
 import de.s2d_advgui.core.input.keys.ASwtInputRegister_Keys;
 import de.s2d_advgui.core.layoutmanager.ASwtLayoutManager;
-import de.s2d_advgui.core.rendering.IRend123;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
 import de.s2d_advgui.core.resourcemanager.ATheme;
 import de.s2d_advgui.core.tabledata.ESwtTableMode;
@@ -82,18 +80,7 @@ public class SwtWindow extends ASwtWidget_ControllerLevel<WidgetGroup> implement
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtWindow(ISwtWidget<? extends Group> pParent, String titleLabel, boolean modal, int prefWidth,
             int prefHeight) {
-        super(new SwtWidgetBuilder<>(top(pParent), false, new IActorCreator<WidgetGroup>() {
-            @Override
-            public WidgetGroup createActor(IRend123 pRend) {
-                WidgetGroup back = new WidgetGroup() {
-                    @Override
-                    public void draw(Batch batch, float parentAlpha) {
-                        pRend.doRender(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
-                    }
-                };
-                return back;
-            }
-        }), modal);
+        super(new SwtWidgetBuilder<>(top(pParent), false, ActorCreatorWidgetGroup.createInstance(true)), modal);
         this.modal = modal;
         this.setBounds(-prefWidth, -prefHeight, prefWidth, prefHeight);
         this.setLayoutNegativePositions(false);

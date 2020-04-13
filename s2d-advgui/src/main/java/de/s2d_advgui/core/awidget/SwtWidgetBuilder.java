@@ -27,11 +27,16 @@ public final class SwtWidgetBuilder<ACTOR extends Actor> {
         this.parent = pParent;
         this.focusable = pFocusable;
     }
-
+    
     // -------------------------------------------------------------------------------------------------------------------------
-    public ACTOR createActor(@Nonnull IRend123 pRend) {
-        return this.actorCreator.createActor(pRend);
+    public IActorCreator<ACTOR> getActorCreator() {
+        return this.actorCreator;
     }
 
+//    // -------------------------------------------------------------------------------------------------------------------------
+//    public ACTOR createActor(@Nonnull IRend123 pRend) {
+//        return this.actorCreator.createActor(pRend);
+//    }
+//
     // -------------------------------------------------------------------------------------------------------------------------
 }

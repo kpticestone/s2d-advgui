@@ -23,8 +23,6 @@ import com.badlogic.gdx.utils.Array;
 import de.s2d_advgui.core.awidget.ASwtWidget;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.awidget.SwtWidgetBuilder;
-import de.s2d_advgui.core.awidget.acc.IActorCreator;
-import de.s2d_advgui.core.rendering.IRend123;
 
 public class SwtTree<PR> extends ASwtWidget<ActorTree<PR>> {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -38,13 +36,7 @@ public class SwtTree<PR> extends ASwtWidget<ActorTree<PR>> {
 
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtTree(ISwtWidget<? extends Group> pParent, SwtTreeContentProvider<PR> pProvider) {
-        // super(pParent, true);
-        super(new SwtWidgetBuilder<>(pParent, true, new IActorCreator<ActorTree<PR>>() {
-            @Override
-            public ActorTree<PR> createActor(IRend123 pRend) {
-                return new ActorTree<PR>(pRend);
-            }
-        }));
+        super(new SwtWidgetBuilder<>(pParent, true, new ActorCreatorTree<PR>()));
         this.provider = pProvider;
         this.registerChangeEventHandler(event -> {
             callSelectionListeners();

@@ -15,7 +15,4 @@ public interface ISwtApplicationController<RM extends AResourceManager, DM exten
     void registerLoadReady();
 
     // -------------------------------------------------------------------------------------------------------------------------
-    // SwtWindow activateWindow(String id);
-
-    // -------------------------------------------------------------------------------------------------------------------------
 }

@@ -1,13 +1,14 @@
 package de.s2d_advgui.core.application;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL30;
+
 import de.s2d_advgui.commons.SphThread;
 import de.s2d_advgui.core.rendering.ISwtDrawerManager;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
 import de.s2d_advgui.core.stage.ASwtStage;
-
-import java.util.ArrayList;
 
 public abstract class ASwtApplication_800_Render<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>, STAGE extends ASwtStage<RM, DM>>
         extends ASwtApplication_310_Events<RM, DM, STAGE> {
@@ -17,7 +18,6 @@ public abstract class ASwtApplication_800_Render<RM extends AResourceManager, DM
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-
     /**
      * Wird nur vom Scene2d-ApplicationListener aufgerufen.
      *

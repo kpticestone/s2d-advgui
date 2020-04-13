@@ -1,7 +1,6 @@
 package de.s2d_advgui.core.basicwidgets;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
@@ -10,28 +9,16 @@ import com.badlogic.gdx.utils.Align;
 import de.s2d_advgui.core.awidget.ASwtWidget;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.awidget.SwtWidgetBuilder;
-import de.s2d_advgui.core.awidget.acc.IActorCreator;
+import de.s2d_advgui.core.awidget.acc.ActorCreatorWidgetGroup;
 import de.s2d_advgui.core.dnd.IDragAndDropHandler;
 import de.s2d_advgui.core.dnd.IDragAndDropHelper;
-import de.s2d_advgui.core.rendering.IRend123;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
 import de.s2d_advgui.core.resourcemanager.ATheme;
 
 public class SwtPanelMovable extends ASwtWidget<WidgetGroup> {
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtPanelMovable(ISwtWidget<? extends Group> pParent) {
-        super(new SwtWidgetBuilder<>(pParent, false, new IActorCreator<WidgetGroup>() {
-            @Override
-            public WidgetGroup createActor(IRend123 pRend) {
-                WidgetGroup back = new WidgetGroup() {
-                    @Override
-                    public void draw(Batch batch, float parentAlpha) {
-                        pRend.doRender(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
-                    }
-                };
-                return back;
-            }
-        }));
+        super(new SwtWidgetBuilder<>(pParent, false, ActorCreatorWidgetGroup.createInstance(true)));
         IDragAndDropHelper dnd = this.addDragAndDrop(new IDragAndDropHandler() {
             @Override
             public void onDrag(float newX, float newY) {

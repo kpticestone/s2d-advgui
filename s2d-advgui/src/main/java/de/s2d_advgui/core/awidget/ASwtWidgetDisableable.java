@@ -8,10 +8,10 @@ public abstract class ASwtWidgetDisableable<ACTOR extends Actor> extends ASwtWid
     // -------------------------------------------------------------------------------------------------------------------------
     public ASwtWidgetDisableable(@Nonnull SwtWidgetBuilder<ACTOR> pBuilder) {
         super(pBuilder);
+        this.addEnabledStateListener((b) -> {
+            this.ac.setEnabledOnActor(this.actor, b);
+        });
     }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    protected abstract void applyDisabledOnActor(boolean b);
 
     // -------------------------------------------------------------------------------------------------------------------------
 }

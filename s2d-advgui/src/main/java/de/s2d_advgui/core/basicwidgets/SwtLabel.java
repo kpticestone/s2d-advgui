@@ -1,35 +1,17 @@
 package de.s2d_advgui.core.basicwidgets;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 
 import de.s2d_advgui.core.awidget.ASwtWidget;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.awidget.SwtWidgetBuilder;
-import de.s2d_advgui.core.awidget.acc.IActorCreator;
-import de.s2d_advgui.core.rendering.IRend123;
 
 public class SwtLabel extends ASwtWidget<Label> {
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtLabel(ISwtWidget<? extends Group> pParent) {
-        super(new SwtWidgetBuilder<>(pParent, false, new IActorCreator<Label>() {
-            @Override
-            public Label createActor(IRend123 pRend) {
-                LabelStyle style = new LabelStyle();
-                style.font = pRend.getResourceManager().getFont(1f, true);
-                Label back = new Label(null, style) {
-                    @Override
-                    public void draw(Batch batch, float parentAlpha) {
-                        pRend.doRender(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
-                    }
-                };
-                back.setWrap(false);
-                return back;
-            }
-        }));
+        super(new SwtWidgetBuilder<>(pParent, false, new ActorCreatorLabel()));
         this.setColor(Color.WHITE);
         this.setFontScale(1f);
     }

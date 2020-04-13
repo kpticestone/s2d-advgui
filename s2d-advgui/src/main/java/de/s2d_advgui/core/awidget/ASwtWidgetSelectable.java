@@ -21,9 +21,12 @@ public abstract class ASwtWidgetSelectable<ACTOR extends Actor> extends ASwtWidg
     public ASwtWidgetSelectable(@Nonnull SwtWidgetBuilder<ACTOR> pBuilder) {
         super(pBuilder);
         this.registerEventHandler(InputEvent.Type.touchDown, (event) -> {
-            System.err.println("ASwtWidgetSelectable.touchDown()");
-            callListeners(event.getButton());
-            return true;
+            if (isEnabled()) {
+                System.err.println("ASwtWidgetSelectable.touchDown()");
+                callListeners(event.getButton());
+                return true;
+            }
+            return false;
         });
     }
 

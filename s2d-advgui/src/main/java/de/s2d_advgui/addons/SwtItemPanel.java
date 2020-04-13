@@ -1,6 +1,5 @@
 package de.s2d_advgui.addons;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -11,10 +10,9 @@ import de.s2d_advgui.core.awidget.ASwtWidget;
 import de.s2d_advgui.core.awidget.ASwtWidgetSelectable;
 import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
 import de.s2d_advgui.core.awidget.SwtWidgetBuilder;
-import de.s2d_advgui.core.awidget.acc.IActorCreator;
+import de.s2d_advgui.core.awidget.acc.ActorCreatorWidgetGroup;
 import de.s2d_advgui.core.basicwidgets.SwtImage;
 import de.s2d_advgui.core.basicwidgets.SwtLabel;
-import de.s2d_advgui.core.rendering.IRend123;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
 
 public class SwtItemPanel extends ASwtWidgetSelectable<WidgetGroup> {
@@ -26,18 +24,7 @@ public class SwtItemPanel extends ASwtWidgetSelectable<WidgetGroup> {
 
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtItemPanel(ASwtWidget<? extends Group> pParent) {
-        super(new SwtWidgetBuilder<>(pParent, true, new IActorCreator<WidgetGroup>() {
-            @Override
-            public WidgetGroup createActor(IRend123 pRend) {
-                WidgetGroup back = new WidgetGroup() {
-                    @Override
-                    public void draw(Batch batch, float parentAlpha) {
-                        pRend.doRender(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
-                    }
-                };
-                return back;
-            }
-        }));
+        super(new SwtWidgetBuilder<>(pParent, true, ActorCreatorWidgetGroup.createInstance(true)));
         this.img = new SwtImage(this);
         this.img.setBounds(9 + 3, 2 + 3, 26, 26);
         this.txt = new SwtLabel(this);
@@ -81,12 +68,6 @@ public class SwtItemPanel extends ASwtWidgetSelectable<WidgetGroup> {
                 batch.draw(use, ax + 40, ay + ah - 8, 1, 6);
             }
         });
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    protected void applyDisabledOnActor(boolean b) {
-        // DON
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

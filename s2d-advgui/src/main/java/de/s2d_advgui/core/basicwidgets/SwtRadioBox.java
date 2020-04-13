@@ -6,7 +6,6 @@ import java.util.Set;
 import javax.annotation.Nullable;
 
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -19,8 +18,6 @@ import de.s2d_advgui.core.awidget.ISwtForm;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
 import de.s2d_advgui.core.awidget.SwtWidgetBuilder;
-import de.s2d_advgui.core.awidget.acc.IActorCreator;
-import de.s2d_advgui.core.rendering.IRend123;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
 import de.s2d_advgui.core.resourcemanager.ATheme;
 
@@ -51,25 +48,15 @@ public class SwtRadioBox extends ASwtWidgetSelectable<ActorRadioBox> {
 
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtRadioBox(ISwtWidget<? extends Group> pParent, @Nullable String pRadioGroup) {
-        super(new SwtWidgetBuilder<>(pParent, true, new IActorCreator<ActorRadioBox>() {
-            @Override
-            public ActorRadioBox createActor(IRend123 pRend) {
-                ActorRadioBox back = new ActorRadioBox() {
-                    @Override
-                    public void draw(Batch batch, float parentAlpha) {
-                        pRend.doRender(batch, parentAlpha, () -> {
-                        });
-                    }
-                };
-                return back;
-            }
-        }));
+        super(new SwtWidgetBuilder<>(pParent, true, new ActorCreatorRadioBox()));
 
         this.registerEventHandler(InputEvent.Type.keyTyped, (event) -> {
-            if (event.getKeyCode() == Keys.ENTER
-                    || event.getKeyCode() == Keys.SPACE) {
-                setChecked();
-                return true;
+            if (isEnabled()) {
+                if (event.getKeyCode() == Keys.ENTER
+                        || event.getKeyCode() == Keys.SPACE) {
+                    setChecked();
+                    return true;
+                }
             }
             return false;
         });
@@ -105,12 +92,6 @@ public class SwtRadioBox extends ASwtWidgetSelectable<ActorRadioBox> {
                 pBatch.drawText(SwtRadioBox.this.myText, pDims2, Align.left, .5f, true, theme.getLabelColor());
             }
         });
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    protected void applyDisabledOnActor(boolean b) {
-        this.actor.setDisabled(b);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

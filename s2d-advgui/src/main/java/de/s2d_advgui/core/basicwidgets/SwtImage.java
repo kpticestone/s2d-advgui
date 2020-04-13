@@ -3,7 +3,6 @@ package de.s2d_advgui.core.basicwidgets;
 import java.util.Objects;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Scaling;
@@ -11,8 +10,6 @@ import com.badlogic.gdx.utils.Scaling;
 import de.s2d_advgui.core.awidget.ASwtWidget;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.awidget.SwtWidgetBuilder;
-import de.s2d_advgui.core.awidget.acc.IActorCreator;
-import de.s2d_advgui.core.rendering.IRend123;
 
 public class SwtImage extends ASwtWidget<Image> {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -21,17 +18,7 @@ public class SwtImage extends ASwtWidget<Image> {
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtImage(ISwtWidget<? extends Group> pParent) {
         // super(pParent, false);
-        super(new SwtWidgetBuilder<>(pParent, false, new IActorCreator<Image>() {
-            @Override
-            public Image createActor(IRend123 pRend) {
-                return new Image() {
-                    @Override
-                    public void draw(Batch batch, float parentAlpha) {
-                        pRend.doRender(batch, parentAlpha, () -> super.draw(batch, parentAlpha));
-                    }
-                };
-            }
-        }));
+        super(new SwtWidgetBuilder<>(pParent, false, new ActorCreatorImage()));
         this.actor.setScaling(Scaling.fit);
     }
 

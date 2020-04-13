@@ -47,14 +47,14 @@ public abstract class ASwtApplication_300_Input<RM extends AResourceManager, DM 
         if (!this.allowInputRegister) return;
         if (this.inputBroadCaster.hasKeyboardActivity()) {
             STAGE someStage = this.createStage();
-            someStage.addDisposeListener(inputBroadCaster::detachKeyboard);
+            someStage.addDisposeListener(this.inputBroadCaster::detachKeyboard);
             this.inputBroadCaster.attach(someStage);
         }
         this.inputBroadCaster.fetchUnassignedControllerActivity(controller -> {
             try {
                 STAGE someStage = this.createStage();
                 ControllerListener controllerListener = someStage.getControllerListener(controller);
-                someStage.addDisposeListener(() -> inputBroadCaster.detach(controllerListener));
+                someStage.addDisposeListener(() -> this.inputBroadCaster.detach(controllerListener));
                 this.inputBroadCaster.attach(controller, controllerListener);
             } catch (Exception e) {
                 e.printStackTrace();
