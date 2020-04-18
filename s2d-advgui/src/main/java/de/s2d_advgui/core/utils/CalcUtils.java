@@ -56,7 +56,7 @@ public class CalcUtils {
 
     /**
      * distance between to angles.
-     * e.g. a=340, b=10 -> result -30
+     * e.g. a=340, b=10, result: -30
      */
     public static float angleDistance(float a, float b) {
         float d = Math.abs(a - b) % 360f;

@@ -11,12 +11,6 @@ public final class RectangleFactory {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    /**
-     * 
-     * @param pDims
-     * @param pPix
-     * @return
-     */
     @Nonnull
     public final static Rectangle explode(@Nonnull Rectangle pDims, float pPix) {
         float dup = pPix * 2;
@@ -24,12 +18,6 @@ public final class RectangleFactory {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    /**
-     * 
-     * @param pDims
-     * @param pPix
-     * @return
-     */
     @Nonnull
     public final static Rectangle explode(@Nonnull Rectangle pDims, float pPixW, float pPixH) {
         float dupW = pPixW * 2;
