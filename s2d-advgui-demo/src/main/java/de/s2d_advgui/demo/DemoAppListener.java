@@ -3,6 +3,7 @@ package de.s2d_advgui.demo;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
+import com.badlogic.gdx.graphics.glutils.HdpiMode;
 import de.s2d_advgui.core.application.SwtApplicationListener;
 import de.s2d_advgui.core.rendering.ISwtDrawerManager;
 import de.s2d_advgui.core.rendering.SwtDrawerManager;
@@ -17,6 +18,7 @@ public class DemoAppListener extends
         // config.setHdpiMode(HdpiMode.Pixels);
         config.useVsync(true);
         // config.useOpenGL3(true, 3, 2);
+        config.setHdpiMode(HdpiMode.Logical);
         new Lwjgl3Application(new DemoAppListener(), config); // needs to be in the main thread for osx
     }
 

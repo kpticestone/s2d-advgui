@@ -1,16 +1,12 @@
 package de.s2d_advgui.core.pagebook;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-
 import com.badlogic.gdx.scenes.scene2d.Group;
-
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.basicwidgets.SwtPanel;
+
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class SwtPagebook extends SwtPanel {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -18,8 +14,7 @@ public final class SwtPagebook extends SwtPanel {
     private final Map<String, SwtPagebookItem> bookitems = new HashMap<>();
 
     // -------------------------------------------------------------------------------------------------------------------------
-    @Nonnull
-    private final List<String> tabNames = new ArrayList<>();
+    private String selectedItemName;
 
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtPagebook(ISwtWidget<? extends Group> pParent) {
@@ -29,17 +24,33 @@ public final class SwtPagebook extends SwtPanel {
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtPagebookItem addItem(String name) {
         SwtPagebookItem back = new SwtPagebookItem(this);
-        back.setVisible(this.getChildren().isEmpty());
+        boolean empty = this.getChildren().isEmpty();
+        if (empty) {
+            selectedItemName = name;
+        }
+        back.setVisible(empty);
+
         this.bookitems.put(name, back);
         return back;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public void setSelectedItem(String name) {
-        SwtPagebookItem sel = this.bookitems.get(name);
+    public void setSelectedItem(String itemName) {
+        this.selectedItemName = itemName;
+        SwtPagebookItem sel = this.bookitems.get(itemName);
         for (SwtPagebookItem item : this.bookitems.values()) {
             item.setVisible(item == sel);
         }
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public String getSelectedItemName() {
+        return selectedItemName;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public SwtPagebookItem getSelectedItemPanel() {
+        return bookitems.get(selectedItemName);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

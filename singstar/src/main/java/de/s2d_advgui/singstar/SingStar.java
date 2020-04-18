@@ -1,17 +1,16 @@
 package de.s2d_advgui.singstar;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class SingStar {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -87,7 +86,7 @@ public final class SingStar {
                 // DON
             }
 
-            Object nwo = clz.newInstance();
+            Object nwo = clz.getDeclaredConstructor().newInstance();
             this.singletons.put(clz, nwo);
             return clz.cast(nwo);
         } catch (Throwable e) {
