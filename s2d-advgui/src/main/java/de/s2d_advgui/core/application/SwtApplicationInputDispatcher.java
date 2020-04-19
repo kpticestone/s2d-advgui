@@ -1,20 +1,23 @@
 package de.s2d_advgui.core.application;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
-import java.util.function.Consumer;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.math.Vector3;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
+import java.util.function.Consumer;
 
 public final class SwtApplicationInputDispatcher implements ControllerListener, InputProcessor {
+    private static final Logger log = LoggerFactory.getLogger(SwtApplicationInputDispatcher.class);
     // -------------------------------------------------------------------------------------------------------------------------
     @Nonnull
     private final Map<Controller, ControllerListener> controllerListeners = new HashMap<>();
@@ -27,7 +30,7 @@ public final class SwtApplicationInputDispatcher implements ControllerListener, 
     private InputProcessor keyboardListener;
 
     // -------------------------------------------------------------------------------------------------------------------------
-    private Stack<Controller> controllerConnectionRequests = new Stack<>();
+    private final Stack<Controller> controllerConnectionRequests = new Stack<>();
 
     // -------------------------------------------------------------------------------------------------------------------------
     private boolean keyboardConnectionRequest = false;
@@ -73,7 +76,11 @@ public final class SwtApplicationInputDispatcher implements ControllerListener, 
     @Override
     public boolean keyDown(int keycode) {
         if (keycode > 0) {
-            if (this.keyboardListener != null) return this.keyboardListener.keyDown(keycode);
+            try {
+                if (this.keyboardListener != null) return this.keyboardListener.keyDown(keycode);
+            } catch (Exception e) {
+                log.error("error during keyDown " + keycode, e);
+            }
             this.keyboardConnectionRequest = true;
         }
         return false;
@@ -82,73 +89,113 @@ public final class SwtApplicationInputDispatcher implements ControllerListener, 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public boolean keyUp(int keycode) {
-        if (this.keyboardListener != null) return this.keyboardListener.keyUp(keycode);
+        try {
+            if (this.keyboardListener != null) return this.keyboardListener.keyUp(keycode);
+        } catch (Exception e) {
+            log.error("error during keyUp " + keycode, e);
+        }
         return false;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public boolean keyTyped(char character) {
-        if (this.keyboardListener != null) return this.keyboardListener.keyTyped(character);
+        try {
+            if (this.keyboardListener != null) return this.keyboardListener.keyTyped(character);
+        } catch (Exception e) {
+            log.error("error during keyTyped " + character, e);
+        }
         return false;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if (this.keyboardListener != null) return this.keyboardListener.touchDown(screenX, screenY, pointer, button);
+        try {
+            if (this.keyboardListener != null) return this.keyboardListener.touchDown(screenX, screenY, pointer, button);
+        } catch (Exception e) {
+            log.error("error during touchDown " + button, e);
+        }
         return false;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        if (this.keyboardListener != null) return this.keyboardListener.touchUp(screenX, screenY, pointer, button);
+        try {
+            if (this.keyboardListener != null) return this.keyboardListener.touchUp(screenX, screenY, pointer, button);
+        } catch (Exception e) {
+            log.error("error during touchUp " + button, e);
+        }
         return false;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        if (this.keyboardListener != null) return this.keyboardListener.touchDragged(screenX, screenY, pointer);
+        try {
+            if (this.keyboardListener != null) return this.keyboardListener.touchDragged(screenX, screenY, pointer);
+        } catch (Exception e) {
+            log.error("error during touchDragged " + pointer, e);
+        }
         return false;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        if (this.keyboardListener != null) return this.keyboardListener.mouseMoved(screenX, screenY);
+        try {
+            if (this.keyboardListener != null) return this.keyboardListener.mouseMoved(screenX, screenY);
+        } catch (Exception e) {
+            log.error("error during mouseMoved", e);
+        }
         return false;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public boolean scrolled(int amount) {
-        if (this.keyboardListener != null) return this.keyboardListener.scrolled(amount);
+        try {
+            if (this.keyboardListener != null) return this.keyboardListener.scrolled(amount);
+        } catch (Exception e) {
+            log.error("error during scrolled " + amount, e);
+        }
         return false;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public void connected(Controller controller) {
-        ControllerListener c = this.controllerListeners.get(controller);
-        if (c != null) c.connected(controller);
+        try {
+            ControllerListener c = this.controllerListeners.get(controller);
+            if (c != null) c.connected(controller);
+        } catch (Exception e) {
+            log.error("error during connected " + controller, e);
+        }
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public void disconnected(Controller controller) {
-        ControllerListener c = this.controllerListeners.get(controller);
-        if (c != null) c.disconnected(controller);
+        try {
+            ControllerListener c = this.controllerListeners.get(controller);
+            if (c != null) c.disconnected(controller);
+        } catch (Exception e) {
+            log.error("error during connected " + controller, e);
+        }
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public boolean buttonDown(Controller controller, int buttonCode) {
-        ControllerListener c = this.controllerListeners.get(controller);
-        if (c != null) return c.buttonDown(controller, buttonCode);
-        if (!this.controllerConnectionRequests.contains(controller)) {
-            this.controllerConnectionRequests.add(controller);
+        try {
+            ControllerListener c = this.controllerListeners.get(controller);
+            if (c != null) return c.buttonDown(controller, buttonCode);
+            if (!this.controllerConnectionRequests.contains(controller)) {
+                this.controllerConnectionRequests.add(controller);
+            }
+        } catch (Exception e) {
+            log.error("error during buttonDown " + controller, e);
         }
         return false;
     }
@@ -156,48 +203,72 @@ public final class SwtApplicationInputDispatcher implements ControllerListener, 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public boolean buttonUp(Controller controller, int buttonCode) {
-        ControllerListener c = this.controllerListeners.get(controller);
-        if (c != null) return c.buttonUp(controller, buttonCode);
+        try {
+            ControllerListener c = this.controllerListeners.get(controller);
+            if (c != null) return c.buttonUp(controller, buttonCode);
+        } catch (Exception e) {
+            log.error("error during buttonUp " + controller, e);
+        }
         return false;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public boolean axisMoved(Controller controller, int axisCode, float value) {
-        ControllerListener c = this.controllerListeners.get(controller);
-        if (c != null) return c.axisMoved(controller, axisCode, value);
+        try {
+            ControllerListener c = this.controllerListeners.get(controller);
+            if (c != null) return c.axisMoved(controller, axisCode, value);
+        } catch (Exception e) {
+            log.error("error during axisMoved " + controller, e);
+        }
         return false;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public boolean povMoved(Controller controller, int povCode, PovDirection value) {
-        ControllerListener c = this.controllerListeners.get(controller);
-        if (c != null) return c.povMoved(controller, povCode, value);
+        try {
+            ControllerListener c = this.controllerListeners.get(controller);
+            if (c != null) return c.povMoved(controller, povCode, value);
+        } catch (Exception e) {
+            log.error("error during povMoved " + controller, e);
+        }
         return false;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public boolean xSliderMoved(Controller controller, int sliderCode, boolean value) {
-        ControllerListener c = this.controllerListeners.get(controller);
-        if (c != null) return c.xSliderMoved(controller, sliderCode, value);
+        try {
+            ControllerListener c = this.controllerListeners.get(controller);
+            if (c != null) return c.xSliderMoved(controller, sliderCode, value);
+        } catch (Exception e) {
+            log.error("error during xSliderMoved " + controller, e);
+        }
         return false;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public boolean ySliderMoved(Controller controller, int sliderCode, boolean value) {
-        ControllerListener c = this.controllerListeners.get(controller);
-        if (c != null) return c.ySliderMoved(controller, sliderCode, value);
+        try {
+            ControllerListener c = this.controllerListeners.get(controller);
+            if (c != null) return c.ySliderMoved(controller, sliderCode, value);
+        } catch (Exception e) {
+            log.error("error during ySliderMoved " + controller, e);
+        }
         return false;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public boolean accelerometerMoved(Controller controller, int accelerometerCode, Vector3 value) {
-        ControllerListener c = this.controllerListeners.get(controller);
-        if (c != null) return c.accelerometerMoved(controller, accelerometerCode, value);
+        try {
+            ControllerListener c = this.controllerListeners.get(controller);
+            if (c != null) return c.accelerometerMoved(controller, accelerometerCode, value);
+        } catch (Exception e) {
+            log.error("error during accelerometerMoved " + controller, e);
+        }
         return false;
     }
 
