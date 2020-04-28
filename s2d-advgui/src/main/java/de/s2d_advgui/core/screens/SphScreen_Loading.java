@@ -1,13 +1,8 @@
 package de.s2d_advgui.core.screens;
 
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
-
 import de.s2d_advgui.animations.AnimationGroup_Sequence;
 import de.s2d_advgui.animations.AnimationManager;
 import de.s2d_advgui.animations.impl.Animation_Sleep;
@@ -19,6 +14,11 @@ import de.s2d_advgui.core.rendering.ISwtDrawerManager;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
 import de.s2d_advgui.core.resourcemanager.ResourceLoader;
 import de.s2d_advgui.core.stage.ASwtStage;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class SphScreen_Loading<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>>
         extends SwtScreen<RM, DM> {
@@ -56,22 +56,25 @@ public class SphScreen_Loading<RM extends AResourceManager, DM extends ISwtDrawe
         float baseSpeed = this.getTheme().getLoadingScreenSpeed();
         AnimationGroup_Sequence animGroup = new AnimationGroup_Sequence();
         Set<ResourceLoader> myLoaders = this.getResourceManager().getLoaders();
-        for (ResourceLoader ll : myLoaders) {
+        List<SwtLoadingBox> loadingBoxes = new ArrayList<>();
+        for (ResourceLoader loader : myLoaders) {
             Rectangle src = new Rectangle(-boxWi, heha, boxWi, boxHe);
             Rectangle half = new Rectangle((wiwi - boxWi) / 2f, heha, boxWi, boxHe);
             Rectangle dst = new Rectangle(wiwi, heha, boxWi, boxHe);
 
-            SwtLoadingBox someBox = new SwtLoadingBox(this, ll);
+            SwtLoadingBox someBox = new SwtLoadingBox(this, loader);
             someBox.setLayoutNegativePositions(false);
             someBox.setBounds(src);
+            loadingBoxes.add(someBox);
 
             AnimationListener_RectangleSupport r1 = new AnimationListener_RectangleSupport(someBox);
             animGroup.add(new Animation_ChangeBounds(0f, baseSpeed, src, half, r1));
-            animGroup.add(new Animation_Sleep(0f, baseSpeed * 5f, () -> ll.doLoad()));
+            animGroup.add(new Animation_Sleep(0f, baseSpeed * 5f, loader::doLoad));
             animGroup.add(new Animation_ChangeBounds(0f, baseSpeed, half, dst, r1));
         }
 
         animGroup.setCloseListener(() -> {
+            loadingBoxes.forEach(box -> box.dispose());
             this.label.setText("loadings ready... press any key or button");
             String img = this.getTheme().getLoadingScreenSplashScreen2();
             if (img != null) {
