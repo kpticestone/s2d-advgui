@@ -15,56 +15,13 @@ import de.s2d_advgui.core.awidget.WidetLayer;
 import de.s2d_advgui.core.basicwidgets.SwtButton;
 import de.s2d_advgui.core.basicwidgets.SwtPanel;
 import de.s2d_advgui.core.camera.CameraHolder;
+import de.s2d_advgui.core.canvas.BoundingBoxCalc;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
 import de.s2d_advgui.core.rendering.SwtDrawer_Shapes;
 import de.s2d_advgui.core.utils.RectangleFactory;
 
 public class SwtPanel_DemoScene2 extends SwtPanel {
-    // -------------------------------------------------------------------------------------------------------------------------
-    static class JHH {
-        float minX = Float.MAX_VALUE;
-        float minY = Float.MAX_VALUE;
-        float maxX = Float.MIN_VALUE;
-        float maxY = Float.MIN_VALUE;
-        float relWidth;
-        float relHeight;
-        Rectangle rr = new Rectangle();
-
-        void reset() {
-            this.minX = Float.MAX_VALUE;
-            this.minY = Float.MAX_VALUE;
-            this.maxX = Float.MIN_VALUE;
-            this.maxY = Float.MIN_VALUE;
-        }
-
-        void add(Vector2 jjj) {
-            this.minX = Math.min(this.minX, jjj.x);
-            this.minY = Math.min(this.minY, jjj.y);
-            this.maxX = Math.max(this.maxX, jjj.x);
-            this.maxY = Math.max(this.maxY, jjj.y);
-        }
-
-        void end() {
-            this.relWidth = this.maxX - this.minX;
-            this.relHeight = this.maxY - this.minY;
-
-            this.rr.x = this.minX;
-            this.rr.y = this.minY;
-            this.rr.width = this.maxX - this.minX;
-            this.rr.height = this.maxY - this.minY;
-        }
-
-        @Override
-        public String toString() {
-            return this.minX + "|" + this.minY + "-" + this.maxX + "|" + this.maxY;
-        }
-
-        public Rectangle rect() {
-            return this.rr;
-        }
-    }
-
-    JHH curJhh = new JHH();
+    BoundingBoxCalc curJhh = new BoundingBoxCalc();
 
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtPanel_DemoScene2(ISwtWidget<? extends Group> pParent) {
@@ -88,19 +45,10 @@ public class SwtPanel_DemoScene2 extends SwtPanel {
             public void act(float delta) throws Exception {
                 Rectangle e1 = canvas.getEntity();
 //                System.err.println("e1: " + e1);
-                float x1 = e1.x;
-                float y1 = e1.y;
-                float x2 = x1 + e1.width;
-                float y2 = y1 + e1.height;
+                
+                canvas.sceneCoordsToCanvasCoords(e1, curJhh);
 
-                curJhh.reset();
-                curJhh.add(canvas.sceneCoordsToCanvasCoords(x1, y1));
-                curJhh.add(canvas.sceneCoordsToCanvasCoords(x2, y2));
-                curJhh.add(canvas.sceneCoordsToCanvasCoords(x1, y2));
-                curJhh.add(canvas.sceneCoordsToCanvasCoords(x2, y1));
-                curJhh.end();
-
-                bbt.setText((int) x1 + "|" + (int) y1);
+                bbt.setText((int) e1.x + "|" + (int) e1.y);
                 // bbt.setPosition(minX, canvas.getActor().getHeight() - minY);
                 // bbt.setSize(maxX - minX, maxY - minY);
                 kk.setPosition(curJhh.minX, canvas.getActor().getHeight() - curJhh.relHeight - curJhh.minY);

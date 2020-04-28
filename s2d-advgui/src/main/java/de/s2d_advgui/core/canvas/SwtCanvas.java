@@ -233,6 +233,21 @@ public abstract class SwtCanvas<RM extends AResourceManager, DM extends ISwtDraw
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
+    public void sceneCoordsToCanvasCoords(Rectangle e1, BoundingBoxCalc curJhh) {
+        float x1 = e1.x;
+        float y1 = e1.y;
+        float x2 = x1 + e1.width;
+        float y2 = y1 + e1.height;
+
+        curJhh.reset();
+        curJhh.add(this.sceneCoordsToCanvasCoords(x1, y1));
+        curJhh.add(this.sceneCoordsToCanvasCoords(x2, y2));
+        curJhh.add(this.sceneCoordsToCanvasCoords(x1, y2));
+        curJhh.add(this.sceneCoordsToCanvasCoords(x2, y1));
+        curJhh.end();
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
     @Nonnull
     public final DM getDrawerManager() {
         return this.drawerManager;
