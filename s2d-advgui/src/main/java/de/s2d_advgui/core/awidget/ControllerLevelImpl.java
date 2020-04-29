@@ -1,5 +1,20 @@
 package de.s2d_advgui.core.awidget;
 
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.PovDirection;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import de.s2d_advgui.core.input.ISwtScrollListener;
+import de.s2d_advgui.core.input.axis.ASwtInputRegister_Axis;
+import de.s2d_advgui.core.input.axis.SwtInputHolder_Axis;
+import de.s2d_advgui.core.input.keys.ASwtInputRegister_Keys;
+import de.s2d_advgui.core.input.keys.ISwtActionRunner_Keys;
+import de.s2d_advgui.core.input.keys.SwtInputHolder_Keys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -7,22 +22,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.controllers.PovDirection;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-
-import de.s2d_advgui.core.input.ISwtScrollListener;
-import de.s2d_advgui.core.input.axis.ASwtInputRegister_Axis;
-import de.s2d_advgui.core.input.axis.SwtInputHolder_Axis;
-import de.s2d_advgui.core.input.keys.ASwtInputRegister_Keys;
-import de.s2d_advgui.core.input.keys.ISwtActionRunner_Keys;
-import de.s2d_advgui.core.input.keys.SwtInputHolder_Keys;
-
 public class ControllerLevelImpl implements IControllerLevel {
+    private static final Logger log = LoggerFactory.getLogger(ControllerLevelImpl.class);
+
     // -------------------------------------------------------------------------------------------------------------------------
     private Map<Integer, Set<ISwtActionRunner_Keys>> mouseButtonRunners = new HashMap<>();
 
@@ -80,11 +82,11 @@ public class ControllerLevelImpl implements IControllerLevel {
             for (int keyCode : s.getKeyCodes(this.isCtrl.isControllerMode())) {
                 if (keyCode < 256) {
                     if (this.workers[keyCode] != null) throw new RuntimeException(
-                            "keycode '" + keyCode + "' of handler " + pInputKeyHandler + " already used"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                            String.format("keycode '%d' of handler %s already used", keyCode, pInputKeyHandler)); //$NON-NLS-1$
                     this.workers[keyCode] = worker;
                 } else {
                     if (this.higherWorkers.containsKey(keyCode)) throw new RuntimeException(
-                            "keycode '" + keyCode + "' of handler " + pInputKeyHandler + " already used"); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+                            String.format("keycode '%d' of handler %s already used", keyCode, pInputKeyHandler)); //$NON-NLS-1$
                     this.higherWorkers.put(keyCode, worker);
                 }
 
@@ -198,39 +200,36 @@ public class ControllerLevelImpl implements IControllerLevel {
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final boolean _onEvent_ControllerXSliderMoved(Controller controller, int sliderCode, boolean value) {
-        System.err.println("SwtScreen._onEvent_ControllerXSliderMoved(" + sliderCode + ", " + value + ");"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        log.debug("SwtScreen._onEvent_ControllerXSliderMoved({}, {});", sliderCode, value); //$NON-NLS-1$
         return false;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final boolean _onEvent_ControllerYSliderMoved(Controller controller, int sliderCode, boolean value) {
-        System.err.println("SwtScreen._onEvent_ControllerYSliderMoved(" + sliderCode + ", " + value + ");"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        log.debug("SwtScreen._onEvent_ControllerYSliderMoved({}, {});", sliderCode, value); //$NON-NLS-1$
         return false;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final boolean _onEvent_ControllerAccelerometerMoved(Controller controller, int accelerometerCode,
-            Vector3 value) {
-        System.err
-                .println("SwtScreen._onEvent_ControllerAccelerometerMoved(" + accelerometerCode + ", " + value + ");"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                                                               Vector3 value) {
+        log.debug("SwtScreen._onEvent_ControllerAccelerometerMoved({}, {});", accelerometerCode, value); //$NON-NLS-1$
         return false;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final boolean _onEvent_TouchDown(int screenX, int screenY, int pointer, int button) {
-        System.err.println(
-                "SwtScreen._onEvent_TouchDown(" + screenX + ", " + screenY + ", " + pointer + ", " + button + ");"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        log.debug("SwtScreen._onEvent_TouchDown({}, {}, {}, {});", screenX, screenY, pointer, button); //$NON-NLS-1$
         return false;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final boolean _onEvent_TouchUp(int screenX, int screenY, int pointer, int button) {
-        System.err.println(
-                "SwtScreen._onEvent_TouchUp(" + screenX + ", " + screenY + ", " + pointer + ", " + button + ");"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        log.debug("SwtScreen._onEvent_TouchUp({}, {}, {}, {});", screenX, screenY, pointer, button); //$NON-NLS-1$
         return false;
     }
 
