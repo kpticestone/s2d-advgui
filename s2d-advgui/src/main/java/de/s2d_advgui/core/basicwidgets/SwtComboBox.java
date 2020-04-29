@@ -1,16 +1,9 @@
 package de.s2d_advgui.core.basicwidgets;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.function.Consumer;
-
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.utils.Array;
-
 import de.s2d_advgui.core.awidget.ASwtWidgetDisableable;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
@@ -18,13 +11,19 @@ import de.s2d_advgui.core.awidget.SwtWidgetBuilder;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
 import de.s2d_advgui.core.resourcemanager.ATheme;
 
-public class SwtComboBox<T> extends ASwtWidgetDisableable<SelectBox<T>> {
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
+public class SwtComboBox<T> extends ASwtWidgetDisableable<ExSelectBox<T>> {
     // -------------------------------------------------------------------------------------------------------------------------
     private final Set<Consumer<T>> selectListener = new LinkedHashSet<>();
 
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtComboBox(ISwtWidget<? extends Group> pParent) {
-        super(new SwtWidgetBuilder<>(pParent, true, new ActorCreatorSelectBox<T>()));
+        super(new SwtWidgetBuilder<>(pParent, true, new ActorCreatorSelectBox<>()));
         this.registerChangeEventHandler(event -> {
             T value = SwtComboBox.this.actor.getSelected();
             for (Consumer<T> a : SwtComboBox.this.selectListener) {
@@ -64,7 +63,8 @@ public class SwtComboBox<T> extends ASwtWidgetDisableable<SelectBox<T>> {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public void setValues(T... ents) {
+    @SafeVarargs
+    public final void setValues(T... ents) {
         this.actor.setItems(ents);
     }
 
@@ -76,6 +76,11 @@ public class SwtComboBox<T> extends ASwtWidgetDisableable<SelectBox<T>> {
     // -------------------------------------------------------------------------------------------------------------------------
     public T getSelected() {
         return this.actor.getSelected();
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public void setToStringResolver(Function<T, String> toStringResolver) {
+        getActor().setToStringProvider(toStringResolver);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
