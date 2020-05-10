@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent.Type;
 
 import de.s2d_advgui.core.layoutmanager.ASwtLayoutData;
 import de.s2d_advgui.core.layoutmanager.ASwtLayoutManager;
+import de.s2d_advgui.core.layoutmanager.ISwtLayoutManager;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
 import de.s2d_advgui.core.resourcemanager.ATheme;
 import de.s2d_advgui.core.stage.ISwtStage;
@@ -97,7 +98,7 @@ public interface ISwtWidget<PT extends Actor> extends IRectangleSupport {
     float getY();
 
     // -------------------------------------------------------------------------------------------------------------------------
-    void setLayoutManager(ASwtLayoutManager pManager);
+    void setLayoutManager(ISwtLayoutManager pManager);
 
     // -------------------------------------------------------------------------------------------------------------------------
     boolean isHovered();

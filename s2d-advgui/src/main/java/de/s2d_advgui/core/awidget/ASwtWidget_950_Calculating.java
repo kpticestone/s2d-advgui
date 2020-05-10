@@ -10,6 +10,7 @@ import de.s2d_advgui.core.dnd.DragAndDropHelper;
 import de.s2d_advgui.core.dnd.IDragAndDropHandler;
 import de.s2d_advgui.core.dnd.IDragAndDropHelper;
 import de.s2d_advgui.core.layoutmanager.ASwtLayoutManager;
+import de.s2d_advgui.core.layoutmanager.ISwtLayoutManager;
 import de.s2d_advgui.core.stage.ISwtStage;
 import de.s2d_advgui.core.window.ISwtWindow;
 
@@ -92,7 +93,7 @@ public abstract class ASwtWidget_950_Calculating<ACTOR extends Actor> extends AS
 
     // -------------------------------------------------------------------------------------------------------------------------
     public final void calcPositionsOfChildren() {
-        ASwtLayoutManager lm = this.layoutmanager;
+        ISwtLayoutManager lm = this.layoutmanager;
         if (lm != null) {
             lm.calculate(this, this.actor.getWidth(), this.actor.getHeight());
         }

@@ -8,12 +8,13 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 
 import de.s2d_advgui.core.layoutmanager.ASwtLayoutData;
 import de.s2d_advgui.core.layoutmanager.ASwtLayoutManager;
+import de.s2d_advgui.core.layoutmanager.ISwtLayoutManager;
 import de.s2d_advgui.core.stage.ISwtStage;
 
 public abstract class ASwtWidget_900_LayoutManager<ACTOR extends Actor> extends ASwtWidget_300_Traverse<ACTOR> {
     // -------------------------------------------------------------------------------------------------------------------------
     @Nullable
-    protected ASwtLayoutManager layoutmanager = null;
+    protected ISwtLayoutManager layoutmanager = null;
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Nullable
@@ -31,7 +32,7 @@ public abstract class ASwtWidget_900_LayoutManager<ACTOR extends Actor> extends 
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    public final void setLayoutManager(ASwtLayoutManager pManager) {
+    public final void setLayoutManager(ISwtLayoutManager pManager) {
         ISwtWidget<? extends Group> dp = this.getDelegatedParent();
         if (dp != null) {
             dp.setLayoutManager(pManager);

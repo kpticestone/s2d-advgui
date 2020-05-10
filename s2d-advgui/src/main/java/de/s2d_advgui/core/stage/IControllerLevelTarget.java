@@ -7,7 +7,7 @@ public interface IControllerLevelTarget {
     void setCurrentControllerLevel(IControllerLevel pControllerLevel);
 
     // -------------------------------------------------------------------------------------------------------------------------
-    void removeCurrentControllerLevel();
+    IControllerLevel removeCurrentControllerLevel();
 
     // -------------------------------------------------------------------------------------------------------------------------
     IControllerLevel getControllerLevel();

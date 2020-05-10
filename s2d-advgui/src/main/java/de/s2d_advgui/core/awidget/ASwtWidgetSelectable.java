@@ -11,9 +11,12 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 
 import de.s2d_advgui.commons.Trigger;
 import de.s2d_advgui.core.input.ISwtWidgetSelectable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class ASwtWidgetSelectable<ACTOR extends Actor> extends ASwtWidgetDisableable<ACTOR>
         implements ISwtWidgetSelectable {
+    private static final Logger log = LoggerFactory.getLogger(ASwtWidgetSelectable.class);
     // -------------------------------------------------------------------------------------------------------------------------
     private final Set<Consumer<Integer>> listeners = new LinkedHashSet<>();
 
@@ -22,7 +25,7 @@ public abstract class ASwtWidgetSelectable<ACTOR extends Actor> extends ASwtWidg
         super(pBuilder);
         this.registerEventHandler(InputEvent.Type.touchDown, (event) -> {
             if (isEnabled()) {
-                System.err.println("ASwtWidgetSelectable.touchDown()");
+                log.debug("ASwtWidgetSelectable.touchDown()");
                 callListeners(event.getButton());
                 return true;
             }

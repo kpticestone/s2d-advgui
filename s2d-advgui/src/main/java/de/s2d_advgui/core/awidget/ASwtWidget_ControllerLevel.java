@@ -1,15 +1,17 @@
 package de.s2d_advgui.core.awidget;
 
-import javax.annotation.Nonnull;
-
 import com.badlogic.gdx.scenes.scene2d.Actor;
-
 import de.s2d_advgui.core.input.axis.ASwtInputRegister_Axis;
 import de.s2d_advgui.core.input.keys.ASwtInputRegister_Keys;
 import de.s2d_advgui.core.stage.IControllerLevelTarget;
 import de.s2d_advgui.core.stage.ISwtStage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
 
 public abstract class ASwtWidget_ControllerLevel<T extends Actor> extends ASwtWidget<T> {
+    private static final Logger log = LoggerFactory.getLogger(ASwtWidget_ControllerLevel.class);
     // -------------------------------------------------------------------------------------------------------------------------
     @Nonnull
     private final ControllerLevelImpl controllerLevel;
@@ -39,7 +41,10 @@ public abstract class ASwtWidget_ControllerLevel<T extends Actor> extends ASwtWi
         });
         ((IControllerLevelTarget) this.context).setCurrentControllerLevel(this.controllerLevel);
         this.addDisposeListener(() -> {
-            ((IControllerLevelTarget) this.context).removeCurrentControllerLevel();
+            IControllerLevel removedLevel = ((IControllerLevelTarget) this.context).removeCurrentControllerLevel();
+            if (removedLevel != this.controllerLevel) {
+                log.warn("!!removed unknown controller level!! {}", removedLevel);
+            }
         });
     }
 

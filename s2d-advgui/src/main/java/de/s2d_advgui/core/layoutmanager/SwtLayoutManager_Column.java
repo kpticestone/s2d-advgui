@@ -27,18 +27,21 @@ public final class SwtLayoutManager_Column extends ASwtLayoutManager {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public void setSpace(int space) {
+    public SwtLayoutManager_Column setSpace(int space) {
         this.space = space;
+        return this;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public void setAh(int ah) {
+    public SwtLayoutManager_Column setAh(int ah) {
         this.ah = ah;
+        return this;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public void setPadding(int padding) {
+    public SwtLayoutManager_Column setPadding(int padding) {
         this.padding = padding;
+        return this;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

@@ -1,10 +1,5 @@
 package de.s2d_advgui.core.stage;
 
-import java.util.Stack;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
@@ -14,13 +9,16 @@ import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.controllers.mappings.Xbox;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-
 import de.s2d_advgui.core.application.ISwtApplicationController;
 import de.s2d_advgui.core.awidget.IControllerLevel;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.input.ISwtWidgetSelectable;
 import de.s2d_advgui.core.rendering.ISwtDrawerManager;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Stack;
 
 public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>>
         extends ASwtStage_200_Widgets<RM, DM> implements IControllerLevelTarget {
@@ -143,17 +141,20 @@ public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM exten
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public void setCurrentControllerLevel(IControllerLevel pControllerLevel) {
-        this.controllerStack.push(pControllerLevel);
-        this.currentControllerLevel = pControllerLevel;
-        setKeyboardFocus(null);
+        if (currentControllerLevel != pControllerLevel) {
+            this.controllerStack.push(pControllerLevel);
+            this.currentControllerLevel = pControllerLevel;
+            setKeyboardFocus(null);
+        }
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    public void removeCurrentControllerLevel() {
-        this.controllerStack.pop();
+    public IControllerLevel removeCurrentControllerLevel() {
+        IControllerLevel pop = this.controllerStack.pop();
         this.currentControllerLevel = this.controllerStack.peek();
         this.currentControllerLevel.doFocusCurrentWidget();
+        return pop;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -193,7 +194,7 @@ public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM exten
         IControllerLevel cu = this.currentControllerLevel;
         if (cu == null) return false;
         if ('\t' == character) return false; // Die Standard-Implementierung vom Scene2D-Tab-System wird hier
-                                             // übersprungen
+        // übersprungen
         boolean back = super.keyTyped(character);
         if (!back) {
             if (cu.keyTyped(character)) return true;
