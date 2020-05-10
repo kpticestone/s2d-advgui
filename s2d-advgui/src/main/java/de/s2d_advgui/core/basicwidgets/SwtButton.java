@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
-
 import de.s2d_advgui.core.awidget.ASwtWidgetSelectable;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
@@ -25,6 +24,7 @@ public class SwtButton extends ASwtWidgetSelectable<Button> {
 
     // -------------------------------------------------------------------------------------------------------------------------
     String myIcon = null;
+    private Color borderColor;
 
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtButton(ISwtWidget<? extends Group> pParent, String text) {
@@ -80,7 +80,7 @@ public class SwtButton extends ASwtWidgetSelectable<Button> {
                     pBatch.drawText(myText, pDims, Align.center, .5f, true, col1);
                 }
                 if (isEnabled()) {
-                    pBatch.setColor(getTheme().getWidgetPrimaryBorderColor());
+                    pBatch.setColor(borderColor != null ? borderColor : getTheme().getWidgetPrimaryBorderColor());
                 } else {
                     pBatch.setColor(getTheme().getWidgetPrimaryBorderColorDisabled());
                 }
@@ -103,6 +103,11 @@ public class SwtButton extends ASwtWidgetSelectable<Button> {
     // -------------------------------------------------------------------------------------------------------------------------
     public void setImage(String string) {
         this.myIcon = string;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public void setBorderColor(Color borderColor) {
+        this.borderColor = borderColor;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
