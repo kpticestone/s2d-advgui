@@ -17,7 +17,7 @@ import de.s2d_advgui.core.awidget.SwtWidgetBuilder;
 import de.s2d_advgui.core.input.GuiUtils;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
 import de.s2d_advgui.core.resourcemanager.ATheme;
-import de.s2d_advgui.core.utils.RectangleFactory;
+import de.s2d_advgui.core.utils.ShapeUtils;
 
 public class SwtTextField extends ASwtWidgetDisableable<TextField> {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ public class SwtTextField extends ASwtWidgetDisableable<TextField> {
             protected void _drawIt(SwtDrawer_Batch<?> batch, Vector2 pScreenCoords, Rectangle dims) {
                 batch.setColor(getTheme().getWidgetPrimaryBackgroundColor());
                 batch.setColor(Color.BLACK);
-                batch.draw(wh, RectangleFactory.explode(dims, 5));
+                batch.draw(wh, ShapeUtils.explode(dims, 5));
             }
         });
         this.addDrawerForeground(new InternalWidgetDrawerBatch() {

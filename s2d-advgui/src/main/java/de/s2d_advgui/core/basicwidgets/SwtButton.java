@@ -17,7 +17,7 @@ import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
 import de.s2d_advgui.core.awidget.SwtWidgetBuilder;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
 import de.s2d_advgui.core.resourcemanager.ATheme;
-import de.s2d_advgui.core.utils.RectangleFactory;
+import de.s2d_advgui.core.utils.ShapeUtils;
 
 public class SwtButton extends ASwtWidgetSelectable<Button> {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -57,7 +57,7 @@ public class SwtButton extends ASwtWidgetSelectable<Button> {
                 } else {
                     batch.setColor(getTheme().getWidgetPrimaryBackgroundColorDisabled());
                 }
-                batch.draw(wh, RectangleFactory.explode(dims, 2));
+                batch.draw(wh, ShapeUtils.explode(dims, 2));
             }
         });
         this.addDrawerForeground(new InternalWidgetDrawerBatch() {
@@ -75,7 +75,7 @@ public class SwtButton extends ASwtWidgetSelectable<Button> {
                     pBatch.draw(tex, rIcon, Scaling.fit);
                 } else if (myIcon != null) {
                     TextureRegion tex = SwtButton.this.context.getTextureRegion(myIcon);
-                    pBatch.draw(tex, RectangleFactory.explode(pDims, space), Scaling.fit);
+                    pBatch.draw(tex, ShapeUtils.explode(pDims, space), Scaling.fit);
                 } else if (myText != null) {
                     pBatch.drawText(myText, pDims, Align.center, .5f, true, col1);
                 }

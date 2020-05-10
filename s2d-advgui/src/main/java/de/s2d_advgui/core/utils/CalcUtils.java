@@ -1,10 +1,11 @@
 package de.s2d_advgui.core.utils;
 
+import java.awt.geom.Point2D;
+
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import de.s2d_advgui.commons.BiConsumerFloat;
 
-import java.awt.geom.Point2D;
+import de.s2d_advgui.commons.BiConsumerFloat;
 
 /**
  * math stuff
@@ -17,7 +18,6 @@ public class CalcUtils {
     public final static float g_half = g * .5f;
 
     // -------------------------------------------------------------------------------------------------------------------------
-
     /**
      * random value between 0 and 360
      */
@@ -25,11 +25,12 @@ public class CalcUtils {
         return (float) (Math.random() * 360F);
     }
 
-
+    // -----------------------------------------------------------------------------------------------------------
     public static float getAngle(Vector2 vector) {
         return getAngle(vector.x, vector.y);
     }
 
+    // -----------------------------------------------------------------------------------------------------------
     /**
      * get rotation of gameobject around 0/0
      */
@@ -37,10 +38,12 @@ public class CalcUtils {
         return getAngle(x, y, 0, 0);
     }
 
+    // -----------------------------------------------------------------------------------------------------------
     public static float getAngle(float x1, float y1, float x2, float y2) {
         return translateRotation((float) (Math.atan2(y1 - y2, x1 - x2) * MathUtils.radiansToDegrees));
     }
 
+    // -----------------------------------------------------------------------------------------------------------
     /**
      * make sure rotation is between 0 and 360
      */
@@ -54,6 +57,7 @@ public class CalcUtils {
         return degrees;
     }
 
+    // -----------------------------------------------------------------------------------------------------------
     /**
      * distance between to angles.
      * e.g. a=340, b=10, result: -30
@@ -65,22 +69,27 @@ public class CalcUtils {
         return r * sign;
     }
 
+    // -----------------------------------------------------------------------------------------------------------
     public static float distance(Vector2 p1, Vector2 p2) {
         return distance(p1.x, p1.y, p2.x, p2.y);
     }
 
+    // -----------------------------------------------------------------------------------------------------------
     public static float distance(float x1, float y1, float x2, float y2) {
         return (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
     }
 
+    // -----------------------------------------------------------------------------------------------------------
     public static float roundish(float v) {
         return Math.round(v * 100F) / 100F;
     }
 
+    // -----------------------------------------------------------------------------------------------------------
     public static String roundish2(float v) {
-        return String.format("%.2f", v);
+        return String.format("%.2f", v); //$NON-NLS-1$
     }
 
+    // -----------------------------------------------------------------------------------------------------------
     public static float approachExponential(float current, float wanted, float delta) {
         if (current == wanted) {
             return current;
@@ -88,17 +97,18 @@ public class CalcUtils {
         return approach(current, wanted, Math.max(delta * Math.abs(wanted - current), 0.0005F));
     }
 
+    // -----------------------------------------------------------------------------------------------------------
     public static float approach(float current, float wanted, float speed) {
         if (current != wanted) {
             if (current > wanted) {
                 return Math.max(current - speed, wanted);
-            } else {
-                return Math.min(current + speed, wanted);
             }
+            return Math.min(current + speed, wanted);
         }
         return current;
     }
 
+    // -----------------------------------------------------------------------------------------------------------
     public static Vector2 calcPoint(Vector2 vec, float angle, float radius) {
         return vec.set(radius * ((float) Math.cos(angle * MathUtils.degreesToRadians)), radius * ((float) Math.sin(angle * MathUtils.degreesToRadians)));
     }
@@ -164,6 +174,7 @@ public class CalcUtils {
         return back;
     }
 
+    // -----------------------------------------------------------------------------------------------------------
     public static float sign(float wantedZoom) {
         return (wantedZoom < 0) ? -1F : 1F;
     }

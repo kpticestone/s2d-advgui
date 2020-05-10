@@ -1,15 +1,12 @@
-package de.s2d_advgui.core.utils;
+package de.s2d_advgui.core.geom.collider;
 
-/**
- * @deprecated Use ShapeUtils instead!
- * @author dhartmann
- */
-@Deprecated
-public class RectangleFactory extends ShapeUtils {
+import javax.annotation.Nonnull;
+
+import com.badlogic.gdx.math.Shape2D;
+
+interface Shape2DHandler<T extends Shape2D> {
     // -------------------------------------------------------------------------------------------------------------------------
-    private RectangleFactory() {
-        // DON
-    }
+    ColliderItem<T> detectBoxBoundaries(@Nonnull T pShape);
 
     // -------------------------------------------------------------------------------------------------------------------------
 }

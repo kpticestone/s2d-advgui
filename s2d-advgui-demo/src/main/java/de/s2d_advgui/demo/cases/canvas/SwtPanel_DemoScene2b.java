@@ -14,7 +14,7 @@ import de.s2d_advgui.core.basicwidgets.SwtPanel;
 import de.s2d_advgui.core.camera.CameraHolder;
 import de.s2d_advgui.core.input.ASwtMouseMoveListenerCanvas;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
-import de.s2d_advgui.core.utils.RectangleFactory;
+import de.s2d_advgui.core.utils.ShapeUtils;
 
 public class SwtPanel_DemoScene2b extends SwtPanel {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -32,7 +32,7 @@ public class SwtPanel_DemoScene2b extends SwtPanel {
         this.addDrawer(WidetLayer.FOREGROUND, false, new InternalWidgetDrawerBatch() {
             @Override
             protected void _drawIt(SwtDrawer_Batch<?> pBatch, Vector2 pScreenCoords, Rectangle pDims) {
-                Rectangle xx = RectangleFactory.explode(pDims, 5);
+                Rectangle xx = ShapeUtils.explode(pDims, 5);
                 CameraHolder ch = canvas.getDrawerManager().getCameraHolder();
                 pBatch.drawText("zoom: " + ch.getWantedZoom() + "\nentity: " + canvas.getEntity() + "\n", xx, Align.bottomLeft, .5f, true, Color.WHITE);
             }
