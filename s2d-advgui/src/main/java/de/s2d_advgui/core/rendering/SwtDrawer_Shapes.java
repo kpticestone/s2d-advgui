@@ -6,8 +6,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
+
 import de.s2d_advgui.core.geom.Ray2D;
-import de.s2d_advgui.core.geom.collider.Collider;
+import de.s2d_advgui.core.geom.collider.ICollider;
 
 public final class SwtDrawer_Shapes extends ASwtDrawer
 {
@@ -64,7 +65,7 @@ public final class SwtDrawer_Shapes extends ASwtDrawer
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public void drawCollider(Collider collider) {
+    public void drawCollider(ICollider collider) {
         collider.forEach(item -> item.drawShape(this.sr));
     }
 

@@ -18,7 +18,7 @@ import de.s2d_advgui.core.camera.CameraHolder;
 import de.s2d_advgui.core.canvas.BoundingBoxCalc;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
 import de.s2d_advgui.core.rendering.SwtDrawer_Shapes;
-import de.s2d_advgui.core.utils.RectangleFactory;
+import de.s2d_advgui.core.utils.ShapeUtils;
 
 public class SwtPanel_DemoScene2 extends SwtPanel {
     BoundingBoxCalc curJhh = new BoundingBoxCalc();
@@ -61,7 +61,7 @@ public class SwtPanel_DemoScene2 extends SwtPanel {
         this.addDrawer(WidetLayer.FOREGROUND, false, new InternalWidgetDrawerBatch() {
             @Override
             protected void _drawIt(SwtDrawer_Batch<?> pBatch, Vector2 pScreenCoords, Rectangle pDims) {
-                Rectangle xx = RectangleFactory.explode(pDims, 5);
+                Rectangle xx = ShapeUtils.explode(pDims, 5);
                 CameraHolder ch = canvas.getDrawerManager().getCameraHolder();
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.append("zoom: ");

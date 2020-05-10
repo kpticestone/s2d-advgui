@@ -25,7 +25,7 @@ import de.s2d_advgui.core.resourcemanager.ATheme;
 import de.s2d_advgui.core.tabledata.ESwtTableMode;
 import de.s2d_advgui.core.tabledata.SwtLayoutDataCellPosition;
 import de.s2d_advgui.core.tabledata.TableDataManager;
-import de.s2d_advgui.core.utils.RectangleFactory;
+import de.s2d_advgui.core.utils.ShapeUtils;
 
 public class SwtWindow extends ASwtWidget_ControllerLevel<WidgetGroup> implements ISwtWindow {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -112,11 +112,11 @@ public class SwtWindow extends ASwtWidget_ControllerLevel<WidgetGroup> implement
                     if (SwtWindow.this.inDrag) {
                         pBatch.drawText("jasdjsao: " + getBounds() + "/" + getParent(), pDims, Align.center, .5f, true,
                                 Color.RED);
-                        pBatch.drawBorder("/borders/white-round-5.png", RectangleFactory.explode(pDims, -10));
+                        pBatch.drawBorder("/borders/white-round-5.png", ShapeUtils.explode(pDims, -10));
                     } else if (TOldCompatibilityCode.FALSE) {
                         Color col = pBatch.getResourceManager().getTheme().getWidgetPrimaryBorderColor();
                         pBatch.setColor(col);
-                        pBatch.drawBorder("/borders/white-round-5.png", RectangleFactory.explode(pDims, -10));
+                        pBatch.drawBorder("/borders/white-round-5.png", ShapeUtils.explode(pDims, -10));
                     }
                 }
             });

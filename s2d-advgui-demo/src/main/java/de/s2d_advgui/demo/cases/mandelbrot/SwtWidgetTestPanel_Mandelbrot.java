@@ -1,8 +1,6 @@
 package de.s2d_advgui.demo.cases.mandelbrot;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import com.badlogic.gdx.graphics.Color;
@@ -21,7 +19,7 @@ import de.s2d_advgui.core.basicwidgets.SwtSlider;
 import de.s2d_advgui.core.basicwidgets.SwtTextField;
 import de.s2d_advgui.core.rendering.SwtDrawerManager;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
-import de.s2d_advgui.core.utils.RectangleFactory;
+import de.s2d_advgui.core.utils.ShapeUtils;
 import de.s2d_advgui.demo.DemoResourceManager;
 import de.s2d_advgui.demo.cases.ASwtWidgetTestPanel;
 
@@ -53,7 +51,7 @@ public class SwtWidgetTestPanel_Mandelbrot extends ASwtWidgetTestPanel {
                 String pStrg = "zoom: " + canvas.zoom + "\n";
                 pStrg += "x: " + canvas.useLeft + "\n";
                 pStrg += "y: " + canvas.useTop + "\n";
-                pBatch.drawText(pStrg, RectangleFactory.explode(pDims, 20), Align.bottom, 1f, true, Color.CYAN);
+                pBatch.drawText(pStrg, ShapeUtils.explode(pDims, 20), Align.bottom, 1f, true, Color.CYAN);
 
             }
         });

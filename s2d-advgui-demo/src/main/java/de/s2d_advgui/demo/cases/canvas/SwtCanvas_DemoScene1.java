@@ -20,7 +20,7 @@ import de.s2d_advgui.core.geom.animations.IAnimationListener_ChangeBounds;
 import de.s2d_advgui.core.rendering.SwtDrawerManager;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
-import de.s2d_advgui.core.utils.RectangleFactory;
+import de.s2d_advgui.core.utils.ShapeUtils;
 
 public class SwtCanvas_DemoScene1 extends SwtCanvas<AResourceManager, SwtDrawerManager<AResourceManager>>
         implements IMyWidgetUpdateHandler {
@@ -45,7 +45,7 @@ public class SwtCanvas_DemoScene1 extends SwtCanvas<AResourceManager, SwtDrawerM
             @Override
             protected void _drawIt(SwtDrawer_Batch<?> batch, Vector2 pScreenCoords, Rectangle dims) {
                 batch.setColor(0.6f, 0.6f, 0.8f, .75f);
-                batch.draw("icons/128/cow.png", RectangleFactory.explode(dims, -10));
+                batch.draw("icons/128/cow.png", ShapeUtils.explode(dims, -10));
             }
         });
     }

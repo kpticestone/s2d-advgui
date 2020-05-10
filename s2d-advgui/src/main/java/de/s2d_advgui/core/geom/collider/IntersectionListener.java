@@ -1,15 +1,9 @@
-package de.s2d_advgui.core.utils;
+package de.s2d_advgui.core.geom.collider;
 
-/**
- * @deprecated Use ShapeUtils instead!
- * @author dhartmann
- */
-@Deprecated
-public class RectangleFactory extends ShapeUtils {
+@FunctionalInterface
+public interface IntersectionListener {
     // -------------------------------------------------------------------------------------------------------------------------
-    private RectangleFactory() {
-        // DON
-    }
+    void intersects(IntersectionContext pContext, float x, float y);
 
     // -------------------------------------------------------------------------------------------------------------------------
 }

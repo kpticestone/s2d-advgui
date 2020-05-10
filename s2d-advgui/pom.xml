@@ -10,7 +10,7 @@
         <relativePath>../parent</relativePath>
     </parent>
     <artifactId>s2d-advgui</artifactId>
-	<name>de.s2d-advgui.s2d-advgui</name>
+    <name>de.s2d-advgui.s2d-advgui</name>
     <properties>
         <gdxVersion>1.9.10</gdxVersion>
     </properties>
@@ -68,6 +68,26 @@
             <artifactId>gdx</artifactId>
             <version>${gdxVersion}</version>
         </dependency>
+        <dependency>
+            <groupId>com.badlogicgames.gdx</groupId>
+            <artifactId>gdx-box2d</artifactId>
+            <version>${gdxVersion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.badlogicgames.gdx</groupId>
+            <artifactId>gdx-box2d-platform</artifactId>
+            <classifier>natives-desktop</classifier>
+            <version>${gdxVersion}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.badlogicgames.box2dlights</groupId>
+            <artifactId>box2dlights</artifactId>
+            <version>1.5</version>
+        </dependency>
+
         <dependency>
             <groupId>com.kotcrab.vis</groupId>
             <artifactId>vis-ui</artifactId>
