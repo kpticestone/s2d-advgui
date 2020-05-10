@@ -24,6 +24,7 @@ public class SwtWidgetTestPanel_Box2DLights extends ASwtWidgetTestPanel {
         SwtDrawerManager<DemoResourceManager> drawerManager = new SwtDrawerManager<>(rm);
         SwtCanvas_Box2DLights canvas = new SwtCanvas_Box2DLights(this, drawerManager);
         canvas.setBounds(0, 25, 0, -25);
+        canvas.setBounds(100, 50, -150, -100);
 
         this.addDrawer(WidetLayer.FOREGROUND, false, new InternalWidgetDrawerBatch() {
             @Override

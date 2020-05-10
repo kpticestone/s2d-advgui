@@ -1,7 +1,5 @@
 package de.s2d_advgui.demo.cases.box2dlights;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -9,92 +7,98 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.QueryCallback;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.scenes.scene2d.Group;
 
-import box2dLight.ChainLight;
-import box2dLight.ConeLight;
-import box2dLight.DirectionalLight;
-import box2dLight.Light;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
+import de.s2d_advgui.commons.TOldCompatibilityCode;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.camera.CameraHolder;
 import de.s2d_advgui.core.canvas.SwtCanvas;
+import de.s2d_advgui.core.geom.collider.Collider;
 import de.s2d_advgui.core.rendering.SwtDrawerManager;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
+import de.s2d_advgui.core.rendering.SwtDrawer_Shapes;
+import de.s2d_advgui.core.utils.ShapeUtils;
 import de.s2d_advgui.demo.DemoResourceManager;
 
 public final class SwtCanvas_Box2DLights extends SwtCanvas<DemoResourceManager, SwtDrawerManager<DemoResourceManager>> {
-    // -------------------------------------------------------------------------------------------------------------------------
-    static final int RAYS_PER_BALL = 128;
-    static final int BALLSNUM = 5;
-    static final float LIGHT_DISTANCE = 16f;
-    static final float RADIUS = 1f;
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    static final float viewportWidth = 48;
-    static final float viewportHeight = 32;
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    /**
-     * Type of lights to use: 0 - PointLight 1 - ConeLight 2 - ChainLight 3 -
-     * DirectionalLight
-     */
-    int lightsType = 3;
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    private final static int MAX_FPS = 30;
-    private final static int MIN_FPS = 15;
-    public final static float TIME_STEP = 1f / MAX_FPS;
-    private final static float MAX_STEPS = 1f + MAX_FPS / MIN_FPS;
-    private final static float MAX_TIME_PER_FRAME = TIME_STEP * MAX_STEPS;
-    private final static int VELOCITY_ITERS = 6;
-    private final static int POSITION_ITERS = 2;
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    float physicsTimeLeft;
-    long aika;
-    int times;
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    World world;
-    ArrayList<Body> balls = new ArrayList<>(BALLSNUM);
-    Body groundBody;
-    RayHandler rayHandler;
-    ArrayList<Light> lights = new ArrayList<>(BALLSNUM);
-    float sunDirection = -90f;
+    private World world;
+    private RayHandler rayHandler;
+    private PointLight ligth;
+    private PointLight ligth2;
+    private BodyDef bodyDef;
+    private Body theBody;
 
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtCanvas_Box2DLights(ISwtWidget<? extends Group> pParent,
             SwtDrawerManager<DemoResourceManager> pDrawerManager) {
         super(pParent, pDrawerManager);
 
-        this.createPhysicsWorld();
-
-        RayHandler.setGammaCorrection(true);
-        RayHandler.useDiffuseLight(true);
-
+        this.world = new World(new Vector2(0, -10), true);
         this.rayHandler = new RayHandler(this.world);
-        this.rayHandler.setAmbientLight(0f, 0f, 0f, .5f);
-        this.rayHandler.setBlurNum(3);
+        this.ligth = new PointLight(this.rayHandler, 32);
+        this.ligth2 = new PointLight(this.rayHandler, 32);
 
-        // this.initPointLights();
-        // this.initChainLights();
-        // this.initDirectionalLight();
-        this.initConeLights();
+        {
+            Polygon hshs = ShapeUtils.createGear(3, 2, 3);
+            // gear.set(hshs.getVertices());
+
+            Rectangle rect = new Rectangle(-100, -10, 200, 5);
+
+            PolygonShape gear = new PolygonShape();
+            // gear.set(new Vector2[] { new Vector2(0, 0), new Vector2(100, 0), new
+            // Vector2(100, 5), new Vector2(0, 5) });
+            Polygon poly = ShapeUtils.byRect(rect);
+            gear.set(poly.getTransformedVertices());
+
+            FixtureDef def = new FixtureDef();
+            def.restitution = 0.0f;
+            def.friction = 0.0f;
+            def.shape = gear;
+            def.density = 1f;
+
+            BodyDef bodyDef = new BodyDef();
+            bodyDef.position.set(0, 0);
+            bodyDef.type = BodyType.StaticBody;
+
+            Body ground = this.world.createBody(bodyDef);
+            ground.createFixture(def);
+
+            gear.dispose();
+        }
+        {
+            CircleShape ballShape = new CircleShape();
+            ballShape.setRadius(1);
+
+            FixtureDef def = new FixtureDef();
+            def.restitution = 0.1f;
+            def.friction = 0.01f;
+            def.shape = ballShape;
+            def.density = 1f;
+
+            this.bodyDef = new BodyDef();
+            this.bodyDef.position.set(0, 2);
+            // this.bodyDef.type = BodyType.StaticBody;
+            this.bodyDef.type = BodyType.DynamicBody;
+
+            this.theBody = this.world.createBody(this.bodyDef);
+            this.theBody.createFixture(def);
+
+            ballShape.dispose();
+        }
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -102,212 +106,88 @@ public final class SwtCanvas_Box2DLights extends SwtCanvas<DemoResourceManager, 
     protected void _drawIt(Rectangle dimensions) {
         super._drawIt(dimensions);
 
-        if (lightsType == 3) {
-            sunDirection += Gdx.graphics.getDeltaTime() * 4f;
-            lights.get(0).setDirection(sunDirection);
-        }
-
         CameraHolder cameraHolder = this.drawerManager.getCameraHolder();
         OrthographicCamera cam = cameraHolder.getCamera();
-        cam.zoom = .1f;
+        cam.zoom = .03f;
         // cam.rotate(.5f);
-        cam.up.set(0, 1, 0);
-        cam.direction.set(0, 0, -1);
+//        cam.up.set(0, 1, 0);
+        // cam.direction.set(1, 1, 0);
         cam.update();
+
+//        OrthographicCamera camera = new OrthographicCamera(48, 48);
+//        camera.update();
 
         Batch bb = this.drawerManager.getBatch();
         bb.setProjectionMatrix(cam.combined);
-        bb.disableBlending();
 
         ShapeRenderer sr = this.drawerManager.getShapeRenderer();
         sr.setProjectionMatrix(cam.combined);
 
-        Rectangle pDims = dimensions;
-        DemoResourceManager rm = this.drawerManager.getResourceManager();
-        TextureRegion rras = rm.getColorTextureRegion(Color.WHITE);
-        TextureRegion jj = rm.getTextureRegion("/icons/128/angel.png");
-        TextureRegion ball2d = rm.getTextureRegion("/icons/128/cow.png");
+        if (TOldCompatibilityCode.FALSE) {
+            // bb.disableBlending();
 
-        boolean stepped = fixedStep(Gdx.graphics.getDeltaTime());
-        Gdx.gl.glClearColor(0.3f, 0.3f, 0.3f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            Rectangle pDims = dimensions;
+            DemoResourceManager rm = this.drawerManager.getResourceManager();
+            TextureRegion rras = rm.getColorTextureRegion(Color.WHITE);
+            TextureRegion jj = rm.getTextureRegion("/splashscreens/s2d-advgui.jpg");
+            TextureRegion ball2d = rm.getTextureRegion("/icons/128/cow.png");
 
-        try (SwtDrawer_Batch<DemoResourceManager> bds = this.drawerManager.startBatchDrawer()) {
-            Batch batch = bds.getBatch();
-            batch.draw(jj, -viewportWidth / 2f, 0, viewportWidth, viewportHeight);
-            batch.enableBlending();
-            for (int i = 0; i < BALLSNUM; i++) {
-                Body ball = this.balls.get(i);
-                Vector2 position = ball.getPosition();
-                float angle = MathUtils.radiansToDegrees * ball.getAngle();
-                batch.draw(
-                        ball2d,
-                        position.x - RADIUS, position.y - RADIUS,
-                        RADIUS, RADIUS,
-                        RADIUS * 2, RADIUS * 2,
-                        1f, 1f,
-                        angle);
+            try (SwtDrawer_Batch<DemoResourceManager> bds = this.drawerManager.startBatchDrawer()) {
             }
         }
-        this.rayHandler.setCombinedMatrix(cam);
-        if (stepped) this.rayHandler.update();
-        this.rayHandler.render();
-    }
 
-    // -------------------------------------------------------------------------------------------------------------------------
-    void clearLights() {
-        if (this.lights.size() > 0) {
-            for (Light light : this.lights) {
-                light.remove();
-            }
-            this.lights.clear();
+        try (SwtDrawer_Shapes sdr = this.drawerManager.startShapesDrawer()) {
+            sdr.setColor(Color.WHITE);
+            Rectangle rect = new Rectangle(-100, -10, 200, 5);
+            Collider collider = new Collider(rect);
+            sdr.drawCollider(collider);
+
+            Vector2 po = this.theBody.getPosition();
+            Collider colbo = new Collider(new Circle(po.x, po.y, 1));
+            sdr.drawCollider(colbo);
+
+            Collider colbo1 = new Collider(new Circle(2, -4, .1f));
+            sdr.drawCollider(colbo1);
+
+            Collider colbo2 = new Collider(new Circle(-6, 3, .1f));
+            sdr.drawCollider(colbo2);
         }
-        this.groundBody.setActive(true);
-    }
 
-    // -------------------------------------------------------------------------------------------------------------------------
-    void initPointLights() {
-        clearLights();
-        for (int i = 0; i < BALLSNUM; i++) {
-            PointLight light = new PointLight(
-                    this.rayHandler,
-                    RAYS_PER_BALL,
-                    null,
-                    LIGHT_DISTANCE,
-                    0f,
-                    0f
-                    );
-            light.attachToBody(this.balls.get(i), RADIUS / 2f, RADIUS / 2f);
-            light.setColor(
-                    MathUtils.random(),
-                    MathUtils.random(),
-                    MathUtils.random(),
-                    1f);
-            this.lights.add(light);
+        this.ligth.setColor(Color.BLUE);
+        this.ligth.setSoft(true);
+        this.ligth.setPosition(2, -4);
+        this.ligth.setDistance(20);
+        this.ligth.setStaticLight(false);
+        // ligth.setXray(false);
+
+        this.ligth2.setColor(Color.RED);
+        this.ligth2.setPosition(-6, 3);
+        this.ligth2.setDistance(20);
+        this.ligth2.setSoft(false);
+        this.ligth2.setStaticLight(true);
+
+//        this.theBody.setTransform(new Vector2(0, 2), 0f);
+//        this.theBody.setAwake(true);
+
+        if (TOldCompatibilityCode.FALSE) {
+//        bb.disableBlending();
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         }
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    void initConeLights() {
-        clearLights();
-        for (int i = 0; i < BALLSNUM; i++) {
-            ConeLight light = new ConeLight(
-                    this.rayHandler, RAYS_PER_BALL, null, LIGHT_DISTANCE,
-                    0, 0, 0f, 45f);
-            light.attachToBody(
-                    this.balls.get(i),
-                    RADIUS / 2f, RADIUS / 2f, MathUtils.random(0f, 360f));
-            light.setColor(
-                    1f,
-                    0f,
-                    1f,
-                    1f);
-            this.lights.add(light);
+        this.world.step(Gdx.graphics.getDeltaTime(), 8, 3);
+        Rectangle ld = cameraHolder.getLastDims();
+//        this.rayHandler.setCulling(false);
+        this.rayHandler.setBlurNum(0);
+//        this.rayHandler.setCombinedMatrix(cam.combined, 0, 0, dimensions.width, dimensions.height);
+        this.rayHandler.setCombinedMatrix(cam.combined, 0, 0, 1, 1);
+//        this.rayHandler.useCustomViewport((int) ld.x, (int) ld.y, (int) ld.width, (int) ld.height);
+        this.rayHandler.useCustomViewport((int) ld.x, (int) ld.y, (int) ld.width, (int) ld.height);
+        this.rayHandler.resizeFBO((int) ld.width, (int) ld.height);
+        this.rayHandler.setAmbientLight(Color.BLACK);
+        if (TOldCompatibilityCode.FALSE) {
         }
+        this.rayHandler.updateAndRender();
+        bb.flush();
     }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    void initChainLights() {
-        clearLights();
-        for (int i = 0; i < BALLSNUM; i++) {
-            ChainLight light = new ChainLight(
-                    this.rayHandler, RAYS_PER_BALL, null, LIGHT_DISTANCE, 1,
-                    new float[] { -5, 0, 0, 3, 5, 0 });
-            light.attachToBody(
-                    this.balls.get(i),
-                    MathUtils.random(0f, 360f));
-            light.setColor(
-                    MathUtils.random(),
-                    MathUtils.random(),
-                    MathUtils.random(),
-                    1f);
-            this.lights.add(light);
-        }
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    void initDirectionalLight() {
-        this.clearLights();
-        this.groundBody.setActive(false);
-        this.sunDirection = MathUtils.random(0f, 360f);
-        DirectionalLight light = new DirectionalLight(
-                this.rayHandler, 4 * RAYS_PER_BALL, null, this.sunDirection);
-        this.lights.add(light);
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    private boolean fixedStep(float delta) {
-        this.physicsTimeLeft += delta;
-        if (this.physicsTimeLeft > MAX_TIME_PER_FRAME)
-            this.physicsTimeLeft = MAX_TIME_PER_FRAME;
-
-        boolean stepped = false;
-        while (this.physicsTimeLeft >= TIME_STEP) {
-            this.world.step(TIME_STEP, VELOCITY_ITERS, POSITION_ITERS);
-            this.physicsTimeLeft -= TIME_STEP;
-            stepped = true;
-        }
-        return stepped;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    private void createPhysicsWorld() {
-        this.world = new World(new Vector2(0, 0), true);
-        float halfWidth = viewportWidth / 2f;
-        ChainShape chainShape = new ChainShape();
-        chainShape.createLoop(new Vector2[] {
-                new Vector2(-halfWidth, 0f),
-                new Vector2(halfWidth, 0f),
-                new Vector2(halfWidth, viewportHeight),
-                new Vector2(-halfWidth, viewportHeight) });
-        BodyDef chainBodyDef = new BodyDef();
-        chainBodyDef.type = BodyType.StaticBody;
-        this.groundBody = this.world.createBody(chainBodyDef);
-        this.groundBody.createFixture(chainShape, 0);
-        chainShape.dispose();
-        this.createBoxes();
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    private void createBoxes() {
-        CircleShape ballShape = new CircleShape();
-        ballShape.setRadius(RADIUS);
-
-        FixtureDef def = new FixtureDef();
-        def.restitution = 0.9f;
-        def.friction = 0.01f;
-        def.shape = ballShape;
-        def.density = 1f;
-        BodyDef boxBodyDef = new BodyDef();
-        boxBodyDef.type = BodyType.DynamicBody;
-
-        for (int i = 0; i < BALLSNUM; i++) {
-            boxBodyDef.position.x = -20 + (float) (Math.random() * 40);
-            boxBodyDef.position.y = 10 + (float) (Math.random() * 15);
-            Body boxBody = this.world.createBody(boxBodyDef);
-            boxBody.createFixture(def);
-            this.balls.add(boxBody);
-        }
-        ballShape.dispose();
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    Vector3 testPoint = new Vector3();
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    QueryCallback callback = new QueryCallback() {
-        @Override
-        public boolean reportFixture(Fixture fixture) {
-            if (fixture.getBody() == SwtCanvas_Box2DLights.this.groundBody)
-                return true;
-
-            if (fixture.testPoint(SwtCanvas_Box2DLights.this.testPoint.x, SwtCanvas_Box2DLights.this.testPoint.y)) {
-                // hitBody = fixture.getBody();
-                return false;
-            } else
-                return true;
-        }
-    };
 
     // -------------------------------------------------------------------------------------------------------------------------
 }
