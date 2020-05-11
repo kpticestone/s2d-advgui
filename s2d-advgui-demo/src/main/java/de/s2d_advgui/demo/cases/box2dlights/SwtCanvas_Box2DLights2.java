@@ -1,8 +1,8 @@
 package de.s2d_advgui.demo.cases.box2dlights;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
+import box2dLight.DirectionalLight;
+import box2dLight.PointLight;
+import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -19,7 +20,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.Shape;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.utils.Array;
@@ -27,10 +28,6 @@ import com.leo.spheres.core.chunksystem.Collider_Planet;
 import com.leo.spheres.core.chunksystem.CoordConsumerShort;
 import com.leo.spheres.core.chunksystem.PlanetChunkSystem;
 import com.leo.spheres.core.chunksystem.PlanetGenerator;
-
-import box2dLight.DirectionalLight;
-import box2dLight.PointLight;
-import box2dLight.RayHandler;
 import de.s2d_advgui.animations.AnimationManager;
 import de.s2d_advgui.animations.IAnimationListener_Close;
 import de.s2d_advgui.animations.impl.Animation_Sleep;
@@ -46,7 +43,12 @@ import de.s2d_advgui.core.rendering.SwtDrawerManager;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
 import de.s2d_advgui.core.rendering.SwtDrawer_Shapes;
 import de.s2d_advgui.core.utils.AffineHelper;
+import de.s2d_advgui.core.utils.ShapeUtils;
 import de.s2d_advgui.demo.DemoResourceManager;
+
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 public final class SwtCanvas_Box2DLights2
         extends SwtCanvas<DemoResourceManager, SwtDrawerManager<DemoResourceManager>> {
@@ -58,6 +60,7 @@ public final class SwtCanvas_Box2DLights2
     float sunDirection = -90f;
     private DirectionalLight dl;
     private Set<PointLight> lights = new LinkedHashSet<>();
+    private PlanetChunkSystem gen1;
 
     // -------------------------------------------------------------------------------------------------------------------------
     static class UserDataHolder {
@@ -77,7 +80,7 @@ public final class SwtCanvas_Box2DLights2
 
     // -------------------------------------------------------------------------------------------------------------------------
     public SwtCanvas_Box2DLights2(ISwtWidget<? extends Group> pParent,
-            LightsDrawer ldra, SwtDrawerManager<DemoResourceManager> pDrawerManager) {
+                                  LightsDrawer ldra, SwtDrawerManager<DemoResourceManager> pDrawerManager) {
         super(pParent, pDrawerManager);
 
         this.world = ldra.getWorld();
@@ -89,53 +92,61 @@ public final class SwtCanvas_Box2DLights2
 
         dl = new DirectionalLight(this.rayHandler, 1024, new Color(1f, 1f, 0f, .8f), 270 - 10);
 
-        PlanetChunkSystem gen1 = PlanetGenerator.doGenerate();
+        gen1 = PlanetGenerator.doGenerate();
 
         Collider_Planet colliderPlanet = new Collider_Planet(gen1);
 
-        int[] counter = { 0 };
+        int[] counter = {0};
         RandomXS128 xj = new RandomXS128();
         {
+            int s = gen1.getPlanetSize();
+            boolean[][] block = new boolean[s][s];
+            final int[] blockCounter = {0};
             gen1.forEachChunk(chunk -> {
                 if (!chunk.outofatmos) {
-                    gen1.forEach(chunk, PlanetChunkSystem.CUSTOM_FIELD_SOURCE, new CoordConsumerShort() {
+                    gen1.forEach(chunk, PlanetChunkSystem.CUSTOM_FIELD_SOURCE, (x, y, i) -> gen1.forEach(chunk, PlanetChunkSystem.CUSTOM_FIELD_SOURCE, new CoordConsumerShort() {
                         @Override
                         public void accept(int x, int y, short i) {
-
-                            Collider blockCol = new Collider(new Rectangle(0, 0, 1, 1));
-
-                            BodyDef bodyDef = new BodyDef();
-
-                            bodyDef.position.set(x, y);
-                            bodyDef.type = BodyType.StaticBody;
-
-                            Body ground = world.createBody(bodyDef);
-
-                            blockCol.forEach(colliderItem -> {
-                                Shape shape = colliderItem.createBox2dShape();
-
-                                FixtureDef def = new FixtureDef();
-                                def.restitution = 1.0f;
-                                def.friction = 0f;
-                                def.shape = shape;
-                                def.density = 1f;
-
-                                ground.createFixture(def);
-
-                                shape.dispose();
-                            });
-
-                            UserDataHolder ush = new UserDataHolder(blockCol);
-                            ush.type = i;
-                            ground.setUserData(ush);
-
-                            counter[0]++;
+                            if (gen1.isBlockExists(x, y)) {
+                                blockCounter[0]++;
+                                block[x + (s / 2)][y + (s / 2)] = true;
+                            }
                         }
-                    });
+                    }));
                 }
             });
+
+            System.err.println("counter: " + counter[0]);
+
+            List<Rectangle> rects = RectangleMerge.merge(block);
+
+            System.out.println("before merge: " + blockCounter[0]);
+            System.out.println("after merge: " + rects.size());
+            for (Rectangle rect : rects) {
+                Rectangle localRect = new Rectangle(0, 0, rect.width, rect.height);
+                Polygon poly = ShapeUtils.byRect(localRect);
+                PolygonShape shape = new PolygonShape();
+                shape.set(poly.getTransformedVertices());
+
+                FixtureDef def = new FixtureDef();
+                def.restitution = 0.0f;
+                def.friction = 0.0f;
+                def.shape = shape;
+                def.density = 1f;
+
+                BodyDef bodyDef = new BodyDef();
+                bodyDef.position.set(rect.x - (s / 2F), rect.y - (s / 2F));
+                bodyDef.type = BodyType.StaticBody;
+
+                Body ground = world.createBody(bodyDef);
+                ground.createFixture(def);
+                UserDataHolder ush = new UserDataHolder(new Collider(poly));
+                ush.type = 1;
+                ground.setUserData(ush);
+                shape.dispose();
+            }
         }
-        System.err.println("counter: " + counter[0]);
+
         for (int i = 0; i < 10; i++) {
             CircleShape ballShape = new CircleShape();
             ballShape.setRadius(1);
@@ -226,7 +237,7 @@ public final class SwtCanvas_Box2DLights2
         CameraHolder cameraHolder = this.drawerManager.getCameraHolder();
         OrthographicCamera cam = cameraHolder.getCamera();
 //         cameraHolder.setWantedZoom(.05f);
-        cameraHolder.setWantedZoom(.2f);
+        cameraHolder.setWantedZoom(.06f);
 //        cam.zoom = .05f;
 //        cam.rotate(.5f);
         // cam.settranslate(0, 100);
@@ -286,16 +297,19 @@ public final class SwtCanvas_Box2DLights2
 
                 Array<Body> bodies = new Array<>();
                 this.world.getBodies(bodies);
+                gen1.forEach(PlanetChunkSystem.CUSTOM_FIELD_SOURCE, (x, y, i) -> {
+                    if (i > 0) {
+                        sdr.setColor(colors[i]);
+                        sdr.draw(blck, x, y, 1, 1);
+                    }
+                });
+
                 for (Body body : bodies) {
                     Vector2 pos = body.getPosition();
                     Object ud = body.getUserData();
                     if (ud instanceof UserDataHolder) {
                         UserDataHolder ush = (UserDataHolder) ud;
-                        ICollider jj = ush.collider.getTransformed(AffineHelper.getTranslate(pos.x, pos.y));
-                        if (ush.type > 0) {
-                            sdr.setColor(colors[ush.type]);
-                            sdr.draw(blck, pos.x, pos.y, 1, 1);
-                        } else {
+                        if (ush.type <= 0) {
                             sdr.setColor(Color.WHITE);
                             float angle = body.getAngle();
                             sdr.getBatch().draw(squ,
@@ -313,7 +327,8 @@ public final class SwtCanvas_Box2DLights2
             }
         }
 
-        if (TOldCompatibilityCode.FALSE) {
+        //if (TOldCompatibilityCode.FALSE)
+        {
             try (SwtDrawer_Shapes sdr = this.drawerManager.startShapesDrawer()) {
                 sdr.setColor(Color.WHITE);
                 for (PointLight a : this.lights) {

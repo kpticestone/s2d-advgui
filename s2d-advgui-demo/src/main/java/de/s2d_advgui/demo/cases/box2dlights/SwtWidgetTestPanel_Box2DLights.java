@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.utils.Align;
-
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
 import de.s2d_advgui.core.awidget.WidetLayer;
@@ -21,10 +20,11 @@ public class SwtWidgetTestPanel_Box2DLights extends ASwtWidgetTestPanel {
     public SwtWidgetTestPanel_Box2DLights(ISwtWidget<? extends Group> pParent) {
         super(pParent);
         DemoResourceManager rm = (DemoResourceManager) this.getContext().getResourceManager();
-        
+
         //WidetLayer[] layers = new WidetLayer[] { WidetLayer.BACKGROUND }
         int i = 0;
-        for(WidetLayer layer: WidetLayer.values())
+        //for(WidetLayer layer: WidetLayer.values())
+        WidetLayer layer = WidetLayer.BACKGROUND;
         //for (int i = 0; i < 1; i++)
         {
             int fi = i++;
@@ -40,7 +40,7 @@ public class SwtWidgetTestPanel_Box2DLights extends ASwtWidgetTestPanel {
             });
             canvas2.addDrawer(layer, false, ldr);
         }
-        this.setLayoutManager(new SwtLayoutManager_GridByColumns(3));
+        this.setLayoutManager(new SwtLayoutManager_GridByColumns(1));
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
