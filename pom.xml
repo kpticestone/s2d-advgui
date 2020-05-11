@@ -10,6 +10,7 @@
     <modules>
         <module>animations</module>
         <module>parent</module>
+        <module>chunksystem</module>
         <module>commons</module>
         <module>singstar</module>
         <module>s2d-advgui</module>

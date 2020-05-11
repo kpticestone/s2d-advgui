@@ -9,18 +9,13 @@
         <version>1.0.2-SNAPSHOT</version>
         <relativePath>../parent</relativePath>
     </parent>
-    <artifactId>s2d-advgui-demo</artifactId>
-	<name>de.s2d-advgui.s2d-advgui-demo</name>
+    <artifactId>chunksystem</artifactId>
+	<name>de.s2d-advgui.chunksystem</name>
     <dependencies>
-        <dependency>
-            <groupId>de.s2d-advgui</groupId>
-            <artifactId>s2d-advgui</artifactId>
-            <version>1.0.2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>de.s2d-advgui</groupId>
-            <artifactId>chunksystem</artifactId>
-            <version>1.0.2-SNAPSHOT</version>
-        </dependency>
+    <dependency>
+        <groupId>de.s2d-advgui</groupId>
+        <artifactId>s2d-advgui</artifactId>
+        <version>1.0.2-SNAPSHOT</version>
+    </dependency>
     </dependencies>
 </project>
