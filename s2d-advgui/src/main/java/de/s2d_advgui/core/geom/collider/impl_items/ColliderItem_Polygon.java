@@ -5,6 +5,8 @@ import javax.annotation.Nonnull;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.Shape;
 
 import de.s2d_advgui.commons.TNull;
 import de.s2d_advgui.core.geom.Ray2D;
@@ -37,6 +39,14 @@ public final class ColliderItem_Polygon extends ColliderItem<Polygon> {
     @Override
     public void calculateIntersections(@Nonnull Ray2D pRay, @Nonnull IntersectionContext pContext) {
         Intersector_PolyRay.getInstance().calculateIntersections(pContext, this.shape, pRay);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public Shape createBox2dShape() {
+        PolygonShape back = new PolygonShape();
+        back.set(this.shape.getTransformedVertices());
+        return back;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

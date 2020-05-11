@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.leo.spheres.core.base.block.Direction;
 
 import de.s2d_advgui.core.geom.Ray2D;
@@ -104,6 +106,15 @@ public class ColliderItem_ChunkBlock extends ColliderItem<Rectangle> {
     public IColliderItem getTransformedItem(Affine2 transform) {
         Polygon asPoly = ShapeUtils.byRect(this.shape);
         return new ColliderItem_Polygon(ShapeUtils.clone2(asPoly, transform));
+    }
+    
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public Shape createBox2dShape() {
+        PolygonShape back = new PolygonShape();
+        Polygon poly = ShapeUtils.byRect(this.shape);
+        back.set(poly.getTransformedVertices());
+        return back;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

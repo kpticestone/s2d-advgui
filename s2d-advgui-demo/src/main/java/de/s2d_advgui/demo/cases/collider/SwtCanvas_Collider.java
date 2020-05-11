@@ -119,7 +119,7 @@ public final class SwtCanvas_Collider extends SwtCanvas<DemoResourceManager, Swt
         tests.add(new ColliderTest_PolyInRect());
         tests.add(new ColliderTest_RayBuild1());
         tests.add(new ColliderTest_RayBuild2());
-        tests.add(new ColliderTest_ManyRays());
+        // tests.add(new ColliderTest_ManyRays());
 
         {
             int ixox = (int) Math.ceil(Math.sqrt(tests.size()));

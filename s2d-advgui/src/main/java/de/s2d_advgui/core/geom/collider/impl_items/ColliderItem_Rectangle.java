@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.Shape;
 
 import de.s2d_advgui.core.geom.Ray2D;
 import de.s2d_advgui.core.geom.collider.ColliderItem;
@@ -38,6 +40,15 @@ public class ColliderItem_Rectangle extends ColliderItem<Rectangle> {
     @Override
     public void calculateIntersections(@Nonnull Ray2D pRay, @Nonnull IntersectionContext pContext) {
         Intersector_RayRect.getInstance().calculateIntersections(pContext, pRay, this.shape);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public Shape createBox2dShape() {
+        PolygonShape back = new PolygonShape();
+        Polygon poly = ShapeUtils.byRect(this.shape);
+        back.set(poly.getTransformedVertices());
+        return back;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

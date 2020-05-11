@@ -52,15 +52,19 @@ public interface ISwtDrawerManager<RM extends AResourceManager> {
         Matrix4 tmj = new Matrix4(pBatch.getTransformMatrix());
         Matrix4 pm = new Matrix4(sr.getProjectionMatrix());
         Matrix4 ps = new Matrix4(sr.getTransformMatrix());
-        if (stopBatch) {
+        boolean restart;
+        if (stopBatch && pBatch.isDrawing()) {
             pBatch.end();
+            restart = true;
+        } else {
+            restart = false;
         }
         return () -> {
             pBatch.setTransformMatrix(tmj);
             pBatch.setProjectionMatrix(pjm);
             sr.setProjectionMatrix(pm);
             sr.setTransformMatrix(ps);
-            if (stopBatch) {
+            if (restart) {
                 pBatch.begin();
             }
         };

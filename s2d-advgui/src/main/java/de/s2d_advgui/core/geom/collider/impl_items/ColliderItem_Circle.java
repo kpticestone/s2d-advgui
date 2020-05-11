@@ -7,6 +7,8 @@ import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Shape;
 
 import de.s2d_advgui.core.geom.Ray2D;
 import de.s2d_advgui.core.geom.collider.ColliderItem;
@@ -40,6 +42,15 @@ public final class ColliderItem_Circle extends ColliderItem<Circle> {
     @Override
     public void calculateIntersections(@Nonnull Ray2D pRay, @Nonnull IntersectionContext pContext) {
         Intersector_CircleRay.getInstance().calculateIntersections(pContext, this.shape, pRay);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public Shape createBox2dShape() {
+        CircleShape back = new CircleShape();
+        back.setPosition(new Vector2(this.shape.x, this.shape.y));
+        back.setRadius(this.shape.radius);
+        return back;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

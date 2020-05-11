@@ -1,4 +1,4 @@
-package de.s2d_advgui.demo.cases.box2dlights;
+package de.s2d_advgui.demo.cases.particleeffects;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
@@ -16,31 +16,24 @@ import de.s2d_advgui.core.utils.ShapeUtils;
 import de.s2d_advgui.demo.DemoResourceManager;
 import de.s2d_advgui.demo.cases.ASwtWidgetTestPanel;
 
-public class SwtWidgetTestPanel_Box2DLights extends ASwtWidgetTestPanel {
+public class SwtWidgetTestPanel_ParticleEffects extends ASwtWidgetTestPanel {
     // -------------------------------------------------------------------------------------------------------------------------
-    public SwtWidgetTestPanel_Box2DLights(ISwtWidget<? extends Group> pParent) {
+    public SwtWidgetTestPanel_ParticleEffects(ISwtWidget<? extends Group> pParent) {
         super(pParent);
         DemoResourceManager rm = (DemoResourceManager) this.getContext().getResourceManager();
-        
-        //WidetLayer[] layers = new WidetLayer[] { WidetLayer.BACKGROUND }
-        int i = 0;
-        for(WidetLayer layer: WidetLayer.values())
-        //for (int i = 0; i < 1; i++)
-        {
-            int fi = i++;
+        for (int i = 0; i < 1; i++) {
+            int fi = i;
             SwtDrawerManager<DemoResourceManager> drawerManager2 = new SwtDrawerManager<>(rm);
-            LightsDrawer ldr = new LightsDrawer(drawerManager2, pParent.getContext());
-            SwtCanvas_Box2DLights2 canvas2 = new SwtCanvas_Box2DLights2(this, ldr, drawerManager2);
+            SwtCanvas_ParticleEffects canvas2 = new SwtCanvas_ParticleEffects(this, drawerManager2);
             canvas2.addDrawer(WidetLayer.FOREGROUND, false, new InternalWidgetDrawerBatch() {
                 @Override
                 protected void _drawIt(SwtDrawer_Batch<?> pBatch, Vector2 pScreenCoords, Rectangle pDims) {
-                    String pStrg = "xyz " + fi + " (layer: " + layer + ")";
+                    String pStrg = "xyz " + fi;
                     pBatch.drawText(pStrg, ShapeUtils.explode(pDims, 20), Align.bottom, 1f, true, Color.CYAN);
                 }
             });
-            canvas2.addDrawer(layer, false, ldr);
         }
-        this.setLayoutManager(new SwtLayoutManager_GridByColumns(3));
+        this.setLayoutManager(new SwtLayoutManager_GridByColumns(1));
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
