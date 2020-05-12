@@ -24,8 +24,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.utils.Array;
-import com.leo.spheres.core.chunksystem.Collider_Planet;
-import com.leo.spheres.core.chunksystem.CoordConsumerShort;
 import com.leo.spheres.core.chunksystem.PlanetChunkSystem;
 import com.leo.spheres.core.chunksystem.PlanetGenerator;
 import de.s2d_advgui.animations.AnimationManager;
@@ -95,33 +93,16 @@ public final class SwtCanvas_Box2DLights2
 
         gen1 = PlanetGenerator.doGenerate();
 
-        Collider_Planet colliderPlanet = new Collider_Planet(gen1);
-
         int[] counter = {0};
         RandomXS128 xj = new RandomXS128();
         {
             int s = gen1.getPlanetSize();
-            boolean[][] blocks = new boolean[s][s];
-            final int[] blockCounter = {0};
-            gen1.forEachChunk(chunk -> {
-                if (!chunk.outofatmos) {
-                    gen1.forEach(chunk, PlanetChunkSystem.CUSTOM_FIELD_SOURCE, (x, y, i) -> gen1.forEach(chunk, PlanetChunkSystem.CUSTOM_FIELD_SOURCE, new CoordConsumerShort() {
-                        @Override
-                        public void accept(int x, int y, short i) {
-                            if (gen1.isBlockExists(x, y)) {
-                                blockCounter[0]++;
-                                blocks[x + (s / 2)][y + (s / 2)] = true;
-                            }
-                        }
-                    }));
-                }
-            });
 
             System.err.println("counter: " + counter[0]);
 
-            List<Rectangle> rects = RectangleMerger.merge(blocks);
+            //System.out.println("before merge: " + blockCounter[0]);
+            List<Rectangle> rects = RectangleMerger.merge(s, (x, y) -> gen1.isBlockExists(x - (s / 2), y - (s / 2)));
 
-            System.out.println("before merge: " + blockCounter[0]);
             System.out.println("after merge: " + rects.size());
             for (Rectangle rect : rects) {
                 Rectangle localRect = new Rectangle(0, 0, rect.width, rect.height);

@@ -6,13 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RectangleMerger {
-    public static List<Rectangle> merge(boolean[][] blocks) {
-        int size = blocks.length;
+    public static List<Rectangle> merge(int size, CoordExistProvider existsProvider) {
+        boolean[][] merged = new boolean[size][size];
+        CoordExistProvider notMergedAndExists = (x, y) -> !merged[x][y] && existsProvider.exists(x, y);
 
         List<Rectangle> rects = new ArrayList<>();
         for (int ix = 0; ix < size; ix++) {
             for (int iy = 0; iy < size; iy++) {
-                Rectangle r = searchSquare(blocks, ix, iy);
+                Rectangle r = searchRectangle(notMergedAndExists, merged, ix, iy, size);
                 if (r != null) {
                     rects.add(r);
                 }
@@ -21,8 +22,8 @@ public class RectangleMerger {
         return rects;
     }
 
-    private static Rectangle searchSquare(boolean[][] block, int sx, int sy) {
-        if (!block[sx][sy]) {
+    private static Rectangle searchRectangle(CoordExistProvider coords, boolean[][] merged, int sx, int sy, int size) {
+        if (!coords.exists(sx, sy)) {
             return null;
         }
 
@@ -30,10 +31,10 @@ public class RectangleMerger {
         int height = 1;
         boolean continueY = true;
         boolean continueX = true;
-        while ((continueY || continueX) && sx + width < block.length && sy + height < block.length) {
+        while ((continueY || continueX) && sx + width < size && sy + height < size) {
             if (continueY) {
                 for (int cx = sx; cx <= sx + width; cx++) {
-                    if (!block[cx][sy + height]) {
+                    if (!coords.exists(cx, sy + height)) {
                         continueY = false;
                         break;
                     }
@@ -41,7 +42,7 @@ public class RectangleMerger {
             }
             if (continueX) {
                 for (int cy = sy; cy < sy + height; cy++) {
-                    if (!block[sx + width][cy]) {
+                    if (!coords.exists(sx + width, cy)) {
                         continueX = false;
                         break;
                     }
@@ -53,9 +54,14 @@ public class RectangleMerger {
 
         for (int cx = 0; cx < width; cx++) {
             for (int cy = 0; cy < height; cy++) {
-                block[sx + cx][sy + cy] = false;
+                merged[sx + cx][sy + cy] = true;
             }
         }
         return new Rectangle(sx, sy, width, height);
+    }
+
+    @FunctionalInterface
+    public interface CoordExistProvider {
+        boolean exists(int x, int y);
     }
 }
