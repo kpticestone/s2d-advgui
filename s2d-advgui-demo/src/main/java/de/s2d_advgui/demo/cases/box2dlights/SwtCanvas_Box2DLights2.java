@@ -43,6 +43,7 @@ import de.s2d_advgui.core.rendering.SwtDrawerManager;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
 import de.s2d_advgui.core.rendering.SwtDrawer_Shapes;
 import de.s2d_advgui.core.utils.AffineHelper;
+import de.s2d_advgui.core.utils.RectangleMerger;
 import de.s2d_advgui.core.utils.ShapeUtils;
 import de.s2d_advgui.demo.DemoResourceManager;
 
@@ -100,7 +101,7 @@ public final class SwtCanvas_Box2DLights2
         RandomXS128 xj = new RandomXS128();
         {
             int s = gen1.getPlanetSize();
-            boolean[][] block = new boolean[s][s];
+            boolean[][] blocks = new boolean[s][s];
             final int[] blockCounter = {0};
             gen1.forEachChunk(chunk -> {
                 if (!chunk.outofatmos) {
@@ -109,7 +110,7 @@ public final class SwtCanvas_Box2DLights2
                         public void accept(int x, int y, short i) {
                             if (gen1.isBlockExists(x, y)) {
                                 blockCounter[0]++;
-                                block[x + (s / 2)][y + (s / 2)] = true;
+                                blocks[x + (s / 2)][y + (s / 2)] = true;
                             }
                         }
                     }));
@@ -118,7 +119,7 @@ public final class SwtCanvas_Box2DLights2
 
             System.err.println("counter: " + counter[0]);
 
-            List<Rectangle> rects = RectangleMerge.merge(block);
+            List<Rectangle> rects = RectangleMerger.merge(blocks);
 
             System.out.println("before merge: " + blockCounter[0]);
             System.out.println("after merge: " + rects.size());
