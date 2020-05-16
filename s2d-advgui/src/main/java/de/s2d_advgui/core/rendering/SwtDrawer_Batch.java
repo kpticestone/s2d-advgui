@@ -9,7 +9,9 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
@@ -274,6 +276,22 @@ public final class SwtDrawer_Batch<RM extends AResourceManager> extends ASwtDraw
         this.batch.draw(trBL, pDims.x, pDims.y);
         this.batch.draw(trB, fu, pDims.y, twi, o1);
         this.batch.draw(trBR, ajs, pDims.y);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public ITransformClosable addTransform(Affine2 pAffine) {
+        Matrix4 was = new Matrix4(this.batch.getTransformMatrix());
+        Matrix4 use = new Matrix4(was);
+        // was.setTranslation()
+        use.set(pAffine);
+        this.batch.setTransformMatrix(use);
+        
+        return new ITransformClosable() {
+            @Override
+            public void close() throws Exception {
+                batch.setTransformMatrix(was);
+            }
+        };
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

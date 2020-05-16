@@ -1,4 +1,4 @@
-package de.s2d_advgui.demo.cases.box2dlights;
+package de.s2d_advgui.core.canvas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -19,18 +19,17 @@ import de.s2d_advgui.core.screens.SlaveViewport;
 import de.s2d_advgui.core.stage.ISwtStage;
 import de.s2d_advgui.core.utils.AffineHelper;
 import de.s2d_advgui.core.utils.CalcUtils;
-import de.s2d_advgui.demo.DemoResourceManager;
 
-public final class LightsDrawer implements IInternalWidgetDrawer {
+public abstract class LightsDrawer implements IInternalWidgetDrawer {
     // -------------------------------------------------------------------------------------------------------------------------
-    private World world;
-    private RayHandler rayHandler;
+    protected final World world;
+    protected final RayHandler rayHandler;
     private Matrix4 oldMatrix;
-    private SwtDrawerManager<?> drawerManager;
-    private ISwtStage<?, ?> stage;
+    protected final SwtDrawerManager<?> drawerManager;
+    protected final ISwtStage<?, ?> stage;
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public LightsDrawer(SwtDrawerManager<DemoResourceManager> pDrawerManager, ISwtStage<?, ?> pSwtStage) {
+    public LightsDrawer(SwtDrawerManager<?> pDrawerManager, ISwtStage<?, ?> pSwtStage) {
         this.drawerManager = pDrawerManager;
         this.stage = pSwtStage;
         this.world = new World(new Vector2(0, -10), true);
@@ -38,18 +37,18 @@ public final class LightsDrawer implements IInternalWidgetDrawer {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public World getWorld() {
+    public final World getWorld() {
         return this.world;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public RayHandler getRayHandler() {
+    public final RayHandler getRayHandler() {
         return this.rayHandler;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    public void drawIt(ISwtDrawerManager<?> pDrawerManagerOfGui, Vector2 pScreenCoords, Rectangle pDims) {
+    public final void drawIt(ISwtDrawerManager<?> pDrawerManagerOfGui, Vector2 pScreenCoords, Rectangle pDims) {
         Rectangle rDims = this.stage.getStageDimensions();
         try (ISwtBatchSaver jf = pDrawerManagerOfGui.batchSave(true)) {
             CameraHolder cameraHolder = this.drawerManager.getCameraHolder();
@@ -66,6 +65,9 @@ public final class LightsDrawer implements IInternalWidgetDrawer {
                 this.rayHandler.resizeFBO((int) ld.width, (int) ld.height);
             }
             this.world.step(Gdx.graphics.getDeltaTime(), 8, 3);
+            
+            this._onUpdate();
+            
             this.rayHandler.updateAndRender();
         }
 
@@ -88,6 +90,8 @@ public final class LightsDrawer implements IInternalWidgetDrawer {
             }
         }
     }
+
+    protected abstract void _onUpdate();
 
     // -------------------------------------------------------------------------------------------------------------------------
 }

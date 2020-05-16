@@ -1,8 +1,9 @@
 package de.s2d_advgui.demo.cases.box2dlights;
 
-import box2dLight.DirectionalLight;
-import box2dLight.PointLight;
-import box2dLight.RayHandler;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -26,12 +27,17 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.utils.Array;
 import com.leo.spheres.core.chunksystem.PlanetChunkSystem;
 import com.leo.spheres.core.chunksystem.PlanetGenerator;
+
+import box2dLight.DirectionalLight;
+import box2dLight.PointLight;
+import box2dLight.RayHandler;
 import de.s2d_advgui.animations.AnimationManager;
 import de.s2d_advgui.animations.IAnimationListener_Close;
 import de.s2d_advgui.animations.impl.Animation_Sleep;
 import de.s2d_advgui.commons.TOldCompatibilityCode;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.camera.CameraHolder;
+import de.s2d_advgui.core.canvas.LightsDrawer;
 import de.s2d_advgui.core.canvas.SwtCanvas;
 import de.s2d_advgui.core.geom.animations.Animation_ChangeBounds;
 import de.s2d_advgui.core.geom.animations.IAnimationListener_ChangeBounds;
@@ -44,10 +50,6 @@ import de.s2d_advgui.core.utils.AffineHelper;
 import de.s2d_advgui.core.utils.RectangleMerger;
 import de.s2d_advgui.core.utils.ShapeUtils;
 import de.s2d_advgui.demo.DemoResourceManager;
-
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
 
 public final class SwtCanvas_Box2DLights2
         extends SwtCanvas<DemoResourceManager, SwtDrawerManager<DemoResourceManager>> {

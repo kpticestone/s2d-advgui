@@ -8,14 +8,17 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter.SpawnShape;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Group;
 
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.camera.CameraHolder;
 import de.s2d_advgui.core.canvas.SwtCanvas;
+import de.s2d_advgui.core.rendering.ITransformClosable;
 import de.s2d_advgui.core.rendering.SwtDrawerManager;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
+import de.s2d_advgui.core.utils.AffineHelper;
 import de.s2d_advgui.demo.DemoResourceManager;
 
 public final class SwtCanvas_ParticleEffects
@@ -42,7 +45,7 @@ public final class SwtCanvas_ParticleEffects
         CameraHolder cameraHolder = this.drawerManager.getCameraHolder();
         OrthographicCamera cam = cameraHolder.getCamera();
 //        cameraHolder.setWantedZoom(.05f);
-        cameraHolder.setWantedZoom(.1f);
+        cameraHolder.setWantedZoom(1f);
 //        cam.zoom = .05f;
 //        cam.rotate(.5f);
         // cam.settranslate(0, 100);
@@ -66,6 +69,7 @@ public final class SwtCanvas_ParticleEffects
             sdr.setColor(Color.WHITE);
 
             ParticleEmitter emmi = additiveEffect.getEmitters().get(0);
+
             emmi.getSpawnShape().setShape(SpawnShape.point);
             // emmi.setMinParticleCount(0);
             // emmi.setMaxParticleCount(2000);
@@ -83,10 +87,27 @@ public final class SwtCanvas_ParticleEffects
             emmi.getWind().setHighMax(100);
 //            emmi.flipY();
             emmi.getXOffsetValue().setLow(0, 0); // keine auswirkung. :(
-            emmi.getYOffsetValue().setLow(-200, 200); // -200, 200 ist richtig!
+            emmi.getYOffsetValue().setLow(-100, 100); // -200, 200 ist richtig!
 
             float delta = getContext().getDelta();
-            additiveEffect.draw(sdr.getBatch(), delta);
+
+            try (ITransformClosable tc = sdr.addTransform(AffineHelper.getTranslate(-100, 0))) {
+                additiveEffect.draw(sdr.getBatch(), delta);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try (ITransformClosable tc = sdr.addTransform(new Affine2().translate(-200, -200).rotate(45))) {
+                additiveEffect.draw(sdr.getBatch(), delta);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try (ITransformClosable tc = sdr.addTransform(new Affine2().translate(-200, 200).rotate(-45))) {
+                additiveEffect.draw(sdr.getBatch(), delta);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            
+            sdr.draw("/ui/multicolorbackground1.png", new Rectangle(-50, -50, 100, 100));
         }
     }
 

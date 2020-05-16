@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Align;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
 import de.s2d_advgui.core.awidget.WidetLayer;
+import de.s2d_advgui.core.canvas.LightsDrawer;
 import de.s2d_advgui.core.layoutmanager.SwtLayoutManager_GridByColumns;
 import de.s2d_advgui.core.rendering.SwtDrawerManager;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
@@ -29,7 +30,12 @@ public class SwtWidgetTestPanel_Box2DLights extends ASwtWidgetTestPanel {
         {
             int fi = i++;
             SwtDrawerManager<DemoResourceManager> drawerManager2 = new SwtDrawerManager<>(rm);
-            LightsDrawer ldr = new LightsDrawer(drawerManager2, pParent.getContext());
+            LightsDrawer ldr = new LightsDrawer(drawerManager2, pParent.getContext()) {
+                @Override
+                protected void _onUpdate() {
+                    // DON
+                }
+            };
             SwtCanvas_Box2DLights2 canvas2 = new SwtCanvas_Box2DLights2(this, ldr, drawerManager2);
             canvas2.addDrawer(WidetLayer.FOREGROUND, false, new InternalWidgetDrawerBatch() {
                 @Override
