@@ -10,6 +10,7 @@ public class DemoApp extends SwtApplication<DemoResourceManager, ISwtDrawerManag
     // -------------------------------------------------------------------------------------------------------------------------
     public DemoApp(ISwtDrawerManager<DemoResourceManager> pDrawerManager) throws Exception {
         super(pDrawerManager);
+        //fpsLimit = 144;
         this.registerScreen(DemoScreenDescriptor.getInstance());
     }
 

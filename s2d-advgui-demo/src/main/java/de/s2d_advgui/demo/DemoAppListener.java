@@ -16,7 +16,7 @@ public class DemoAppListener extends
         config.setWindowedMode(1280, 800);
         // config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
         // config.setHdpiMode(HdpiMode.Pixels);
-        config.useVsync(true);
+        config.useVsync(false);
         // config.useOpenGL3(true, 3, 2);
         config.setHdpiMode(HdpiMode.Logical);
         new Lwjgl3Application(new DemoAppListener(), config); // needs to be in the main thread for osx
