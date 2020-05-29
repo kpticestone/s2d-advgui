@@ -1,19 +1,19 @@
 package de.s2d_advgui.core.application;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-
 import de.s2d_advgui.animations.AnimationManager;
 import de.s2d_advgui.core.awidget.IMyWidgetUpdateHandler;
 import de.s2d_advgui.core.rendering.ISwtDrawerManager;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
+import de.s2d_advgui.core.screens.SplitScreenArrangement;
 import de.s2d_advgui.core.screens.SwtScreen;
 import de.s2d_advgui.core.screens.SwtScreenDescriptor;
 import de.s2d_advgui.core.stage.ASwtStage;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class ASwtApplication_150_ScreenStages<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>, STAGE extends ASwtStage<RM, DM>>
         extends ASwtApplication_000_Ground<RM, DM, STAGE> {
@@ -78,6 +78,9 @@ public abstract class ASwtApplication_150_ScreenStages<RM extends AResourceManag
     // -------------------------------------------------------------------------------------------------------------------------
     protected final STAGE createStage() throws Exception {
         int stageNr = this.stages.size();
+        if (stageNr >= SplitScreenArrangement.MAX - 1) {
+            throw new IllegalStateException("Maximum Splitscreens reached");
+        }
         STAGE someStage = this._createStage(new ISwtApplicationController<>() {
             @Override
             public SwtScreen<RM, DM> activateScreen(String id) throws Exception {
