@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -98,8 +97,8 @@ public class SingStarClassHolder {
         }
 
         private void add(T instance, boolean isPrimary) {
-            T previous = this.instances.add(instance);
-            if (previous != null) {
+            Optional<T> previous = this.instances.add(instance);
+            if (previous.isPresent()) {
                 log.error("Duplicated Handlers for '{}': {} <-> {}",
                         this.forClass.getSimpleName(),
                         instance.getClass().getSimpleName(),
@@ -114,15 +113,18 @@ public class SingStarClassHolder {
 
     private static class SingStarCollection<T> implements ISingStarCollection<T> {
         Set<T> use = new LinkedHashSet<>();
-        Map<Object, T> idMap = new HashMap<>();
+        Map<Object, Optional<T>> idMap = new HashMap<>();
 
-        private T add(T instance) {
+        private Optional<T> add(T instance) {
             if (this.use.add(instance)) {
                 if (instance instanceof ISingStarDescriptor) {
-                    return this.idMap.put(((ISingStarDescriptor) instance).getID(), instance);
+                    Optional<T> previous = this.idMap.put(((ISingStarDescriptor<?>) instance).getID(), Optional.of(instance));
+                    if (previous != null && previous.isPresent()) {
+                        return previous;
+                    }
                 }
             }
-            return null;
+            return Optional.empty();
         }
 
         @Nonnull
@@ -138,7 +140,7 @@ public class SingStarClassHolder {
 
         @Override
         public Optional<T> get(Object id) {
-            return Optional.ofNullable(this.idMap.get(id));
+            return this.idMap.getOrDefault(id, Optional.empty());
         }
     }
 }

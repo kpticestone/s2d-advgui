@@ -1,12 +1,5 @@
 package de.s2d_advgui.core.awidget;
 
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -15,11 +8,16 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-
 import de.s2d_advgui.commons.Trigger;
 import de.s2d_advgui.core.rendering.ISwtDrawerManager;
 import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
 import de.s2d_advgui.core.stage.ISwtStage;
+
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 public abstract class ASwtWidget_970_Rendering<ACTOR extends Actor> extends ASwtWidget_950_Calculating<ACTOR> {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -153,13 +151,19 @@ public abstract class ASwtWidget_970_Rendering<ACTOR extends Actor> extends ASwt
         srx.setProjectionMatrix(pm);
         srx.setTransformMatrix(tm);
 
-        ISwtDrawerManager<?> useDm = dm.cloneDrawerWithOtherBatch(batch, srx);
-        Set<DrawableHolder> d1 = this.drawer.get(background);
-        if (d1 != null) {
-            for (DrawableHolder a : d1) {
-                a.drawIt(base, useDm, this.v2, this.drawingRect);
-                batch.setColor(Color.WHITE);
+        //TODO warum gibt es mehrere Batches?
+        // Laut Libgdx soll es nur einen geben, es kann sowieso nur einer gleichzeitig malen.
+        Batch previousBatch = dm.setBatch(batch);
+        try {
+            Set<DrawableHolder> d1 = this.drawer.get(background);
+            if (d1 != null) {
+                for (DrawableHolder a : d1) {
+                    a.drawIt(base, dm, this.v2, this.drawingRect);
+                    batch.setColor(Color.WHITE);
+                }
             }
+        } finally {
+            dm.setBatch(previousBatch);
         }
     }
 
