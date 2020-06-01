@@ -40,12 +40,7 @@ public abstract class ASwtWidget_ControllerLevel<T extends Actor> extends ASwtWi
             this.controllerLevel.doUpdateOrderedList();
         });
         ((IControllerLevelTarget) this.context).setCurrentControllerLevel(this.controllerLevel);
-        this.addDisposeListener(() -> {
-            IControllerLevel removedLevel = ((IControllerLevelTarget) this.context).removeCurrentControllerLevel();
-            if (removedLevel != this.controllerLevel) {
-                log.warn("!!removed unknown controller level!! {}", removedLevel);
-            }
-        });
+        this.addDisposeListener(() -> ((IControllerLevelTarget) this.context).removeControllerLevel(this.controllerLevel));
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

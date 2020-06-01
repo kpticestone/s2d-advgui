@@ -153,6 +153,17 @@ public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM exten
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public void removeControllerLevel(IControllerLevel level) {
+        if (this.currentControllerLevel != level) {
+            log.warn("removing controller-level that was not current {}, {}", currentControllerLevel, level);
+        }
+        controllerStack.remove(level);
+        this.currentControllerLevel = this.controllerStack.peek();
+        this.currentControllerLevel.doFocusCurrentWidget();
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final boolean keyDown(int keyCode) {

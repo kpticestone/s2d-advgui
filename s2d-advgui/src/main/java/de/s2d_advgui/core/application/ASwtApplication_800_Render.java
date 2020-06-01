@@ -44,7 +44,7 @@ public abstract class ASwtApplication_800_Render<RM extends AResourceManager, DM
         this.handleInput();
 
         if (this.stages.isEmpty()) {
-            this.zero.setBounds(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight());
+            this.zero.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             this.zero.act(delta);
             this.zero.draw();
         } else {
