@@ -17,5 +17,10 @@
         <artifactId>s2d-advgui</artifactId>
         <version>1.0.2-SNAPSHOT</version>
     </dependency>
+    <dependency>
+        <groupId>de.s2d-advgui</groupId>
+        <artifactId>commons</artifactId>
+        <version>1.0.2-SNAPSHOT</version>
+    </dependency>
     </dependencies>
 </project>

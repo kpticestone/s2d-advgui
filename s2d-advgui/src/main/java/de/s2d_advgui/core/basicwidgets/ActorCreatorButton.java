@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
 import de.s2d_advgui.core.awidget.acc.IActorCreator;
 import de.s2d_advgui.core.rendering.IRend123;
 
-final class ActorCreatorButton implements IActorCreator<Button> {
+public final class ActorCreatorButton implements IActorCreator<Button> {
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public Button createActor(IRend123 pRend) {

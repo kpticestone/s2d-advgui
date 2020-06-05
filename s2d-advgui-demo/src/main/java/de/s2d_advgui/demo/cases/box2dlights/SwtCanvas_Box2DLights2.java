@@ -93,7 +93,7 @@ public final class SwtCanvas_Box2DLights2
 
         dl = new DirectionalLight(this.rayHandler, 1024, new Color(1f, 1f, 0f, .8f), 270 - 10);
 
-        gen1 = PlanetGenerator.doGenerate();
+        gen1 = PlanetGenerator.doGenerate(50);
 
         int[] counter = {0};
         RandomXS128 xj = new RandomXS128();

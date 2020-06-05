@@ -37,6 +37,11 @@ public class Ray2D implements Shape2D {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
+    public Ray2D(Vector2 p1, Vector2 p2) {
+        this(p1.x, p1.y, p2.x, p2.y);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
     public void getTranslatedInstance(@Nonnull Affine2 pAffine, @Nonnull Ray2D pTarget) {
         this.tmp1.set(this.x1, this.y1);
         pAffine.applyTo(this.tmp1);

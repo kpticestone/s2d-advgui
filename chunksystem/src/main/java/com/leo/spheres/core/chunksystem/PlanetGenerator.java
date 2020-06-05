@@ -14,9 +14,8 @@ public class PlanetGenerator {
     public static final int GOLD_ORE = 5;
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public static PlanetChunkSystem doGenerate() {
+    public static PlanetChunkSystem doGenerate(int blockRadius) {
         PerlinNoiseGenerator environment = new PerlinNoiseGenerator(new Random().nextLong());
-        int blockRadius = 50;
         float outlineRadius = blockRadius+15;
         PlanetChunkSystem blockMapper = new PlanetChunkSystem(AChunkSystem.calcBlockMapperSize(outlineRadius));
         for (int lX = -blockRadius; lX <= blockRadius; lX++) {

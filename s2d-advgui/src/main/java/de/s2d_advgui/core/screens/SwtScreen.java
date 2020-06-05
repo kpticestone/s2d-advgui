@@ -21,7 +21,7 @@ public abstract class SwtScreen<RM extends AResourceManager, DM extends ISwtDraw
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Nonnull
-    protected final ISwtDrawerManager<RM> drawerManager;
+    protected final DM drawerManager;
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Nonnull

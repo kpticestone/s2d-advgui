@@ -69,4 +69,9 @@ public class Collider implements ICollider {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
+    public boolean isOverlapping(ICollider collider) {
+        return this.calcIntersections(collider, false, IntersectionListener.EMPTY);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
 }

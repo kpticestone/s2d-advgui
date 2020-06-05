@@ -1,16 +1,22 @@
 package com.leo.spheres.core.chunksystem;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.badlogic.gdx.math.Vector2;
 import com.leo.commons.geom.Point;
 import com.leo.commons.utils.Brush;
 
 public class PlanetChunkSystem extends AChunkSystem {
     // -------------------------------------------------------------------------------------------------------------------------
+    private static final Logger log = LoggerFactory.getLogger(PlanetChunkSystem.class);
+    // -------------------------------------------------------------------------------------------------------------------------
     public static final int CUSTOM_FIELD_SOURCE = 0;
     public static final int CUSTOM_FIELD_VISIBLE = 1;
     public static final int CUSTOM_FIELD_OUTLINE = 2;
+    public static final int CUSTOM_FIELD_LIGHTMAP = 3;
     // -------------------------------------------------------------------------------------------------------------------------
-    private final static int CUSTOM_FIELDS = 3;
+    private final static int CUSTOM_FIELDS = 4;
     // -------------------------------------------------------------------------------------------------------------------------
     private final int quad;
     // -------------------------------------------------------------------------------------------------------------------------
@@ -73,6 +79,18 @@ public class PlanetChunkSystem extends AChunkSystem {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
+    protected boolean doReset(int pCustonFieldNr, int x, int y, short targetId) {
+        int o = tr0(x, y);
+        boolean back = false;
+        int p = o + pCustonFieldNr * this.quad;
+        if (this.allData[p] != targetId) {
+            this.allData[p] = targetId;
+            back = true;
+        }
+        return back;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
     public void doReset(int fieldType) {
         for (int i = 0; i < quad; i++) {
             allData[i + (fieldType * quad)] = 0;
@@ -118,6 +136,16 @@ public class PlanetChunkSystem extends AChunkSystem {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
+    public final void forceFastSet(int pCustonFieldNr, int pAbsoluteX, int pAbsoluteY, short pValue) {
+        int translatedX = pAbsoluteX + this.half;
+        int translatedY = pAbsoluteY + this.half;
+        if (translatedX < 0 || translatedY < 0 || translatedX >= this.planetSize || translatedY >= this.planetSize)
+            return;
+        int o = (pCustonFieldNr * this.quad) + translatedY * this.planetSize + translatedX;
+        this.allData[o] = pValue;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
 
     /**
      * @param pAbsoluteX
@@ -132,7 +160,9 @@ public class PlanetChunkSystem extends AChunkSystem {
             return false;
         if (this.doSet(pCustonFieldNr, translatedX, translatedY, pValue)) {
             if (!this.inImport) {
-                this.getChunk(translatedX, translatedY).rev = this.rev++;
+                if (pCustonFieldNr < CUSTOM_FIELD_OUTLINE) {
+                    this.getChunk(translatedX, translatedY).rev = this.rev++;
+                }
             }
             return true;
         }
@@ -239,6 +269,85 @@ public class PlanetChunkSystem extends AChunkSystem {
     public boolean isBlockExists(int blockX, int blockY) {
         short inside = this.get(CUSTOM_FIELD_SOURCE, blockX, blockY);
         return inside > 0;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public short getBlockGlowId() {
+        return 8;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public short getBlockHiddenId() {
+        return 9;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public void resetChunk(int pCustonFieldNr, Chunk chunk, short pTargetId) {
+        int useRev = this.rev++;
+        int h = this.planetSize / 2;
+        int x = (chunk.getX()) * CHUNKSIZE;
+        int y = (chunk.getY()) * CHUNKSIZE;
+        for (int cx = 0; cx < CHUNKSIZE; cx++) {
+            for (int cy = 0; cy < CHUNKSIZE; cy++) {
+                try {
+                    if (this.doReset(pCustonFieldNr, x + cx + h, y + cy + h, pTargetId)) {
+                        if (pCustonFieldNr < CUSTOM_FIELD_OUTLINE) {
+                            chunk.rev = useRev;
+                        }
+                    }
+                } catch (Exception e) {
+                    log.error("error resetting chunk {}/{}", cx, cy, e);
+                }
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    int stx[] = new int[3000000];
+    int sty[] = new int[3000000];
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public void floodOuttaSpace(int x1, int y1) {
+        int siz = this.half;
+        int f, r, x, y;
+        f = r = 0;
+        stx[0] = x1;
+        sty[0] = y1;
+        while (f >= r) {
+            x = stx[r];
+            y = sty[r++];
+            if (x > -siz && y >= -siz
+                    && x < siz
+                    && y < siz) {
+                if (this.get(PlanetChunkSystem.CUSTOM_FIELD_OUTLINE, x, y) == 0) {
+                    if (this.get(PlanetChunkSystem.CUSTOM_FIELD_SOURCE, x, y) == 0) {
+                        this.forceFastSet(PlanetChunkSystem.CUSTOM_FIELD_OUTLINE, x, y, (short)1);
+                        stx[f] = x;     sty[f++] = y + 1;
+                        stx[f] = x;     sty[f++] = y - 1;
+                        stx[f] = x + 1; sty[f++] = y;
+                        stx[f] = x - 1; sty[f++] = y;
+                        
+                        
+                        stx[f] = x + 1; sty[f++] = y + 1;
+                        stx[f] = x + 1; sty[f++] = y - 1;
+                        stx[f] = x - 1; sty[f++] = y + 1;
+                        stx[f] = x - 1; sty[f++] = y - 1;
+                    } else {
+                        this.forceFastSet(PlanetChunkSystem.CUSTOM_FIELD_OUTLINE, x, y, (short)2);
+                    }
+                }
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public void copy(int pAbsoluteX, int pAbsoluteY, int pCustomFieldNrSrc, int pCustomFieldNrDst) {
+        int translatedX = pAbsoluteX + this.half;
+        int translatedY = pAbsoluteY + this.half;
+        if (translatedX < 0 || translatedY < 0 || translatedX >= this.planetSize || translatedY >= this.planetSize)
+            return;
+        int o = translatedY * this.planetSize + translatedX;
+        this.allData[(pCustomFieldNrDst * this.quad) + o] = this.allData[(pCustomFieldNrSrc * this.quad) + o];
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

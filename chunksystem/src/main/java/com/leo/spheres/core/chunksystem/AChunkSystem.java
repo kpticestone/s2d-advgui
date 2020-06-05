@@ -3,6 +3,8 @@ package com.leo.spheres.core.chunksystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.leo.commons.geom.Point;
+
 import java.io.Closeable;
 import java.util.function.Consumer;
 
@@ -166,6 +168,24 @@ public abstract class AChunkSystem {
     public final Closeable init() {
         this.inImport = true;
         return () -> AChunkSystem.this.inImport = false;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public boolean contains(Point p) {
+        int translatedX = p.x + this.half;
+        int translatedY = p.y + this.half;
+        if (translatedX < 0 || translatedY < 0 || translatedX >= this.planetSize || translatedY >= this.planetSize)
+            return false;
+        return true;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public boolean contains(int x, int y) {
+        int translatedX = x + this.half;
+        int translatedY = y + this.half;
+        if (translatedX < 0 || translatedY < 0 || translatedX >= this.planetSize || translatedY >= this.planetSize)
+            return false;
+        return true;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

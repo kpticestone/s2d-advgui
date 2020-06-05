@@ -44,6 +44,7 @@ public abstract class SwtCanvas<RM extends AResourceManager, DM extends ISwtDraw
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Nullable
+    @Deprecated
     private ASwtInputRegister_Keys inputHandler;
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -141,7 +142,11 @@ public abstract class SwtCanvas<RM extends AResourceManager, DM extends ISwtDraw
 
     // -------------------------------------------------------------------------------------------------------------------------
     private final Vector2 decodeCoords(InputEvent pInputEvent) {
+//        Rectangle canvas = this.drawerManager.getCameraHolder().getLastDims();
+//        Vector2 voo = new Vector2(Gdx.input.getX(), Gdx.input.getY()-canvas.y);
+        
         Vector2 voo = new Vector2(pInputEvent.getStageX(), pInputEvent.getStageY());
+        
         Vector2 rii = new Vector2();
         this.coord123(voo, rii);
         return rii;
@@ -158,6 +163,7 @@ public abstract class SwtCanvas<RM extends AResourceManager, DM extends ISwtDraw
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
+    @Deprecated
     public void setInputHandler(ASwtInputRegister_Keys pInputHandler) {
         this.inputHandler = pInputHandler;
     }

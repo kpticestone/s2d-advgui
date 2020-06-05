@@ -2,7 +2,9 @@ package de.s2d_advgui.core.awidget;
 
 import javax.annotation.Nonnull;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import de.s2d_advgui.core.stage.ISwtStage;
@@ -118,5 +120,19 @@ public abstract class ASwtWidget_200_Coordinates<ACTOR extends Actor> extends AS
         this.bounds.height = height;
     }
 
+    // -------------------------------------------------------------------------------------------------------------------------
+    public final void screenCoordsToLocalCoords(Vector2 pIn, Vector2 pOut) {
+        pOut.set(pIn);
+        pOut.y = Gdx.graphics.getHeight() - pOut.y;
+        this.actor.screenToLocalCoordinates(pOut);
+    }
+    
+    // -------------------------------------------------------------------------------------------------------------------------
+    public final void localCoordsToScreenCoords(Vector2 pIn, Vector2 pOut) {
+        pOut.set(pIn);
+        pOut.y = Gdx.graphics.getHeight() - pOut.y;
+        this.actor.localToScreenCoordinates(pOut);
+    }
+    
     // -------------------------------------------------------------------------------------------------------------------------
 }
