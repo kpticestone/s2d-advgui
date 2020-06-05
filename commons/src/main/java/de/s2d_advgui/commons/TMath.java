@@ -79,5 +79,26 @@ public class TMath {
         return buf;
     }
 
+    // -----------------------------------------------------------------------------------------------------------
+    public static float getDegreesByCoord2f(float ax, float ay, float bx, float by) {
+        float w, x, y;
+        int qu = 0;
+        y = ax - bx;
+        x = ay - by;
+        if(x!=0) w = (float)Math.abs(Math.atan( (y/x) )* 180 / Math.PI); else w = 0;
+        if(x<0)  qu+= 4; if(x==0) qu+= 2; if(x>0)  qu+= 1;
+        if(y>0)  qu+= 8; if(y==0) qu+= 4; if(y<0)  qu+= 2;
+        switch( qu ) {
+          case 5 :  w = 0;       break;
+          case 3 :  w = w;       break;
+          case 4 :  w = 90;      break;
+          case 6 :  w = 180 - w; break;
+          case 8 :  w = 180;     break;
+          case 12 : w = 180 + w; break;
+          case 10 : w = 270;     break;
+          case 9 :  w = 360 - w; break;
+        }
+        return (w+270);
+    }
     // -------------------------------------------------------------------------------------------------------------------------
 }
