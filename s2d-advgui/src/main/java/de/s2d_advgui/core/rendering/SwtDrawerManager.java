@@ -1,7 +1,5 @@
 package de.s2d_advgui.core.rendering;
 
-import javax.annotation.Nonnull;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -10,6 +8,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import de.s2d_advgui.core.camera.CameraHolder;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
 
+import javax.annotation.Nonnull;
+
 public class SwtDrawerManager<RM extends AResourceManager> implements ISwtDrawerManager<RM> {
     // -------------------------------------------------------------------------------------------------------------------------
     @Nonnull
@@ -17,7 +17,7 @@ public class SwtDrawerManager<RM extends AResourceManager> implements ISwtDrawer
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Nonnull
-    protected final Batch batch;
+    protected Batch batch;
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Nonnull
@@ -28,10 +28,13 @@ public class SwtDrawerManager<RM extends AResourceManager> implements ISwtDrawer
     protected final CameraHolder cameraHolder = new CameraHolder();
 
     // -------------------------------------------------------------------------------------------------------------------------
+    public SwtDrawerManager(@Nonnull ISwtDrawerManager<RM> pOther) {
+        this(pOther.getBatch(), pOther.getShapeRenderer(), pOther.getResourceManager());
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
     public SwtDrawerManager(RM pResourceManager) {
-        this.batch = new SpriteBatch();
-        this.shapeRenderer = new ShapeRenderer();
-        this.resourceManager = pResourceManager;
+        this(new SpriteBatch(), new ShapeRenderer(), pResourceManager);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -42,23 +45,18 @@ public class SwtDrawerManager<RM extends AResourceManager> implements ISwtDrawer
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public SwtDrawerManager(@Nonnull ISwtDrawerManager<RM> pOther) {
-        this.batch = pOther.getBatch();
-        this.shapeRenderer = pOther.getShapeRenderer();
-        this.resourceManager = pOther.getResourceManager();
-    }
-    
-    // -------------------------------------------------------------------------------------------------------------------------
+    @Nonnull
     @Override
-    public SwtDrawerManager<RM> cloneDrawerWithOtherBatch(Batch batch, ShapeRenderer pShapeRenderer)
-    {
-        return new SwtDrawerManager<RM>(batch, pShapeRenderer, this.resourceManager);
+    public final CameraHolder getCameraHolder() {
+        return this.cameraHolder;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    public final CameraHolder getCameraHolder() {
-        return this.cameraHolder;
+    public Batch setBatch(Batch newBatch) {
+        Batch previousBatch = batch;
+        this.batch = newBatch;
+        return previousBatch;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

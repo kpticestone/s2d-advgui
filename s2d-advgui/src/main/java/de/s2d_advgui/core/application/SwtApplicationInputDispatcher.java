@@ -1,16 +1,18 @@
 package de.s2d_advgui.core.application;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.PovDirection;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import de.s2d_advgui.core.stage.ASwtStage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -18,6 +20,12 @@ import java.util.function.Consumer;
 
 public final class SwtApplicationInputDispatcher implements ControllerListener, InputProcessor {
     private static final Logger log = LoggerFactory.getLogger(SwtApplicationInputDispatcher.class);
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    // If enabled, the Keyboard can be used for Controller-Stages as well, when pointed at it.
+    public boolean shareKeyboard = false;
+    // -------------------------------------------------------------------------------------------------------------------------
+    private final Vector2 tmp = new Vector2();
     // -------------------------------------------------------------------------------------------------------------------------
     @Nonnull
     private final Map<Controller, ControllerListener> controllerListeners = new HashMap<>();
@@ -76,12 +84,12 @@ public final class SwtApplicationInputDispatcher implements ControllerListener, 
     @Override
     public boolean keyDown(int keycode) {
         if (keycode > 0) {
+            this.keyboardConnectionRequest = this.keyboardListener == null;
             try {
-                if (this.keyboardListener != null) return this.keyboardListener.keyDown(keycode);
+                forEachKeyboardListener(k -> k.keyDown(keycode));
             } catch (Exception e) {
                 log.error("error during keyDown " + keycode, e);
             }
-            this.keyboardConnectionRequest = true;
         }
         return false;
     }
@@ -90,7 +98,7 @@ public final class SwtApplicationInputDispatcher implements ControllerListener, 
     @Override
     public boolean keyUp(int keycode) {
         try {
-            if (this.keyboardListener != null) return this.keyboardListener.keyUp(keycode);
+            forEachKeyboardListener(k -> k.keyUp(keycode));
         } catch (Exception e) {
             log.error("error during keyUp " + keycode, e);
         }
@@ -101,7 +109,7 @@ public final class SwtApplicationInputDispatcher implements ControllerListener, 
     @Override
     public boolean keyTyped(char character) {
         try {
-            if (this.keyboardListener != null) return this.keyboardListener.keyTyped(character);
+            forEachKeyboardListener(k -> k.keyTyped(character));
         } catch (Exception e) {
             log.error("error during keyTyped " + character, e);
         }
@@ -112,9 +120,36 @@ public final class SwtApplicationInputDispatcher implements ControllerListener, 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         try {
-            if (this.keyboardListener != null) return this.keyboardListener.touchDown(screenX, screenY, pointer, button);
+            forEachKeyboardListener(k -> k.touchDown(screenX, screenY, pointer, button));
         } catch (Exception e) {
             log.error("error during touchDown " + button, e);
+        }
+        return false;
+    }
+
+    private void forEachKeyboardListener(Consumer<InputProcessor> consumer) {
+        if (!shareKeyboard) {
+            if (this.keyboardListener != null) {
+                consumer.accept(this.keyboardListener);
+            }
+            return;
+        }
+
+        if (hits(keyboardListener)) {
+            consumer.accept(this.keyboardListener);
+        }
+        for (ControllerListener controllerListener : controllerListeners.values()) {
+            if (hits(controllerListener)) {
+                consumer.accept((InputProcessor) controllerListener);
+            }
+        }
+    }
+
+    private boolean hits(Object listener) {
+        if (listener instanceof ASwtStage) {
+            ASwtStage<?, ?> stage = (ASwtStage<?, ?>) listener;
+            Vector2 stagePos = stage.screenToStageCoordinates(tmp.set(Gdx.input.getX(), Gdx.input.getY()));
+            return stage.hit(stagePos.x, stagePos.y, false) != null;
         }
         return false;
     }
@@ -123,7 +158,7 @@ public final class SwtApplicationInputDispatcher implements ControllerListener, 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         try {
-            if (this.keyboardListener != null) return this.keyboardListener.touchUp(screenX, screenY, pointer, button);
+            forEachKeyboardListener(k -> k.touchUp(screenX, screenY, pointer, button));
         } catch (Exception e) {
             log.error("error during touchUp " + button, e);
         }
@@ -134,7 +169,7 @@ public final class SwtApplicationInputDispatcher implements ControllerListener, 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         try {
-            if (this.keyboardListener != null) return this.keyboardListener.touchDragged(screenX, screenY, pointer);
+            forEachKeyboardListener(k -> k.touchDragged(screenX, screenY, pointer));
         } catch (Exception e) {
             log.error("error during touchDragged " + pointer, e);
         }
@@ -145,7 +180,7 @@ public final class SwtApplicationInputDispatcher implements ControllerListener, 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         try {
-            if (this.keyboardListener != null) return this.keyboardListener.mouseMoved(screenX, screenY);
+            forEachKeyboardListener(k -> k.mouseMoved(screenX, screenY));
         } catch (Exception e) {
             log.error("error during mouseMoved", e);
         }
@@ -156,7 +191,7 @@ public final class SwtApplicationInputDispatcher implements ControllerListener, 
     @Override
     public boolean scrolled(int amount) {
         try {
-            if (this.keyboardListener != null) return this.keyboardListener.scrolled(amount);
+            forEachKeyboardListener(k -> k.scrolled(amount));
         } catch (Exception e) {
             log.error("error during scrolled " + amount, e);
         }

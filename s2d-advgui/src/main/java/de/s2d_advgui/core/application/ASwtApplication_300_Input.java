@@ -1,14 +1,13 @@
 package de.s2d_advgui.core.application;
 
-import javax.annotation.Nonnull;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.Controllers;
-
 import de.s2d_advgui.core.rendering.ISwtDrawerManager;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
 import de.s2d_advgui.core.stage.ASwtStage;
+
+import javax.annotation.Nonnull;
 
 public abstract class ASwtApplication_300_Input<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>, STAGE extends ASwtStage<RM, DM>>
         extends ASwtApplication_150_ScreenStages<RM, DM, STAGE> {
@@ -60,6 +59,11 @@ public abstract class ASwtApplication_300_Input<RM extends AResourceManager, DM 
                 e.printStackTrace();
             }
         });
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public void setShareKeyboard(boolean shareKeyboard) {
+        inputBroadCaster.shareKeyboard = shareKeyboard;
     }
     // -------------------------------------------------------------------------------------------------------------------------
 }

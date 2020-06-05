@@ -21,95 +21,90 @@ import javax.annotation.Nullable;
 import java.util.Stack;
 
 public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>>
-        extends ASwtStage_200_Widgets<RM, DM> implements IControllerLevelTarget {
+        extends ASwtStage_200_Widgets<RM, DM> implements IControllerLevelTarget, ControllerListener {
     // -------------------------------------------------------------------------------------------------------------------------
-    private final ControllerListener controllerListener = new ControllerListener() {
-        // -------------------------------------------------------------------------------------------------------------------------
-        @Override
-        public void connected(Controller pController) {
-            System.err.println("ASwtStage_600_Events.connected(" + pController + ");");
-        }
-
-        // -------------------------------------------------------------------------------------------------------------------------
-        @Override
-        public void disconnected(Controller pController) {
-            System.err.println("ASwtStage_600_Events.disconnected(" + pController + ");");
-        }
-
-        // -------------------------------------------------------------------------------------------------------------------------
-        @Override
-        public boolean buttonDown(Controller pController, int pButtonCode) {
-            IControllerLevel cu = ASwtStage_600_Events.this.currentControllerLevel;
-            if (cu == null) return false;
-            if (pButtonCode == Xbox.R_BUMPER) {
-                return cu.traverseTabNext();
-            }
-            if (pButtonCode == Xbox.L_BUMPER) {
-                return cu.traverseTabPrev();
-            }
-            return cu._onEvent_ControllerButtonDown(pButtonCode);
-        }
-
-        // -------------------------------------------------------------------------------------------------------------------------
-        @Override
-        public boolean buttonUp(Controller pController, int pButtonCode) {
-            IControllerLevel cu = ASwtStage_600_Events.this.currentControllerLevel;
-            if (cu == null) return false;
-            Actor actor = getKeyboardFocus();
-            ISwtWidget<?> swt = ASwtStage_600_Events.this.actorMappings.get(actor);
-            if (swt instanceof ISwtWidgetSelectable) {
-                if (Xbox.A == pButtonCode) {
-                    ((ISwtWidgetSelectable) swt).callListeners(0);
-                    return true;
-                }
-            }
-            return cu._onEvent_ControllerButtonUp(pButtonCode);
-        }
-
-        // -------------------------------------------------------------------------------------------------------------------------
-        @Override
-        public boolean axisMoved(Controller pController, int pAxisCode, float pValue) {
-            IControllerLevel cu = ASwtStage_600_Events.this.currentControllerLevel;
-            if (cu == null) return false;
-            return cu._onEvent_ControllerAxisMoved(pController, pAxisCode, pValue);
-        }
-
-        // -------------------------------------------------------------------------------------------------------------------------
-        @Override
-        public boolean povMoved(Controller pController, int pPovCode, PovDirection pValue) {
-            IControllerLevel cu = ASwtStage_600_Events.this.currentControllerLevel;
-            if (cu == null) return false;
-            return cu._onEvent_ControllerPovMoved(pController, pPovCode, pValue);
-        }
-
-        // -------------------------------------------------------------------------------------------------------------------------
-        @Override
-        public boolean xSliderMoved(Controller pController, int pSliderCode, boolean pValue) {
-            IControllerLevel cu = ASwtStage_600_Events.this.currentControllerLevel;
-            if (cu == null) return false;
-            return cu._onEvent_ControllerXSliderMoved(pController, pSliderCode, pValue);
-        }
-
-        // -------------------------------------------------------------------------------------------------------------------------
-        @Override
-        public boolean ySliderMoved(Controller pController, int pSliderCode, boolean pValue) {
-            IControllerLevel cu = ASwtStage_600_Events.this.currentControllerLevel;
-            if (cu == null) return false;
-            return cu._onEvent_ControllerYSliderMoved(pController, pSliderCode, pValue);
-        }
-
-        // -------------------------------------------------------------------------------------------------------------------------
-        @Override
-        public boolean accelerometerMoved(Controller pController, int pAccelerometerCode, Vector3 pValue) {
-            IControllerLevel cu = ASwtStage_600_Events.this.currentControllerLevel;
-            if (cu == null) return false;
-            return cu._onEvent_ControllerAccelerometerMoved(pController, pAccelerometerCode, pValue);
-        }
-
-        // -------------------------------------------------------------------------------------------------------------------------
-    };
+    @Override
+    public void connected(Controller pController) {
+        System.err.println("ASwtStage_600_Events.connected(" + pController + ");");
+    }
 
     // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public void disconnected(Controller pController) {
+        System.err.println("ASwtStage_600_Events.disconnected(" + pController + ");");
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public boolean buttonDown(Controller pController, int pButtonCode) {
+        IControllerLevel cu = ASwtStage_600_Events.this.currentControllerLevel;
+        if (cu == null) return false;
+        if (pButtonCode == Xbox.R_BUMPER) {
+            return cu.traverseTabNext();
+        }
+        if (pButtonCode == Xbox.L_BUMPER) {
+            return cu.traverseTabPrev();
+        }
+        return cu._onEvent_ControllerButtonDown(pButtonCode);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public boolean buttonUp(Controller pController, int pButtonCode) {
+        IControllerLevel cu = ASwtStage_600_Events.this.currentControllerLevel;
+        if (cu == null) return false;
+        Actor actor = getKeyboardFocus();
+        ISwtWidget<?> swt = ASwtStage_600_Events.this.actorMappings.get(actor);
+        if (swt instanceof ISwtWidgetSelectable) {
+            if (Xbox.A == pButtonCode) {
+                ((ISwtWidgetSelectable) swt).callListeners(0);
+                return true;
+            }
+        }
+        return cu._onEvent_ControllerButtonUp(pButtonCode);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public boolean axisMoved(Controller pController, int pAxisCode, float pValue) {
+        IControllerLevel cu = ASwtStage_600_Events.this.currentControllerLevel;
+        if (cu == null) return false;
+        return cu._onEvent_ControllerAxisMoved(pController, pAxisCode, pValue);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public boolean povMoved(Controller pController, int pPovCode, PovDirection pValue) {
+        IControllerLevel cu = ASwtStage_600_Events.this.currentControllerLevel;
+        if (cu == null) return false;
+        return cu._onEvent_ControllerPovMoved(pController, pPovCode, pValue);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public boolean xSliderMoved(Controller pController, int pSliderCode, boolean pValue) {
+        IControllerLevel cu = ASwtStage_600_Events.this.currentControllerLevel;
+        if (cu == null) return false;
+        return cu._onEvent_ControllerXSliderMoved(pController, pSliderCode, pValue);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public boolean ySliderMoved(Controller pController, int pSliderCode, boolean pValue) {
+        IControllerLevel cu = ASwtStage_600_Events.this.currentControllerLevel;
+        if (cu == null) return false;
+        return cu._onEvent_ControllerYSliderMoved(pController, pSliderCode, pValue);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public boolean accelerometerMoved(Controller pController, int pAccelerometerCode, Vector3 pValue) {
+        IControllerLevel cu = ASwtStage_600_Events.this.currentControllerLevel;
+        if (cu == null) return false;
+        return cu._onEvent_ControllerAccelerometerMoved(pController, pAccelerometerCode, pValue);
+    }
+    // -------------------------------------------------------------------------------------------------------------------------
+
     @Nullable
     Controller controller;
 
@@ -129,7 +124,7 @@ public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM exten
     // -------------------------------------------------------------------------------------------------------------------------
     public final ControllerListener getControllerListener(Controller pController) {
         this.controller = pController;
-        return this.controllerListener;
+        return this;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -155,6 +150,17 @@ public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM exten
         this.currentControllerLevel = this.controllerStack.peek();
         this.currentControllerLevel.doFocusCurrentWidget();
         return pop;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    @Override
+    public void removeControllerLevel(IControllerLevel level) {
+        if (this.currentControllerLevel != level) {
+            log.warn("removing controller-level that was not current {}, {}", currentControllerLevel, level);
+        }
+        controllerStack.remove(level);
+        this.currentControllerLevel = this.controllerStack.peek();
+        this.currentControllerLevel.doFocusCurrentWidget();
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

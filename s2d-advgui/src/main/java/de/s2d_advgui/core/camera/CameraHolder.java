@@ -10,10 +10,11 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-
 import de.s2d_advgui.core.utils.CalcUtils;
 
 public final class CameraHolder {
+    private Vector3 tmp = new Vector3();
+
     // -------------------------------------------------------------------------------------------------------------------------
     @Nonnull
     private final OrthographicCamera camera = new OrthographicCamera();
@@ -73,13 +74,11 @@ public final class CameraHolder {
     // -------------------------------------------------------------------------------------------------------------------------
     public void unproject(Vector2 in, Vector2 out) {
         OrthographicCamera cam = this.camera;
-        Vector3 totrans = new Vector3(in.x, in.y, 0);
-        // Vector3 totrans = new Vector3(in.x, this.getLastDims().height-in.y, 0);
+        Vector3 totrans = tmp.set(in.x, in.y, 0);
         Vector3 oxx = unproject(cam, totrans, this.getLastDims().x, this.getLastDims().y, this.getLastDims().width,
                 this.getLastDims().height);
         out.x = oxx.x;
         out.y = oxx.y;
-
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -110,7 +109,7 @@ public final class CameraHolder {
     }
 
     public Vector2 project(Vector2 v) {
-        Vector3 project = getCamera().project(new Vector3(v, 0));
+        Vector3 project = getCamera().project(tmp.set(v, 0));
         return v.set(project.x, -project.y);
     }
 

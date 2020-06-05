@@ -1,35 +1,41 @@
 package de.s2d_advgui.core.application;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL30;
-
-import de.s2d_advgui.commons.SphThread;
 import de.s2d_advgui.core.rendering.ISwtDrawerManager;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
 import de.s2d_advgui.core.stage.ASwtStage;
 
+import java.util.ArrayList;
+
 public abstract class ASwtApplication_800_Render<RM extends AResourceManager, DM extends ISwtDrawerManager<RM>, STAGE extends ASwtStage<RM, DM>>
         extends ASwtApplication_310_Events<RM, DM, STAGE> {
+    // -------------------------------------------------------------------------------------------------------------------------
+    private final LwjglSync lwjglSync = new LwjglSync();
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public int fpsLimit = -1;
+
     // -------------------------------------------------------------------------------------------------------------------------
     public ASwtApplication_800_Render(DM pDrawerManager) {
         super(pDrawerManager);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
+
     /**
      * Wird nur vom Scene2d-ApplicationListener aufgerufen.
      *
      * @throws Exception
      */
     public final void render() throws Exception {
+        Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
+        Gdx.gl.glClear(Gdx.gl.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glEnable(GL30.GL_BLEND);
+
+        Gdx.graphics.setTitle(this.getTitle());
+
         float delta = Gdx.graphics.getDeltaTime();
-        if (delta < 0.005F) {
-            // Chill out!
-            SphThread.sleep(100);
-            return;
-        }
         if (delta > 0.2f) {
             log.error("OUCH: {}", delta); //$NON-NLS-1$
             delta = 0.2f;
@@ -37,12 +43,8 @@ public abstract class ASwtApplication_800_Render<RM extends AResourceManager, DM
 
         this.handleInput();
 
-        Gdx.graphics.setTitle(this.getTitle());
-        Gdx.gl.glEnable(GL30.GL_BLEND);
-        Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
-
         if (this.stages.isEmpty()) {
-            this.zero.setBounds(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight());
+            this.zero.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             this.zero.act(delta);
             this.zero.draw();
         } else {
@@ -53,6 +55,10 @@ public abstract class ASwtApplication_800_Render<RM extends AResourceManager, DM
                 stage.draw();
                 stage.executeQueuedCommands();
             }
+        }
+
+        if (fpsLimit > 0) {
+            lwjglSync.sync(fpsLimit);
         }
     }
 

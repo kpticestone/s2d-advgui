@@ -5,7 +5,7 @@ public class SplitScreenArrangement {
     public static final SplitScreenArrangement ZERO = new SplitScreenArrangement(1, 1);
 
     // -------------------------------------------------------------------------------------------------------------------------
-    final static int MAX = 16;
+    public final static int MAX = 17;
 
     // -------------------------------------------------------------------------------------------------------------------------
     final static SplitScreenArrangement[] INSTANCES = new SplitScreenArrangement[MAX];

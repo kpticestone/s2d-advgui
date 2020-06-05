@@ -3,6 +3,7 @@ package de.s2d_advgui.core.rendering;
 import javax.annotation.Nonnull;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Matrix4;
@@ -71,7 +72,7 @@ public interface ISwtDrawerManager<RM extends AResourceManager> {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    ISwtDrawerManager<RM> cloneDrawerWithOtherBatch(Batch batch, ShapeRenderer pShapeRenderer);
+    Batch setBatch(Batch spriteBatch);
 
     // -------------------------------------------------------------------------------------------------------------------------
 }
