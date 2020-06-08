@@ -1,6 +1,5 @@
 package com.leo.spheres.core.chunksystem;
 
-import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import de.s2d_advgui.core.geom.collider.ICollider;
@@ -19,37 +18,27 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import static com.leo.spheres.core.chunksystem.PlanetChunkSystem.CUSTOM_FIELD_VISIBLE;
-
 public class Collider_Planet implements ICollider {
     private static final Logger log = LoggerFactory.getLogger(Collider_Planet.class);
 
     // -------------------------------------------------------------------------------------------------------------------------
-    private PlanetChunkSystem chunkSystem;
+    private final PlanetChunkSystem chunkSystem;
 
     // -------------------------------------------------------------------------------------------------------------------------
-    Map<String, Collider_Chunk> chunks = new HashMap<>();
+    private final Map<String, Collider_Chunk> chunks = new HashMap<>();
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Nonnull
-    private final MinMax box;
+    private final MinMax boundingBox;
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Nonnull
     private final Set<IRegionOfInterest> regs = new LinkedHashSet<>();
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public Collider_Planet(PlanetChunkSystem chunkSystem) {
+    public Collider_Planet(PlanetChunkSystem chunkSystem, Rectangle boundingBox) {
         this.chunkSystem = chunkSystem;
-        MinMax minmax = new MinMax();
-        Collider_Chunk newChunkCollider = new Collider_Chunk();
-        chunkSystem.forEachChunk((chunk) -> {
-            chunkSystem.forEach(chunk, CUSTOM_FIELD_VISIBLE, (x, y, t) -> {
-                ColliderItem_ChunkBlock ch = newChunkCollider.getBlockCollider(x, y);
-                minmax.append(ch.getBox());
-            });
-        });
-        this.box = minmax;
+        this.boundingBox = new MinMax().append(boundingBox);
         this.update();
     }
 
@@ -86,7 +75,8 @@ public class Collider_Planet implements ICollider {
 
         Consumer<Chunk> pChunk = chunk -> {
             boolean hits = false;
-            AX: for (Rectangle r : rects) {
+            AX:
+            for (Rectangle r : rects) {
                 if (IntersectionFactory.getInstance().calculateOverlapping(chunk.getRectangle(), r)) {
                     hits = true;
                     break AX;
@@ -99,7 +89,8 @@ public class Collider_Planet implements ICollider {
                 Map<String, ColliderItem_ChunkBlock> existingKeys = new HashMap<>(colChunk.getMap());
                 this.chunkSystem.forEach(chunk, PlanetChunkSystem.CUSTOM_FIELD_SOURCE, (x, y, t) -> {
                     boolean hits2 = false;
-                    AY: for (Rectangle r : rects) {
+                    AY:
+                    for (Rectangle r : rects) {
                         if (r.contains(x, y)) {
                             hits2 = true;
                             break AY;
@@ -140,15 +131,13 @@ public class Collider_Planet implements ICollider {
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public boolean isEmpty() {
-        this.update();
-        return this.chunks.isEmpty();
+        return false;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public MinMax getBox() {
-        this.update();
-        return this.box;
+        return this.boundingBox;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -157,53 +146,9 @@ public class Collider_Planet implements ICollider {
         this.update();
         Collection<IColliderItem> back = new HashSet<>();
         for (Collider_Chunk a : this.chunks.values()) {
-            for (ColliderItem_ChunkBlock b : a.getItems()) {
-                back.add(b);
-            }
+            back.addAll(a.getItems());
         }
         return back;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    public ICollider getTransformed(Affine2 transform) {
-        return ICollider.super.getTransformed(transform);
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    public boolean hits(ICollider pA, ICollider pB) {
-        return ICollider.super.hits(pA, pB);
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    public float getDistance(ICollider pOtherCollider) {
-        return ICollider.super.getDistance(pOtherCollider);
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    public boolean hits(ICollider pOther) {
-        return ICollider.super.hits(pOther);
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    public boolean contains(Vector2 pPoint) {
-        return ICollider.super.contains(pPoint);
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    public boolean contains(float x, float y) {
-        return ICollider.super.contains(x, y);
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    @Override
-    public void forEach(Consumer<IColliderItem> pConsumer) {
-        ICollider.super.forEach(pConsumer);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

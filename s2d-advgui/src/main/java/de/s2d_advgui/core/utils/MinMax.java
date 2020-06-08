@@ -27,7 +27,7 @@ public class MinMax {
 
     // -------------------------------------------------------------------------------------------------------------------------
     @SuppressWarnings("null")
-    public void append(@Nonnull Rectangle box) {
+    public MinMax append(@Nonnull Rectangle box) {
         float boxX2 = box.x + box.width;
         float boxY2 = box.y + box.height;
         float boxX = box.x;
@@ -35,6 +35,7 @@ public class MinMax {
         this.apply(boxX, boxY);
         this.apply(boxX2, boxY2);
         this.reCalcWiHe();
+        return this;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
