@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-
 import de.s2d_advgui.core.geom.Ray2D;
 import de.s2d_advgui.core.geom.collider.AIntersector;
 import de.s2d_advgui.core.geom.collider.IntersectionContext;
@@ -31,7 +30,7 @@ public final class Intersector_CircleRay extends AIntersector<Circle, Ray2D> {
                 new Vector2(pRay.x1, pRay.y1),
                 new Vector2(pRay.x2, pRay.y2),
                 new Vector2(pCircle.x, pCircle.y),
-                pCircle.radius);
+                pCircle.radius * pCircle.radius);
     }
 
     @FunctionalInterface

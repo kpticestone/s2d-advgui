@@ -13,7 +13,7 @@ import com.badlogic.gdx.math.Vector3;
 import de.s2d_advgui.core.utils.CalcUtils;
 
 public final class CameraHolder {
-    private Vector3 tmp = new Vector3();
+    private final Vector3 tmp = new Vector3();
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Nonnull
@@ -98,7 +98,7 @@ public final class CameraHolder {
      * @return
      */
     public Vector3 unproject(Camera cam, Vector3 screenCoords, float viewportX, float viewportY, float viewportWidth,
-            float viewportHeight) {
+                             float viewportHeight) {
         float x = screenCoords.x, y = screenCoords.y;
         x = x - viewportX;
         y = y - viewportY;
@@ -137,7 +137,7 @@ public final class CameraHolder {
     // -------------------------------------------------------------------------------------------------------------------------
     public void screenCoordsToSceneCoords(Vector2 in, Vector2 out) {
         Rectangle vp = this.getLastDims();
-        Vector3 screenCoords = new Vector3(in.x, Gdx.graphics.getHeight() - in.y, 0);
+        Vector3 screenCoords = tmp.set(in.x, Gdx.graphics.getHeight() - in.y, 0);
         float x = screenCoords.x, y = screenCoords.y;
         x = x - vp.x;
         y = y - vp.y;
@@ -153,11 +153,11 @@ public final class CameraHolder {
         this.sceneCoordsToScreenCoords(in, out);
         return out;
     }
-    
+
     // -------------------------------------------------------------------------------------------------------------------------
     public void sceneCoordsToScreenCoords(Vector2 in, Vector2 out) {
         Rectangle vp = this.getLastDims();
-        Vector3 worldCoords = new Vector3(in.x, in.y, 0);
+        Vector3 worldCoords = tmp.set(in.x, in.y, 0);
         worldCoords.prj(this.camera.combined);
         worldCoords.x = vp.width * (worldCoords.x + 1) / 2 + vp.x;
         worldCoords.y = vp.height * (worldCoords.y + 1) / 2 + vp.y;
