@@ -1,7 +1,16 @@
 package com.leo.spheres.core.chunksystem;
 
-import static com.leo.spheres.core.chunksystem.PlanetChunkSystem.CUSTOM_FIELD_VISIBLE;
+import com.badlogic.gdx.math.Affine2;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import de.s2d_advgui.core.geom.collider.ICollider;
+import de.s2d_advgui.core.geom.collider.IColliderItem;
+import de.s2d_advgui.core.geom.collider.IntersectionFactory;
+import de.s2d_advgui.core.utils.MinMax;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,18 +19,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import javax.annotation.Nonnull;
-
-import com.badlogic.gdx.math.Affine2;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-
-import de.s2d_advgui.core.geom.collider.ICollider;
-import de.s2d_advgui.core.geom.collider.IColliderItem;
-import de.s2d_advgui.core.geom.collider.IntersectionFactory;
-import de.s2d_advgui.core.utils.MinMax;
+import static com.leo.spheres.core.chunksystem.PlanetChunkSystem.CUSTOM_FIELD_VISIBLE;
 
 public class Collider_Planet implements ICollider {
+    private static final Logger log = LoggerFactory.getLogger(Collider_Planet.class);
+
     // -------------------------------------------------------------------------------------------------------------------------
     private PlanetChunkSystem chunkSystem;
 
@@ -115,7 +117,7 @@ public class Collider_Planet implements ICollider {
         for (String al : usedChunkKeys) {
             Collider_Chunk chch = this.chunks.get(al);
             if (chch.isEmpty()) {
-                System.err.println("remove chunk-infos");
+                log.debug("remove chunk-infos");
                 this.chunks.remove(al);
             }
         }
@@ -126,9 +128,11 @@ public class Collider_Planet implements ICollider {
         boolean ex = this.chunkSystem.isBlockExists(atX, atY);
         if (ex) {
             Chunk chunk = this.chunkSystem.getChunk(atX, atY);
-            String chunkKey = chunk.getKey();
-            Collider_Chunk colChunk = this.chunks.computeIfAbsent(chunkKey, k -> new Collider_Chunk());
-            return colChunk.getBlockCollider(atX, atY);
+            if (chunk != null) {
+                String chunkKey = chunk.getKey();
+                Collider_Chunk colChunk = this.chunks.computeIfAbsent(chunkKey, k -> new Collider_Chunk());
+                return colChunk.getBlockCollider(atX, atY);
+            }
         }
         return null;
     }

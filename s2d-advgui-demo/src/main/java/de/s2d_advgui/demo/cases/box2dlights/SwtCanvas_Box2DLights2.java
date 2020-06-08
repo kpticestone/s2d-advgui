@@ -26,7 +26,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.utils.Array;
 import com.leo.spheres.core.chunksystem.PlanetChunkSystem;
-import com.leo.spheres.core.chunksystem.PlanetGenerator;
+import de.s2d_advgui.demo.cases.planettests.S2DTestPlanetGenerator;
 
 import box2dLight.DirectionalLight;
 import box2dLight.PointLight;
@@ -93,7 +93,7 @@ public final class SwtCanvas_Box2DLights2
 
         dl = new DirectionalLight(this.rayHandler, 1024, new Color(1f, 1f, 0f, .8f), 270 - 10);
 
-        gen1 = PlanetGenerator.doGenerate(50);
+        gen1 = S2DTestPlanetGenerator.doGenerate(50);
 
         int[] counter = {0};
         RandomXS128 xj = new RandomXS128();
@@ -273,11 +273,11 @@ public final class SwtCanvas_Box2DLights2
                 TextureRegion squ = this.drawerManager.getResourceManager().getTextureRegion("/icons/128/yinyang.png");
 
                 Color[] colors = new Color[32];
-                colors[PlanetGenerator.BEDROCK] = Color.DARK_GRAY;
-                colors[PlanetGenerator.COAL_ORE] = Color.DARK_GRAY;
-                colors[PlanetGenerator.DIRT] = Color.BROWN;
-                colors[PlanetGenerator.GOLD_ORE] = Color.YELLOW;
-                colors[PlanetGenerator.STONE] = Color.GRAY;
+                colors[S2DTestPlanetGenerator.BEDROCK] = Color.DARK_GRAY;
+                colors[S2DTestPlanetGenerator.COAL_ORE] = Color.DARK_GRAY;
+                colors[S2DTestPlanetGenerator.DIRT] = Color.BROWN;
+                colors[S2DTestPlanetGenerator.GOLD_ORE] = Color.YELLOW;
+                colors[S2DTestPlanetGenerator.STONE] = Color.GRAY;
 
                 Array<Body> bodies = new Array<>();
                 this.world.getBodies(bodies);

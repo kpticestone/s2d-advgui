@@ -1,9 +1,4 @@
-package com.leo.spheres.core.chunksystem;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+package com.leo.spheres.core.chunksystem.calculator;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Intersector;
@@ -11,7 +6,12 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.leo.commons.geom.Point;
 import com.leo.commons.utils.Brush;
-
+import com.leo.spheres.core.chunksystem.AChunkSystem;
+import com.leo.spheres.core.chunksystem.Chunk;
+import com.leo.spheres.core.chunksystem.CircleBrush;
+import com.leo.spheres.core.chunksystem.CoordConsumerShort;
+import com.leo.spheres.core.chunksystem.PlanetChunkSystem;
+import com.leo.spheres.core.chunksystem.RayBlockHandler;
 import de.s2d_advgui.commons.TOldCompatibilityCode;
 import de.s2d_advgui.commons.TimeTracker;
 import de.s2d_advgui.core.geom.Ray2D;
@@ -19,6 +19,11 @@ import de.s2d_advgui.core.geom.collider.IntersectionContext;
 import de.s2d_advgui.core.geom.collider.impl_items.ColliderItem_Rectangle;
 import de.s2d_advgui.core.geom.collider.ints.Intersector_CircleRect;
 import de.s2d_advgui.core.rendering.SwtDrawer_Shapes;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class PlanetLightMapCalculator {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -71,7 +76,7 @@ public class PlanetLightMapCalculator {
         }
 
         if (TOldCompatibilityCode.TRUE) {
-            OutlineCalculator.calcVisibleOutline(planetChunkSystem);
+            PlanetVisibleAndOutlineCalculator.calcVisibleOutline(planetChunkSystem);
             tt.track("outline calc"); //$NON-NLS-1$
         }
 
@@ -209,7 +214,7 @@ public class PlanetLightMapCalculator {
 
         StringBuilder txt = new StringBuilder();
         tt.report(txt);
-        txt.append("planet size: " + planetChunkSystem.planetSize + "\n");
+        txt.append("planet size: " + planetChunkSystem.getPlanetSize() + "\n");
 
         int[] counter = { 0 };
         planetChunkSystem.forEach(PlanetChunkSystem.CUSTOM_FIELD_SOURCE, new CoordConsumerShort() {

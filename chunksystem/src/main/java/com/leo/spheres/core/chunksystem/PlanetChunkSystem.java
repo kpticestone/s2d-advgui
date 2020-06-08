@@ -1,11 +1,10 @@
 package com.leo.spheres.core.chunksystem;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.badlogic.gdx.math.Vector2;
 import com.leo.commons.geom.Point;
 import com.leo.commons.utils.Brush;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PlanetChunkSystem extends AChunkSystem {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -22,7 +21,7 @@ public class PlanetChunkSystem extends AChunkSystem {
     // -------------------------------------------------------------------------------------------------------------------------
     private short[] allData;
     // -------------------------------------------------------------------------------------------------------------------------
-    public boolean calculated = false;
+    public long[] lastCalculated = new long[4];
 
     // -------------------------------------------------------------------------------------------------------------------------
     public PlanetChunkSystem(AChunkSystem other) {

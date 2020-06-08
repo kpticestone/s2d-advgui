@@ -1,27 +1,18 @@
 package de.s2d_advgui.demo.cases.planetchunk;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.utils.Align;
 import com.leo.spheres.core.chunksystem.AChunkSystem;
-import com.leo.spheres.core.chunksystem.Chunk;
-import com.leo.spheres.core.chunksystem.PlanetChunkSystem;
-import com.leo.spheres.core.chunksystem.PlanetGenerator;
-import com.leo.spheres.core.chunksystem.PlanetLightMapCalculator;
 
-import de.s2d_advgui.commons.TOldCompatibilityCode;
+import com.leo.spheres.core.chunksystem.calculator.PlanetLightMapCalculator;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.camera.CameraHolder;
 import de.s2d_advgui.core.canvas.SwtCanvas;
-import de.s2d_advgui.core.geom.Ray2D;
 import de.s2d_advgui.core.rendering.SwtDrawerManager;
-import de.s2d_advgui.core.rendering.SwtDrawer_Batch;
 import de.s2d_advgui.core.rendering.SwtDrawer_Shapes;
 import de.s2d_advgui.demo.DemoResourceManager;
 

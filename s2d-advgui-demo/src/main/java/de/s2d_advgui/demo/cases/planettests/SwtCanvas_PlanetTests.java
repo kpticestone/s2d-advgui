@@ -1,8 +1,5 @@
 package de.s2d_advgui.demo.cases.planettests;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -17,10 +14,9 @@ import com.badlogic.gdx.utils.Align;
 import com.leo.spheres.core.chunksystem.AChunkSystem;
 import com.leo.spheres.core.chunksystem.Chunk;
 import com.leo.spheres.core.chunksystem.PlanetChunkSystem;
-import com.leo.spheres.core.chunksystem.PlanetGenerator;
-import com.leo.spheres.core.chunksystem.PlanetLightMapCalculator;
 import com.leo.spheres.core.chunksystem.RayBlockHandler;
 
+import com.leo.spheres.core.chunksystem.calculator.PlanetLightMapCalculator;
 import de.s2d_advgui.commons.TOldCompatibilityCode;
 import de.s2d_advgui.core.awidget.ISwtWidget;
 import de.s2d_advgui.core.awidget.InternalWidgetDrawerBatch;
@@ -28,7 +24,6 @@ import de.s2d_advgui.core.camera.CameraHolder;
 import de.s2d_advgui.core.canvas.SwtCanvas;
 import de.s2d_advgui.core.geom.Ray2D;
 import de.s2d_advgui.core.geom.collider.IntersectionContext;
-import de.s2d_advgui.core.geom.collider.IntersectionFactory;
 import de.s2d_advgui.core.geom.collider.IntersectionListener;
 import de.s2d_advgui.core.geom.collider.ints.Intersector_RayRect;
 import de.s2d_advgui.core.rendering.SwtDrawerManager;
@@ -47,7 +42,7 @@ public final class SwtCanvas_PlanetTests
     public SwtCanvas_PlanetTests(ISwtWidget<? extends Group> pParent,
             SwtDrawerManager<DemoResourceManager> pDrawerManager) {
         super(pParent, pDrawerManager);
-        this.gen1 = PlanetGenerator.doGenerate(100);
+        this.gen1 = S2DTestPlanetGenerator.doGenerate(100);
 
         this.addDrawerForeground(new InternalWidgetDrawerBatch() {
             @Override
@@ -232,11 +227,11 @@ public final class SwtCanvas_PlanetTests
                 TextureRegion squ = this.drawerManager.getResourceManager().getTextureRegion("/icons/128/yinyang.png");
 
                 Color[] colors = new Color[32];
-                colors[PlanetGenerator.BEDROCK] = Color.DARK_GRAY;
-                colors[PlanetGenerator.COAL_ORE] = Color.DARK_GRAY;
-                colors[PlanetGenerator.DIRT] = Color.BROWN;
-                colors[PlanetGenerator.GOLD_ORE] = Color.YELLOW;
-                colors[PlanetGenerator.STONE] = Color.GRAY;
+                colors[S2DTestPlanetGenerator.BEDROCK] = Color.DARK_GRAY;
+                colors[S2DTestPlanetGenerator.COAL_ORE] = Color.DARK_GRAY;
+                colors[S2DTestPlanetGenerator.DIRT] = Color.BROWN;
+                colors[S2DTestPlanetGenerator.GOLD_ORE] = Color.YELLOW;
+                colors[S2DTestPlanetGenerator.STONE] = Color.GRAY;
                 colors[8] = Color.WHITE;
                 colors[9] = Color.BLACK;
 

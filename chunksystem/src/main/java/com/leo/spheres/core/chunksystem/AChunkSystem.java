@@ -27,6 +27,8 @@ public abstract class AChunkSystem {
     // -------------------------------------------------------------------------------------------------------------------------
     private final int chunkHalf;
     // -------------------------------------------------------------------------------------------------------------------------
+    private final CircleHolder circleHolder;
+    // -------------------------------------------------------------------------------------------------------------------------
     protected int rev;
     // -------------------------------------------------------------------------------------------------------------------------
     boolean inImport = false;
@@ -35,6 +37,7 @@ public abstract class AChunkSystem {
     public AChunkSystem(int pPlanetSize) {
         this.planetSize = pPlanetSize;
         this.half = (int) Math.ceil(this.planetSize / 2f);
+        this.circleHolder = CircleHolder.getInstance(half);
         this.chunkcount = (int) Math.ceil((float) this.planetSize / (float) CHUNKSIZE);
         this.chunkHalf = (int) Math.ceil(this.chunkcount / 2f);
         this.chunkcountmax = this.chunkcount * this.chunkcount;
@@ -168,6 +171,11 @@ public abstract class AChunkSystem {
     public final Closeable init() {
         this.inImport = true;
         return () -> AChunkSystem.this.inImport = false;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    public final boolean inCircle(int pX, int pY) {
+        return circleHolder.inCircle(pX, pY);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
