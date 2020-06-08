@@ -1,11 +1,5 @@
 package com.leo.spheres.core.chunksystem;
 
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.annotation.Nullable;
-
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Polygon;
@@ -13,7 +7,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.leo.spheres.core.base.block.Direction;
-
 import de.s2d_advgui.core.geom.Ray2D;
 import de.s2d_advgui.core.geom.collider.ColliderItem;
 import de.s2d_advgui.core.geom.collider.IColliderItem;
@@ -22,13 +15,22 @@ import de.s2d_advgui.core.geom.collider.impl_items.ColliderItem_Polygon;
 import de.s2d_advgui.core.geom.collider.ints.Intersector_RayRay;
 import de.s2d_advgui.core.utils.ShapeUtils;
 
+import javax.annotation.Nullable;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 public class ColliderItem_ChunkBlock extends ColliderItem<Rectangle> {
     // -------------------------------------------------------------------------------------------------------------------------
     public static final String DATAKEY_BLOCKSIDE = "BLOCKSIDE"; //$NON-NLS-1$
 
     // -------------------------------------------------------------------------------------------------------------------------
+    private static final float OFF_X = 0.001F;
+    private static final float SIZE = 1F - OFF_X * 2;
+
+    // -------------------------------------------------------------------------------------------------------------------------
     @Nullable
-    Map<Direction, Ray2D> blockLines;
+    private Map<Direction, Ray2D> blockLines;
 
     // -------------------------------------------------------------------------------------------------------------------------
     private final int atX, atY;
@@ -41,7 +43,7 @@ public class ColliderItem_ChunkBlock extends ColliderItem<Rectangle> {
 
     // -------------------------------------------------------------------------------------------------------------------------
     public ColliderItem_ChunkBlock(int atX, int atY) {
-        super(new Rectangle(atX, atY, 1, 1), new Rectangle(atX, atY, 1, 1), false);
+        super(new Rectangle(atX + OFF_X, atY + OFF_X, SIZE, SIZE), new Rectangle(atX + OFF_X, atY + OFF_X, SIZE, SIZE), false);
         this.key = atX + "_" + atY; //$NON-NLS-1$
         this.atX = atX;
         this.atY = atY;
@@ -107,7 +109,7 @@ public class ColliderItem_ChunkBlock extends ColliderItem<Rectangle> {
         Polygon asPoly = ShapeUtils.byRect(this.shape);
         return new ColliderItem_Polygon(ShapeUtils.clone2(asPoly, transform));
     }
-    
+
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public Shape createBox2dShape() {

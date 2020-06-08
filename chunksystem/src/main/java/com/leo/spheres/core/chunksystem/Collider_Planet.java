@@ -1,5 +1,6 @@
 package com.leo.spheres.core.chunksystem;
 
+import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import de.s2d_advgui.core.geom.collider.ICollider;
@@ -149,6 +150,13 @@ public class Collider_Planet implements ICollider {
             back.addAll(a.getItems());
         }
         return back;
+    }
+
+    @Nonnull
+    @Override
+    public ICollider getTransformed(@Nonnull Affine2 transform) {
+        //TODO think about how getBox can be transformed
+        return ICollider.super.getTransformed(transform);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
