@@ -25,8 +25,8 @@ public class ColliderItem_ChunkBlock extends ColliderItem<Rectangle> {
     public static final String DATAKEY_BLOCKSIDE = "BLOCKSIDE"; //$NON-NLS-1$
 
     // -------------------------------------------------------------------------------------------------------------------------
-    private static final float OFF_X = 0.001F;
-    private static final float SIZE = 1F - OFF_X * 2;
+    public static final float BLOCK_OFF = 0.001F;
+    public static final float BLOCK_SIZE = 1F - (BLOCK_OFF * 2);
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Nullable
@@ -43,7 +43,7 @@ public class ColliderItem_ChunkBlock extends ColliderItem<Rectangle> {
 
     // -------------------------------------------------------------------------------------------------------------------------
     public ColliderItem_ChunkBlock(int atX, int atY) {
-        super(new Rectangle(atX + OFF_X, atY + OFF_X, SIZE, SIZE), new Rectangle(atX + OFF_X, atY + OFF_X, SIZE, SIZE), false);
+        super(new Rectangle(atX + BLOCK_OFF, atY + BLOCK_OFF, BLOCK_SIZE, BLOCK_SIZE), new Rectangle(atX + BLOCK_OFF, atY + BLOCK_OFF, BLOCK_SIZE, BLOCK_SIZE), false);
         this.key = atX + "_" + atY; //$NON-NLS-1$
         this.atX = atX;
         this.atY = atY;
