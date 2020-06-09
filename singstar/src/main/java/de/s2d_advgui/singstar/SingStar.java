@@ -7,6 +7,7 @@ import org.reflections.util.ConfigurationBuilder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -86,7 +87,9 @@ public final class SingStar {
                 // DON
             }
 
-            Object nwo = clz.getDeclaredConstructor().newInstance();
+            Constructor<? extends T> declaredConstructor = clz.getDeclaredConstructor();
+            declaredConstructor.setAccessible(true);
+            Object nwo = declaredConstructor.newInstance();
             this.singletons.put(clz, nwo);
             return clz.cast(nwo);
         } catch (Throwable e) {

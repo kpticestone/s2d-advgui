@@ -1,18 +1,16 @@
 package de.s2d_advgui.core.geom.collider;
 
+import com.badlogic.gdx.math.Affine2;
+import com.badlogic.gdx.math.Vector2;
+import de.s2d_advgui.core.geom.Ray2D;
+import de.s2d_advgui.core.utils.CalcUtils;
+import de.s2d_advgui.core.utils.MinMax;
+
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Consumer;
-
-import javax.annotation.Nonnull;
-
-import com.badlogic.gdx.math.Affine2;
-import com.badlogic.gdx.math.Vector2;
-
-import de.s2d_advgui.core.geom.Ray2D;
-import de.s2d_advgui.core.utils.CalcUtils;
-import de.s2d_advgui.core.utils.MinMax;
 
 public interface ICollider {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -40,7 +38,13 @@ public interface ICollider {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    default float getDistance(@Nonnull ICollider pOtherCollider) {
+    default float getCenterDistance(float x, float y) {
+        Vector2 colliderCenter = this.getBox().toRect().getCenter(new Vector2());
+        return CalcUtils.distance(colliderCenter.x, colliderCenter.y, x, y);
+    }
+
+    // -------------------------------------------------------------------------------------------------------------------------
+    default float getCenterDistance(@Nonnull ICollider pOtherCollider) {
         Vector2 v1 = new Vector2();
         Vector2 v2 = new Vector2();
         this.getBox().toRect().getCenter(v1);

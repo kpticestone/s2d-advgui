@@ -1,11 +1,11 @@
 package de.s2d_advgui.core.awidget;
 
-import javax.annotation.Nonnull;
-
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import de.s2d_advgui.core.stage.ISwtStage;
+
+import javax.annotation.Nonnull;
 
 public abstract class ASwtWidget_300_Traverse<ACTOR extends Actor> extends ASwtWidget_299_Hover<ACTOR> {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -48,6 +48,10 @@ public abstract class ASwtWidget_300_Traverse<ACTOR extends Actor> extends ASwtW
     // -------------------------------------------------------------------------------------------------------------------------
     public final boolean isFocused() {
         return this.context.getKeyboardFocus() == this.actor;
+    }
+
+    public void setTouchable(Touchable touchable) {
+        this.actor.setTouchable(touchable);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------

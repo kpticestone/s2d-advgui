@@ -129,7 +129,7 @@ public abstract class AResourceManager {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    private final TextureRegion[][] fixBleeding(TextureRegion[][] pRegions) {
+    private static final TextureRegion[][] fixBleeding(TextureRegion[][] pRegions) {
         for (TextureRegion[] array : pRegions) {
             for (TextureRegion region : array) {
                 float fix = 0.01f;
@@ -147,7 +147,7 @@ public abstract class AResourceManager {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    protected final TextureRegion[][] loadTexMap(String pResourceId, int pSize) {
+    public static final TextureRegion[][] loadTexMap(String pResourceId, int pSize) {
         return fixBleeding(TextureRegion.split(_loadTexture(pResourceId), pSize, pSize));
     }
 

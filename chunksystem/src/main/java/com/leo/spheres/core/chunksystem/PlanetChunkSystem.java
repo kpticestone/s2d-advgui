@@ -271,13 +271,8 @@ public class PlanetChunkSystem extends AChunkSystem {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
-    public short getBlockGlowId() {
-        return 8;
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
     public short getBlockHiddenId() {
-        return 9;
+        return 1;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -315,7 +310,7 @@ public class PlanetChunkSystem extends AChunkSystem {
         while (f >= r) {
             x = stx[r];
             y = sty[r++];
-            if (x > -siz && y >= -siz
+            if (x >= -siz && y >= -siz
                     && x < siz
                     && y < siz) {
                 if (this.get(PlanetChunkSystem.CUSTOM_FIELD_OUTLINE, x, y) == 0) {

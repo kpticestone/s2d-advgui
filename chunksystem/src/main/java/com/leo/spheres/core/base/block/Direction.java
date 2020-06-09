@@ -4,6 +4,9 @@ package com.leo.spheres.core.base.block;
 import com.leo.commons.geom.Point;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /*
  *     1
@@ -25,6 +28,8 @@ public enum Direction {
     private final int ordinal;
     private int rotation;
     private byte index;
+
+    private Set<Point> sideNeighborPoints;
 
     // -------------------------------------------------------------------------------------------------------------------------
     Direction(int pIndex, int ordinal, @Nonnull Point pModifiers, int pRotation) {
@@ -136,5 +141,23 @@ public enum Direction {
         if (this == SOUTH) return NORTH;
         if (this == NORTH) return SOUTH;
         throw new IllegalStateException("??");
+    }
+
+    public Direction[] getSideNeighbors() {
+        return switch (this) {
+            case NORTH, SOUTH -> new Direction[]{EAST, WEST};
+            case EAST, WEST -> new Direction[]{NORTH, SOUTH};
+        };
+    }
+
+    public Set<Point> getSideNeighborPoints() {
+        if (sideNeighborPoints == null) {
+            Set<Point> points = new HashSet<>();
+            for (Direction sideNeighbor : getSideNeighbors()) {
+                points.add(sideNeighbor.getModifiers());
+            }
+            sideNeighborPoints = Collections.unmodifiableSet(points);
+        }
+        return sideNeighborPoints;
     }
 }
