@@ -1,11 +1,10 @@
 package de.s2d_advgui.core.utils;
 
-import java.awt.geom.Point2D;
-
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-
 import de.s2d_advgui.commons.BiConsumerFloat;
+
+import java.awt.geom.Point2D;
 
 /**
  * math stuff
@@ -18,6 +17,7 @@ public class CalcUtils {
     public final static float g_half = g * .5f;
 
     // -------------------------------------------------------------------------------------------------------------------------
+
     /**
      * random value between 0 and 360
      */
@@ -31,6 +31,7 @@ public class CalcUtils {
     }
 
     // -----------------------------------------------------------------------------------------------------------
+
     /**
      * get rotation of gameobject around 0/0
      */
@@ -44,20 +45,16 @@ public class CalcUtils {
     }
 
     // -----------------------------------------------------------------------------------------------------------
+
     /**
      * make sure rotation is between 0 and 360
      */
     public static float translateRotation(float degrees) {
-        while (degrees > 360f) {
-            degrees -= 360f;
-        }
-        while (degrees < 0f) {
-            degrees += 360f;
-        }
-        return degrees;
+        return (degrees % 360F + 360F) % 360F;
     }
 
     // -----------------------------------------------------------------------------------------------------------
+
     /**
      * distance between to angles.
      * e.g. a=340, b=10, result: -30
@@ -137,19 +134,19 @@ public class CalcUtils {
         double ey1 = ex0;
         double Q1x = A.getX() + x * ex0;
         double Q1y = A.getY() + x * ex1;
-        if (y == 0) return new Point2D[] { new Point2D.Double(Q1x, Q1y) };
+        if (y == 0) return new Point2D[]{new Point2D.Double(Q1x, Q1y)};
 
         double Q2x = Q1x - y * ey0;
         double Q2y = Q1y - y * ey1;
         Q1x += y * ey0;
         Q1y += y * ey1;
-        return new Point2D[] { new Point2D.Double(Q1x, Q1y), new Point2D.Double(Q2x, Q2y) };
+        return new Point2D[]{new Point2D.Double(Q1x, Q1y), new Point2D.Double(Q2x, Q2y)};
     }
 
     // http://antigrain.com/research/adaptive_bezier/#toc0003
     // -------------------------------------------------------------------------------------------------------------------------
     public static void bezier3p(Point2D p1, Point2D p2, Point2D p3, float t, BiConsumerFloat pCallback) {
-        Point2D[] p = { p1, p2, p3 };
+        Point2D[] p = {p1, p2, p3};
         float nt = 1 - t;
         float qt = nt * nt;
         float dt = t * t;
@@ -160,7 +157,7 @@ public class CalcUtils {
 
     // -------------------------------------------------------------------------------------------------------------------------
     public static void bezier4p(Point2D p1, Point2D p2, Point2D p3, Point2D p4, float t, BiConsumerFloat pCallback) {
-        Point2D[] p = { p1, p2, p3, p4 };
+        Point2D[] p = {p1, p2, p3, p4};
         double x = (1 - t) * (1 - t) * (1 - t) * p[0].getX() + 3 * (1 - t) * (1 - t) * t * p[1].getX() + 3 * (1 - t) * t * t * p[2].getX() + t * t * t * p[3].getX();
         double y = (1 - t) * (1 - t) * (1 - t) * p[0].getY() + 3 * (1 - t) * (1 - t) * t * p[1].getY() + 3 * (1 - t) * t * t * p[2].getY() + t * t * t * p[3].getY();
         pCallback.accept((float) x, (float) y);
@@ -186,6 +183,17 @@ public class CalcUtils {
             back += 360;
         }
         return back % 360f;
+    }
+
+    public static float rotateTowards(float current, float wanted, float speed) {
+        float d = CalcUtils.angleDistance(current, wanted);
+        if (d == 0) {
+            return 0;
+        }
+        float absDistance = Math.abs(d);
+        float mod = (MathUtils.norm(0, 360, absDistance) * 1.5F) + 1F; // move faster, if you need to move more
+        float f = Math.min(speed * mod, absDistance);
+        return -(f * Math.signum(d));
     }
 
     // -----------------------------------------------------------------------------------------------------------

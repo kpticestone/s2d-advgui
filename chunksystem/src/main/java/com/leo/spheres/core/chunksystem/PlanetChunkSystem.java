@@ -101,6 +101,11 @@ public class PlanetChunkSystem extends AChunkSystem {
         int o = tr(pCustonFieldNr, pTranslatedX, pTranslatedY);
         if (this.allData[o] != pValue) {
             this.allData[o] = pValue;
+            if (!this.inImport) {
+                if (pCustonFieldNr < CUSTOM_FIELD_OUTLINE) {
+                    this.getChunk(pTranslatedX, pTranslatedY).rev = this.rev++;
+                }
+            }
             return true;
         }
         return false;
@@ -157,15 +162,19 @@ public class PlanetChunkSystem extends AChunkSystem {
         int translatedY = pAbsoluteY + this.half;
         if (translatedX < 0 || translatedY < 0 || translatedX >= this.planetSize || translatedY >= this.planetSize)
             return false;
-        if (this.doSet(pCustonFieldNr, translatedX, translatedY, pValue)) {
-            if (!this.inImport) {
-                if (pCustonFieldNr < CUSTOM_FIELD_OUTLINE) {
-                    this.getChunk(translatedX, translatedY).rev = this.rev++;
-                }
-            }
-            return true;
+        return this.doSet(pCustonFieldNr, translatedX, translatedY, pValue);
+    }
+
+    public boolean setIfAbsent(int pCustonFieldNr, int pAbsoluteX, int pAbsoluteY, short pValue) {
+        int translatedX = pAbsoluteX + this.half;
+        int translatedY = pAbsoluteY + this.half;
+        if (translatedX < 0 || translatedY < 0 || translatedX >= this.planetSize || translatedY >= this.planetSize)
+            return false;
+        short curr = this.doGet(pCustonFieldNr, translatedX, translatedY);
+        if (curr > 0) {
+            return false;
         }
-        return false;
+        return this.doSet(pCustonFieldNr, translatedX, translatedY, pValue);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -275,6 +284,10 @@ public class PlanetChunkSystem extends AChunkSystem {
         return 1;
     }
 
+    protected boolean allowsLight(short type) {
+        return type == 0;
+    }
+
     // -------------------------------------------------------------------------------------------------------------------------
     public void resetChunk(int pCustonFieldNr, Chunk chunk, short pTargetId) {
         int useRev = this.rev++;
@@ -314,14 +327,15 @@ public class PlanetChunkSystem extends AChunkSystem {
                     && x < siz
                     && y < siz) {
                 if (this.get(PlanetChunkSystem.CUSTOM_FIELD_OUTLINE, x, y) == 0) {
-                    if (this.get(PlanetChunkSystem.CUSTOM_FIELD_SOURCE, x, y) == 0) {
+                    short type = this.get(PlanetChunkSystem.CUSTOM_FIELD_SOURCE, x, y);
+                    if (allowsLight(type)) {
                         this.forceFastSet(PlanetChunkSystem.CUSTOM_FIELD_OUTLINE, x, y, (short)1);
                         stx[f] = x;     sty[f++] = y + 1;
                         stx[f] = x;     sty[f++] = y - 1;
                         stx[f] = x + 1; sty[f++] = y;
                         stx[f] = x - 1; sty[f++] = y;
-                        
-                        
+
+
                         stx[f] = x + 1; sty[f++] = y + 1;
                         stx[f] = x + 1; sty[f++] = y - 1;
                         stx[f] = x - 1; sty[f++] = y + 1;
@@ -333,7 +347,6 @@ public class PlanetChunkSystem extends AChunkSystem {
             }
         }
     }
-
     // -------------------------------------------------------------------------------------------------------------------------
     public void copy(int pAbsoluteX, int pAbsoluteY, int pCustomFieldNrSrc, int pCustomFieldNrDst) {
         int translatedX = pAbsoluteX + this.half;

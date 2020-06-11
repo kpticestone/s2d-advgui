@@ -55,4 +55,8 @@ public class Point {
     public Vector2 toVector() {
         return new Vector2(x, y);
     }
+
+    public Point add(int x, int y) {
+        return new Point(this.x+x,this.y+y);
+    }
 }
