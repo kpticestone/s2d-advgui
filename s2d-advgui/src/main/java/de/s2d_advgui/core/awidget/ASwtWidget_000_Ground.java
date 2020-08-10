@@ -1,19 +1,5 @@
 package de.s2d_advgui.core.awidget;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
@@ -23,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputEvent.Type;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
-
 import de.s2d_advgui.commons.TNull;
 import de.s2d_advgui.commons.Trigger;
 import de.s2d_advgui.core.awidget.acc.IActorCreator;
@@ -31,6 +16,19 @@ import de.s2d_advgui.core.rendering.IRend123;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
 import de.s2d_advgui.core.resourcemanager.ATheme;
 import de.s2d_advgui.core.stage.ISwtStage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwtWidget<ACTOR> {
     // -------------------------------------------------------------------------------------------------------------------------
@@ -128,11 +126,17 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
                         }
                     }
                 } else if (event instanceof InputEvent) {
-                    Type ti = ((InputEvent) event).getType();
+                    InputEvent input = (InputEvent) event;
+                    Type ti = input.getType();
                     Set<ISwtInputEventCaller> li = ASwtWidget_000_Ground.this.eventMappings.get(ti);
                     if (li != null) {
                         for (ISwtInputEventCaller c : li) {
-                            if (c.call((InputEvent) event)) {
+                            if (c.call(input)) {
+                                if (ti == Type.touchDown && input.getTouchFocus()) {
+                                    event.getStage().addTouchFocus(this,
+                                            input.getListenerActor(), input.getTarget(),
+                                            input.getPointer(), input.getButton());// 65 66
+                                }
                                 // System.err.println("handle input '" + event + "' on '" + c + "'");
                                 return true;
                             }
@@ -150,7 +154,7 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
             paractor.addActor(this.actor);
         }
 
-        (((ASwtWidget_000_Ground<?>) this.parent)).children.add(this);
+        ((ASwtWidget_000_Ground<?>) this.parent).children.add(this);
         this.context.onWidgetCreation(this);
 
         this.parent.calcPositions();
@@ -163,7 +167,7 @@ public abstract class ASwtWidget_000_Ground<ACTOR extends Actor> implements ISwt
     @Override
     public final void registerEventHandler(InputEvent.Type pInputEventType, ISwtInputEventCaller pCaller) {
         Set<ISwtInputEventCaller> as = this.eventMappings.computeIfAbsent(pInputEventType,
-                (s) -> new LinkedHashSet<>());
+                s -> new LinkedHashSet<>());
         as.add(pCaller);
     }
 

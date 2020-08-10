@@ -12,7 +12,7 @@
     <artifactId>s2d-advgui</artifactId>
     <name>de.s2d-advgui.s2d-advgui</name>
     <properties>
-        <gdxVersion>1.9.10</gdxVersion>
+        <gdxVersion>1.9.11</gdxVersion>
     </properties>
     <dependencies>
         <dependency>
