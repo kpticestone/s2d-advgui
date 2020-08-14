@@ -39,13 +39,16 @@ public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM exten
     public boolean buttonDown(Controller pController, int pButtonCode) {
         IControllerLevel cu = ASwtStage_600_Events.this.currentControllerLevel;
         if (cu == null) return false;
-        if (pButtonCode == Xbox.R_BUMPER) {
-            return cu.traverseTabNext();
+        final boolean handled = cu._onEvent_ControllerButtonDown(pButtonCode);
+        if (!handled) {
+            if (pButtonCode == Xbox.R_BUMPER) {
+                return cu.traverseTabNext();
+            }
+            if (pButtonCode == Xbox.L_BUMPER) {
+                return cu.traverseTabPrev();
+            }
         }
-        if (pButtonCode == Xbox.L_BUMPER) {
-            return cu.traverseTabPrev();
-        }
-        return cu._onEvent_ControllerButtonDown(pButtonCode);
+        return handled;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -215,7 +218,9 @@ public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM exten
         if (cu == null) return false;
         boolean back = super.touchDown(screenX, screenY, pointer, button);
         if (!back) {
-            if (cu._onEvent_TouchDown(screenX, screenY, pointer, button)) return true;
+            if (cu._onEvent_TouchDown(screenX, screenY, pointer, button)) {
+                return true;
+            }
         }
         return back;
     }

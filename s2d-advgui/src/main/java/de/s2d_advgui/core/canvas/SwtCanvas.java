@@ -43,11 +43,6 @@ public abstract class SwtCanvas<RM extends AResourceManager, DM extends ISwtDraw
     private Set<ISwtMouseMoveListener> mouseMoveHandler = new LinkedHashSet<>();
 
     // -------------------------------------------------------------------------------------------------------------------------
-    @Nullable
-    @Deprecated
-    private ASwtInputRegister_Keys inputHandler;
-
-    // -------------------------------------------------------------------------------------------------------------------------
     @Nonnull
     protected final DM drawerManager;
 
@@ -160,12 +155,6 @@ public abstract class SwtCanvas<RM extends AResourceManager, DM extends ISwtDraw
     // -------------------------------------------------------------------------------------------------------------------------
     public void addMouseMoveHandler(ISwtMouseMoveListener pHandler) {
         this.mouseMoveHandler.add(pHandler);
-    }
-
-    // -------------------------------------------------------------------------------------------------------------------------
-    @Deprecated
-    public void setInputHandler(ASwtInputRegister_Keys pInputHandler) {
-        this.inputHandler = pInputHandler;
     }
 
 //    // -------------------------------------------------------------------------------------------------------------------------

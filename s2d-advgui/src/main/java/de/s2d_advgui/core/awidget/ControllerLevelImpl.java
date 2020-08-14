@@ -222,14 +222,24 @@ public class ControllerLevelImpl implements IControllerLevel {
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final boolean _onEvent_TouchDown(int screenX, int screenY, int pointer, int button) {
-        log.debug("SwtScreen._onEvent_TouchDown({}, {}, {}, {});", screenX, screenY, pointer, button); //$NON-NLS-1$
+        Set<ISwtActionRunner_Keys> runners = this.mouseButtonRunners.get(button);
+        if (runners != null) {
+            for (ISwtActionRunner_Keys runner : runners) {
+                if (runner.run(true)) return true;
+            }
+        }
         return false;
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
     public final boolean _onEvent_TouchUp(int screenX, int screenY, int pointer, int button) {
-        log.debug("SwtScreen._onEvent_TouchUp({}, {}, {}, {});", screenX, screenY, pointer, button); //$NON-NLS-1$
+        Set<ISwtActionRunner_Keys> runners = this.mouseButtonRunners.get(button);
+        if (runners != null) {
+            for (ISwtActionRunner_Keys runner : runners) {
+                if (runner.run(false)) return true;
+            }
+        }
         return false;
     }
 

@@ -7,6 +7,7 @@ import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.google.common.collect.Sets;
 import de.s2d_advgui.core.stage.ASwtStage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +16,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 import java.util.function.Consumer;
+
+import static com.badlogic.gdx.Input.Keys.ALT_LEFT;
+import static com.badlogic.gdx.Input.Keys.ALT_RIGHT;
+import static com.badlogic.gdx.Input.Keys.CONTROL_LEFT;
+import static com.badlogic.gdx.Input.Keys.CONTROL_RIGHT;
+import static com.badlogic.gdx.Input.Keys.TAB;
 
 public final class SwtApplicationInputDispatcher implements ControllerListener, InputProcessor {
     private static final Logger log = LoggerFactory.getLogger(SwtApplicationInputDispatcher.class);
@@ -42,6 +50,7 @@ public final class SwtApplicationInputDispatcher implements ControllerListener, 
 
     // -------------------------------------------------------------------------------------------------------------------------
     private boolean keyboardConnectionRequest = false;
+    private final Set<Integer> connectionRequestIgnore = Sets.newHashSet(ALT_LEFT, ALT_RIGHT, TAB, CONTROL_LEFT, CONTROL_RIGHT);
 
     // -------------------------------------------------------------------------------------------------------------------------
     public void attach(InputProcessor someStage) {
@@ -84,7 +93,7 @@ public final class SwtApplicationInputDispatcher implements ControllerListener, 
     @Override
     public boolean keyDown(int keycode) {
         if (keycode > 0) {
-            this.keyboardConnectionRequest = this.keyboardListener == null;
+            this.keyboardConnectionRequest = this.keyboardListener == null && !connectionRequestIgnore.contains(keycode);
             try {
                 forEachKeyboardListener(k -> k.keyDown(keycode));
             } catch (Exception e) {
