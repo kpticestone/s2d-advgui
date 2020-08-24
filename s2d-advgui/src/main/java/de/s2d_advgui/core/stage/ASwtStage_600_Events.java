@@ -9,6 +9,8 @@ import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.controllers.mappings.Xbox;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.utils.Pools;
 import de.s2d_advgui.core.application.ISwtApplicationController;
 import de.s2d_advgui.core.awidget.IControllerLevel;
 import de.s2d_advgui.core.awidget.ISwtWidget;
@@ -142,8 +144,16 @@ public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM exten
         if (currentControllerLevel != pControllerLevel) {
             this.controllerStack.push(pControllerLevel);
             this.currentControllerLevel = pControllerLevel;
+            this.sendControllerLevelChangeEvent();
             setKeyboardFocus(null);
         }
+    }
+
+    private void sendControllerLevelChangeEvent() {
+        ControllerLevelEvent event = Pools.obtain(ControllerLevelEvent.class);
+        event.setStage(this);
+        getRoot().fire(event);
+        Pools.free(event);
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
@@ -295,6 +305,9 @@ public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM exten
     @Override
     public Actor getKeyboardFocus() {
         return super.getKeyboardFocus();
+    }
+
+    public static final class ControllerLevelEvent extends Event {
     }
 
     // -------------------------------------------------------------------------------------------------------------------------
