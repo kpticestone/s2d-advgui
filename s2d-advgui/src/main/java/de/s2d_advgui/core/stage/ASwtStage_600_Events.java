@@ -275,14 +275,13 @@ public abstract class ASwtStage_600_Events<RM extends AResourceManager, DM exten
         return back;
     }
 
-    // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    public final boolean scrolled(int amount) {
+    public boolean scrolled(float amountX, float amountY) {
         IControllerLevel cu = this.currentControllerLevel;
         if (cu == null) return false;
-        boolean back = super.scrolled(amount);
+        boolean back = super.scrolled(amountX,amountY);
         if (!back) {
-            if (cu._onEvent_MouseScrolled(amount)) return true;
+            if (cu._onEvent_MouseScrolled(amountX, amountY)) return true;
         }
         return back;
     }

@@ -24,7 +24,6 @@ import de.s2d_advgui.core.awidget.acc.ActorCreatorWidgetGroup;
 import de.s2d_advgui.core.camera.CameraHolder;
 import de.s2d_advgui.core.input.ISwtMouseMoveListener;
 import de.s2d_advgui.core.input.ISwtScrollListener;
-import de.s2d_advgui.core.input.keys.ASwtInputRegister_Keys;
 import de.s2d_advgui.core.rendering.ISwtBatchSaver;
 import de.s2d_advgui.core.rendering.ISwtDrawerManager;
 import de.s2d_advgui.core.resourcemanager.AResourceManager;
@@ -71,7 +70,7 @@ public abstract class SwtCanvas<RM extends AResourceManager, DM extends ISwtDraw
         this.registerEventHandler(InputEvent.Type.mouseMoved, l1);
         this.registerEventHandler(InputEvent.Type.scrolled, (event) -> {
             if (this.scrollListener != null) {
-                return this.scrollListener.onScroll(event.getScrollAmount());
+                return this.scrollListener.onScroll(event.getScrollAmountX(), event.getScrollAmountY());
             }
             return false;
         });

@@ -245,9 +245,9 @@ public class ControllerLevelImpl implements IControllerLevel {
 
     // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    public final boolean _onEvent_MouseScrolled(int amount) {
+    public final boolean _onEvent_MouseScrolled(float amountX, float amountY) {
         for (ISwtScrollListener a : this.scrollListeners) {
-            if (a.onScroll(amount)) return true;
+            if (a.onScroll(amountX, amountY)) return true;
         }
         return false;
     }

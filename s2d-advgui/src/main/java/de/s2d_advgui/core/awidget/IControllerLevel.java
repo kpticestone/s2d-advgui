@@ -42,7 +42,7 @@ public interface IControllerLevel {
     boolean _onEvent_TouchUp(int screenX, int screenY, int pointer, int button);
 
     // -------------------------------------------------------------------------------------------------------------------------
-    boolean _onEvent_MouseScrolled(int amount);
+    boolean _onEvent_MouseScrolled(float amountX, float amountY);
 
     // -------------------------------------------------------------------------------------------------------------------------
     boolean traverseTabNext();

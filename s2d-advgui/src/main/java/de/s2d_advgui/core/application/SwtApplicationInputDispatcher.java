@@ -1,5 +1,11 @@
 package de.s2d_advgui.core.application;
 
+import static com.badlogic.gdx.Input.Keys.ALT_LEFT;
+import static com.badlogic.gdx.Input.Keys.ALT_RIGHT;
+import static com.badlogic.gdx.Input.Keys.CONTROL_LEFT;
+import static com.badlogic.gdx.Input.Keys.CONTROL_RIGHT;
+import static com.badlogic.gdx.Input.Keys.TAB;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.controllers.Controller;
@@ -14,17 +20,12 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import java.util.function.Consumer;
-
-import static com.badlogic.gdx.Input.Keys.ALT_LEFT;
-import static com.badlogic.gdx.Input.Keys.ALT_RIGHT;
-import static com.badlogic.gdx.Input.Keys.CONTROL_LEFT;
-import static com.badlogic.gdx.Input.Keys.CONTROL_RIGHT;
-import static com.badlogic.gdx.Input.Keys.TAB;
 
 public final class SwtApplicationInputDispatcher implements ControllerListener, InputProcessor {
     private static final Logger log = LoggerFactory.getLogger(SwtApplicationInputDispatcher.class);
@@ -196,13 +197,12 @@ public final class SwtApplicationInputDispatcher implements ControllerListener, 
         return false;
     }
 
-    // -------------------------------------------------------------------------------------------------------------------------
     @Override
-    public boolean scrolled(int amount) {
+    public boolean scrolled(float amountX, float amountY) {
         try {
-            forEachKeyboardListener(k -> k.scrolled(amount));
+            forEachKeyboardListener(k -> k.scrolled(amountX, amountY));
         } catch (Exception e) {
-            log.error("error during scrolled " + amount, e);
+            log.error("error during scrolled {}/{}", amountX, amountY, e);
         }
         return false;
     }
